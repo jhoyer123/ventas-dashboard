@@ -1,0 +1,50 @@
+tenologias
+React + Vite + Tailwind + shadcn/ui + Recharts + TanStack Table + Zustand
+
+
+estructura de carpetas
+src/
+├── assets/                  # Archivos estáticos (imágenes, fuentes, iconos SVG)
+│   ├── images/
+│   └── icons/
+├── components/              # Componentes visuales
+│   ├── common/              # Componentes UI reutilizables y genéricos (Botones, Inputs)
+│   │   ├── Button/
+│   │   ├── Input/
+│   │   └── Modal/
+│   └── business/            # Componentes con lógica específica del negocio (Widgets, Tablas de datos)
+│       ├── StatsCard/
+│       └── UserTable/
+├── config/                  # Configuraciones globales
+│   ├── constants.js         # Constantes (URLs, tamaños de paginación)
+│   └── theme.js             # Configuración del tema (colores, tipografía)
+├── context/                 # Estado global (React Context API)
+│   ├── AuthContext.jsx      # Manejo de sesión
+│   └── UIContext.jsx        # Estado de la UI (Sidebar abierto/cerrado, Tema oscuro/claro)
+├── hooks/                   # Custom Hooks
+│   ├── useFetch.js          # Hook genérico para peticiones
+│   └── useForm.js           # Hook para manejo de formularios
+├── layouts/                 # Estructuras de página (Esqueleto del Dashboard)
+│   ├── MainLayout.jsx       # Layout principal (Sidebar + Header + Contenido)
+│   └── AuthLayout.jsx       # Layout para Login/Registro (Sin Sidebar)
+├── pages/                   # Vistas/Rutas principales
+│   ├── auth/                # Vistas de autenticación
+│   │   ├── Login.jsx
+│   │   └── Register.jsx
+│   ├── dashboard/           # Vistas del panel
+│   │   ├── Home/
+│   │   ├── Users/
+│   │   └── Settings/
+│   └── NotFound.jsx
+├── routes/                  # Configuración de rutas y protección
+│   ├── AppRouter.jsx        # Definición de rutas
+│   └── PrivateRoute.jsx     # Guard para rutas protegidas
+├── services/                # Lógica de comunicación con APIs
+│   ├── api.js               # Configuración de Axios (interceptor)
+│   └── authService.js       # Endpoints específicos (login, logout)
+├── styles/                  # Estilos globales (si no usas Tailwind/CSS-in-JS completo)
+│   └── global.css
+├── utils/                   # Funciones auxiliares puras
+│   ├── formatDate.js
+│   └── validators.js
+└── App.jsx                  # Punto de entrada
