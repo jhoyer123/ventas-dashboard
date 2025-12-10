@@ -1,3 +1,7 @@
+PROBLEMAS A RESOLVER
+1- al eliminar la sucursal que esta seleccionada en el context el nombre permanece el dropdown donde se selecciona las sucursales pero solo permanece el nombre 
+
+
 tenologias
 React + Vite + Tailwind + shadcn/ui + Recharts + TanStack Table + Zustand
 

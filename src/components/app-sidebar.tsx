@@ -30,6 +30,7 @@ import { useAuth } from "@/context/AuthContext";
 
 import SidebarBanner from "./layout/HeadSidebar";
 import { NavButton } from "./nav-button";
+import { BranchSelected } from "./BranchSelected";
 
 // This is sample data.
 const data = {
@@ -41,9 +42,14 @@ const data = {
     avatar:
       "https://i.pinimg.com/736x/01/07/8c/01078c4a824ea92e1bb3e742ccd6f216.jpg",
   },
-  teams: [
+  sucursales: [
     {
-      name: "Acme Inc",
+      name: "Todas las Sucursales",
+      logo: GalleryVerticalEnd,
+      plan: "Enterprise",
+    },
+    {
+      name: "Sucursal de La Paz del prado comercio",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
     },
@@ -51,6 +57,16 @@ const data = {
       name: "Acme Corp.",
       logo: AudioWaveform,
       plan: "Startup",
+    },
+    {
+      name: "Evil Corp.",
+      logo: Command,
+      plan: "Free",
+    },
+    {
+      name: "Evil Corp.",
+      logo: Command,
+      plan: "Free",
     },
     {
       name: "Evil Corp.",
@@ -147,13 +163,13 @@ const data = {
       icon: Frame,
     },
     {
-      name: "Home",
-      url: "/dashboard/home",
+      name: "Sucursales",
+      url: "/dashboard/sucursales",
       icon: PieChart,
     },
     {
-      name: "Travel",
-      url: "#",
+      name: "Home",
+      url: "/dashboard/home",
       icon: Map,
     },
   ],
@@ -168,11 +184,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        {/* <TeamSwitcher teams={data.teams} /> */}
+        {/* Banner en el sidebar */}
         <SidebarBanner />
+        {/* Selector de sucursales */}
+        <BranchSelected /* teams={data.sucursales} */ />
       </SidebarHeader>
       <SidebarContent>
+        {/* Botones normales */}
         <NavButton projects={data.buttons} />
+        {/* Menu con dropdowns */}
         <NavDropDown items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>

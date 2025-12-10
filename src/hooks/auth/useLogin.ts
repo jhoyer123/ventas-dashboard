@@ -11,8 +11,7 @@ export const useLogin = () => {
       navigate("/dashboard");
     },
 
-    onError: (error: any) => {
-      console.log("Redirigiendo a home");
+    onError: (error) => {
       navigate("/");
       console.error("Error en login:", error);
       throw error;

@@ -1,3 +1,10 @@
+type job =
+  | "CEO"
+  | "GERENTE DE SUCURSAL"
+  | "ALMACEN"
+  | "SEGURIDAD"
+  | "SOPORTE ALMACEN";
+
 export type Employee = {
   id: string;
   name: string;
@@ -5,7 +12,7 @@ export type Employee = {
   address: string;
   phone: string;
   birthDate: string; // La fecha viene como string del backend
-  position: string;
+  job: job;
   // Si incluyes la relación 'branch' en el servicio:
   branch: { name: string } | null;
 };

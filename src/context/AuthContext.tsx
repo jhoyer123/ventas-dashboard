@@ -1,18 +1,8 @@
 import { createContext, useContext, type ReactNode } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useCheckAuth } from "../hooks/auth/useCheckAuth";
 import { useLogout } from "../hooks/auth/useLogout";
-
-type Role = "SUPERADMIN" | "ADMIN" | "SELLER" | "INVENTORY";
-
-export interface User {
-  userId: string;
-  name: string;
-  email: string;
-  role: Role;
-  //implementar
-  avatar?: string;
-}
+//types para el user - context
+import type { User } from "@/types/auth";
 
 interface AuthContextType {
   user: User | null;
@@ -20,27 +10,19 @@ interface AuthContextType {
   isAuthenticated: boolean;
   logout: () => Promise<void>;
 }
-
+//creamos el context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
+//hook para usar el context
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
   return ctx;
 };
-
+//componente proveedor del context
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const queryClient = useQueryClient();
   const { data, isLoading } = useCheckAuth(); // TanStack Query hook que hace el /me
-  const logoutMutation = useLogout();
 
-  const user = data?.user ?? null;
-
-  const logout = async () => {
-    await logoutMutation.mutateAsync();
-    // make sure also to clear React state/cache if needed (we removed "me" in onSuccess)
-    queryClient.removeQueries({ queryKey: ["me"] });
-  };
+  const user = data ?? null;
 
   return (
     <AuthContext.Provider
@@ -48,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         isLoading,
         isAuthenticated: !!user,
-        logout,
+        logout: useLogout().mutateAsync,
       }}
     >
       {children}

@@ -13,15 +13,17 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-//para cambiar el contenido del inset segun la ruta
 import { Outlet } from "react-router-dom";
 
 const LayoutDashboard = () => {
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+      <AppSidebar className="bg-gray-900" />
+
+      {/* SidebarInset con flex y altura completa */}
+      <SidebarInset className="flex flex-col overflow-hidden">
+        {/* HEADER - Fijo */}
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-white">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
@@ -43,7 +45,11 @@ const LayoutDashboard = () => {
             </Breadcrumb>
           </div>
         </header>
-        <Outlet />
+
+        {/* CONTENIDO - Sin overflow-auto, solo flex-1 */}
+        <div className="flex-1 min-h-0">
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
