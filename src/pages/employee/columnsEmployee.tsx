@@ -11,7 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-export const columnsPersonal: ColumnDef<Employee>[] = [
+interface ColumnProps {
+  setOpen: (empleado: Employee) => void;
+}
+
+export const columnsPersonal = ({
+  setOpen,
+}: ColumnProps): ColumnDef<Employee>[] => [
   {
     accessorKey: "name",
     header: "Nombre Completo",
@@ -20,14 +26,14 @@ export const columnsPersonal: ColumnDef<Employee>[] = [
       return (
         <div className="flex items-center gap-3">
           {/* Avatar con iniciales */}
-          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold">
+          {/* <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold">
             {row.original.name
               .split(" ")
               .map((n) => n[0])
               .slice(0, 2)
               .join("")
               .toUpperCase()}
-          </div>
+          </div> */}
           <span className="font-medium text-gray-900">{row.original.name}</span>
         </div>
       );
@@ -65,7 +71,7 @@ export const columnsPersonal: ColumnDef<Employee>[] = [
     accessorKey: "birthDate",
     header: "Fecha de Nacimiento",
     enableSorting: true,
-    cell: ({ row }) => {
+    /* cell: ({ row }) => {
       const dateValue = row.original.birthDate;
       if (!dateValue) return <span className="text-gray-400">N/A</span>;
 
@@ -84,7 +90,7 @@ export const columnsPersonal: ColumnDef<Employee>[] = [
       } catch (e) {
         return <span className="text-gray-400">{dateValue}</span>;
       }
-    },
+    }, */
   },
   {
     id: "actions",
@@ -117,8 +123,13 @@ export const columnsPersonal: ColumnDef<Employee>[] = [
 
             <DropdownMenuItem
               onClick={() => {
-                // TODO: Implementar lógica de editar
-                console.log("Editar empleado:", employee);
+                const employEnviar = {
+                  ...employee,
+                  birthDate: employee.birthDate
+                    ? new Date(employee.birthDate + "T00:00")
+                    : undefined,
+                };
+                setOpen(employEnviar);
               }}
               className="cursor-pointer"
             >

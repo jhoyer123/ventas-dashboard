@@ -40,8 +40,7 @@ const Branch = () => {
     //Determinar qué promesa ejecutar
     const promise = !branchS
       ? create.mutateAsync(data) // Retorna la promesa de creación
-      : update.mutateAsync({ id: branchS.id, dataBranch: data }); // Retorna la promesa de actualización
-
+      : update.mutateAsync({ id: branchS.id, dataBranch: data }); // Retorna la promesa de actualizacións
     try {
       //Envolver la promesa con toast.promise
       await toast.promise(promise, {

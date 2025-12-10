@@ -1,6 +1,8 @@
 import { supabase } from "@/api/supabaseClient";
 //parametors que enviaremos al backend
 import type { TableParams } from "@/components/common/tabla/api";
+//type del empleado
+import { type FormEmployeeInput } from "@/types/employee";
 
 // Get employees desde supabase - OPTIMIZADO
 export const getEmployees = async (
@@ -54,4 +56,41 @@ export const getEmployees = async (
       totalPages: Math.ceil((count || 0) / params.pageSize),
     },
   };
+};
+
+// Crear un nuevo empleado
+export const createEmployee = async (dataEmp: FormEmployeeInput) => {
+  // Lógica para crear un empleado
+  const { data, error } = await supabase
+    .from("employees")
+    .insert(dataEmp)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error al crear empleado:", error);
+    throw error;
+  }
+
+  return data;
+};
+
+//Actualizar un empleado
+export const updateEmployee = async (
+  dataEmp: FormEmployeeInput,
+  idEmp: string
+) => {
+  const { data, error } = await supabase
+    .from("employees")
+    .update(dataEmp)
+    .eq("id", idEmp)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error al actualizar empleado:", error);
+    throw error;
+  }
+
+  return data;
 };

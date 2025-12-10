@@ -1,16 +1,62 @@
 import { DataTable } from "../../components/common/tabla/DataTable";
 import { DebouncedInput } from "../../components/common/tabla/DebouncedInput";
+import { Button } from "@/components/ui/button";
 import { columnsPersonal } from "./columnsEmployee";
 import useGetEmployee from "../../hooks/employee/useGetEmployee";
 // Importamos el nuevo Hook
 import { useServerTableState } from "../../components/common/tabla/useServerTableState";
 //context de la sucursal
 import { useBranch } from "../../context/BranchContext";
+import { ModalEmployee } from "@/components/Personal/ModalEmployee";
+import { useState } from "react";
+//tipo para el formulario de empleado
+import { type Employee, type FormEmployeeInput } from "@/types/employee";
+//importar el hook de creacion de empleado
+import { useCreateEmployee } from "@/hooks/employee/useCreateEmployee";
+import { toast } from "sonner";
+import { useUpdateEmployee } from "@/hooks/employee/useUpdateEmployee";
+//context de branch
 
 export default function PersonalPage() {
+  //logica de la tabla
   const tableState = useServerTableState({});
   const { currentBranch } = useBranch();
   const { data, isLoading } = useGetEmployee(tableState, currentBranch || null);
+
+  //logica para crear y actualizar el empleado
+  const create = useCreateEmployee();
+  const update = useUpdateEmployee();
+  //logica para el empleado seleccionado
+  const [empSelected, setEmpSelected] = useState<Employee | undefined>(
+    undefined
+  );
+
+  //logica del modal
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  //funcion para el submit del formulario
+  const handleSubmit = (dataEmp: FormEmployeeInput) => {
+    const promise = empSelected
+      ? update.mutateAsync({ id: empSelected.id, dataEmployee: dataEmp })
+      : create.mutateAsync(dataEmp);
+
+    toast.promise(promise, {
+      loading: empSelected ? "Actualizando empleado..." : "Creando empleado...",
+      success: empSelected
+        ? "Empleado actualizado con éxito"
+        : "Empleado creado con éxito",
+      error: empSelected
+        ? "Error al actualizar el empleado"
+        : "Error al crear el empleado",
+      position: "top-right",
+      duration: 3500,
+    });
+
+    handleOpen();
+  };
 
   return (
     // calcular alture - 64px del header
@@ -24,17 +70,33 @@ export default function PersonalPage() {
           </span>
         </h1>
 
-        <DebouncedInput
-          valueDafault={tableState.globalFilter ?? ""}
-          onChange={tableState.onGlobalFilterChange}
-          placeholder="Buscar empleados..."
-        />
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => {
+              setEmpSelected(undefined);
+              handleOpen();
+            }}
+            className="cursor-pointer"
+          >
+            Agregar Empleado
+          </Button>
+          <DebouncedInput
+            valueDafault={tableState.globalFilter ?? ""}
+            onChange={tableState.onGlobalFilterChange}
+            placeholder="Buscar empleados..."
+          />
+        </div>
       </div>
 
       {/* TABLA - Crece para ocupar espacio restante */}
       <div className="flex-1 min-h-0">
         <DataTable
-          columns={columnsPersonal}
+          columns={columnsPersonal({
+            setOpen: (empSelected: any) => {
+              setEmpSelected(empSelected);
+              handleOpen();
+            },
+          })}
           data={data?.data || []}
           rowCount={data?.meta.total ?? 0}
           pagination={tableState.pagination}
@@ -44,6 +106,15 @@ export default function PersonalPage() {
           isLoading={isLoading}
         />
       </div>
+
+      {/* Renderizar Modal de acciones */}
+      <ModalEmployee
+        isOpen={isOpen}
+        setOpen={handleOpen}
+        onSubmit={handleSubmit}
+        initialValues={empSelected}
+        branchIdC={currentBranch || undefined}
+      />
     </div>
   );
 }
