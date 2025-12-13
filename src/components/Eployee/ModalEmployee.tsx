@@ -18,6 +18,7 @@ interface ModalEmployeeProps {
   onSubmit: (data: FormEmployeeInput) => void;
   initialValues?: Employee;
   branchIdC?: string;
+  isViewMode?: boolean;
 }
 
 export function ModalEmployee({
@@ -26,6 +27,7 @@ export function ModalEmployee({
   onSubmit,
   initialValues,
   branchIdC,
+  isViewMode,
 }: ModalEmployeeProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -45,16 +47,36 @@ export function ModalEmployee({
           funParent={onSubmit}
           initialValues={initialValues}
           branchIdC={branchIdC}
+          isViewMode={isViewMode}
         />
         <div className="flex justify-between mt-2">
-          <DialogClose asChild>
-            <Button variant="outline" className="cursor-pointer bg-gray-200">
-              Cancelar
-            </Button>
-          </DialogClose>
-          <Button type="submit" form="form-employee" className="cursor-pointer">
-            {!initialValues ? "Crear Empleado" : "Actualizar Empleado"}
-          </Button>
+          {!isViewMode && (
+            <>
+              <DialogClose asChild>
+                <Button
+                  variant="outline"
+                  className="cursor-pointer bg-gray-200"
+                >
+                  Cancelar
+                </Button>
+              </DialogClose>
+
+              <Button
+                type="submit"
+                form="form-employee"
+                className="cursor-pointer"
+              >
+                {!initialValues ? "Crear Empleado" : "Actualizar Empleado"}
+              </Button>
+            </>
+          )}
+          {isViewMode && (
+            <DialogClose asChild>
+              <Button variant="outline" className="cursor-pointer bg-gray-200">
+                Cerrar
+              </Button>
+            </DialogClose>
+          )}
         </div>
       </DialogContent>
     </Dialog>

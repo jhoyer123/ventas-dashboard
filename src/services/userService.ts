@@ -1,11 +1,8 @@
 import { supabase } from "@/api/supabaseClient";
-//parametors que enviaremos al backend
-import type { TableParams } from "@/components/common/tabla/api";
-//type del empleado
-import { type FormEmployeeInput } from "@/types/employee";
+import { type TableParams } from "@/components/common/tabla/api";
 
 // Get employees desde supabase - OPTIMIZADO
-export const getEmployees = async (
+export const getUsers = async (
   params: TableParams,
   branchId: string | null
 ) => {
@@ -15,9 +12,7 @@ export const getEmployees = async (
 
   // UNA SOLA QUERY con count incluido
   //let query = supabase.from("employees").select("*", { count: "exact" });
-    let query = supabase
-    .from("v_employees_without_user")
-    .select("*", { count: "exact" });
+  let query = supabase.from("users").select(`*,employee:employees(name,phone)`, { count: "exact" });
 
   // Búsqueda global
   if (params.globalFilter) {
@@ -60,58 +55,4 @@ export const getEmployees = async (
       totalPages: Math.ceil((count || 0) / params.pageSize),
     },
   };
-};
-
-// Crear un nuevo empleado
-export const createEmployee = async (dataEmp: FormEmployeeInput) => {
-  // Lógica para crear un empleado
-  const { data, error } = await supabase
-    .from("employees")
-    .insert(dataEmp)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Error al crear empleado:", error);
-    throw error;
-  }
-
-  return data;
-};
-
-//Actualizar un empleado
-export const updateEmployee = async (
-  dataEmp: FormEmployeeInput,
-  idEmp: string
-) => {
-  const { data, error } = await supabase
-    .from("employees")
-    .update(dataEmp)
-    .eq("id", idEmp)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Error al actualizar empleado:", error);
-    throw error;
-  }
-
-  return data;
-};
-
-//eliminar un empleado
-export const deleteEmployee = async (idEmp: string) => {
-  const { data, error } = await supabase
-    .from("employees")
-    .delete()
-    .eq("id", idEmp)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Error al eliminar empleado:", error);
-    throw error;
-  }
-
-  return data;
 };

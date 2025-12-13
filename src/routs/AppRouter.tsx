@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 //import de las paginas
 import Login from "../pages/auth/Login";
 import LayoutDashboard from "../layouts/LayoutDashboard";
-import Home from "../pages/Home/Home";
 import PrivateRoute from "./PrivateRoute";
 //importar el contexto del user
 import { AuthProvider } from "../context/AuthContext";
@@ -12,9 +11,11 @@ import { BranchProvider } from "../context/BranchContext";
 import { Toaster } from "@/components/ui/sonner";
 //improt pages
 import Dashboard from "@/pages/dashboard/Dashboard";
-import PersonalPage from "../pages/employee/EmployeePage";
+import Personal from "../pages/employee/Employee";
 import Branch from "@/pages/branch/Branch";
-import FormEmployee from "@/components/Personal/FormEmployee";
+import CreateProduct from "@/pages/product/CreateProduct";
+import Category from "@/pages/categories/Category";
+import Product from "@/pages/product/Product";
 
 const AppRouter = () => {
   return (
@@ -38,12 +39,11 @@ const AppRouter = () => {
         >
           <Route index element={<Dashboard />} />
           {/* rutas de empleados */}
-          <Route
-            path="home"
-            element={<FormEmployee funParent={() => console.log("prube")} />}
-          />
-          <Route path="personal" element={<PersonalPage />} />
+          <Route path="personal" element={<Personal />} />
           <Route path="sucursales" element={<Branch />} />
+          <Route path="categories" element={<Category />} />
+          <Route path="product" element={<Product />} />
+          <Route path="createp" element={<CreateProduct />} />
         </Route>
       </Routes>
       <Toaster theme="dark" />

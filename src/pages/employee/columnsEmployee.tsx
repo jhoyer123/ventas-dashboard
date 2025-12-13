@@ -1,6 +1,11 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { type Employee } from "@/types/employee";
-import { MoreHorizontal, Pencil, Trash2, Eye, Calendar } from "lucide-react";
+import {
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Eye /* Calendar */,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,11 +17,15 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface ColumnProps {
-  setOpen: (empleado: Employee) => void;
+  setOpenEdit: (empleado: Employee) => void;
+  setOpenView: (empleado: Employee, disable: boolean) => void;
+  setOpenDelete: (empleado: Employee) => void;
 }
 
 export const columnsPersonal = ({
-  setOpen,
+  setOpenEdit,
+  setOpenView,
+  setOpenDelete,
 }: ColumnProps): ColumnDef<Employee>[] => [
   {
     accessorKey: "name",
@@ -25,15 +34,6 @@ export const columnsPersonal = ({
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-3">
-          {/* Avatar con iniciales */}
-          {/* <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold">
-            {row.original.name
-              .split(" ")
-              .map((n) => n[0])
-              .slice(0, 2)
-              .join("")
-              .toUpperCase()}
-          </div> */}
           <span className="font-medium text-gray-900">{row.original.name}</span>
         </div>
       );
@@ -112,8 +112,13 @@ export const columnsPersonal = ({
 
             <DropdownMenuItem
               onClick={() => {
-                // TODO: Implementar lógica de ver
-                console.log("Ver empleado:", employee);
+                let employeeEnviar = {
+                  ...employee,
+                  birthDate: employee.birthDate
+                    ? new Date(employee.birthDate + "T00:00")
+                    : undefined,
+                };
+                setOpenView(employeeEnviar, true);
               }}
               className="cursor-pointer"
             >
@@ -129,7 +134,7 @@ export const columnsPersonal = ({
                     ? new Date(employee.birthDate + "T00:00")
                     : undefined,
                 };
-                setOpen(employEnviar);
+                setOpenEdit(employEnviar);
               }}
               className="cursor-pointer"
             >
@@ -141,7 +146,7 @@ export const columnsPersonal = ({
 
             <DropdownMenuItem
               onClick={() => {
-                // TODO: Implementar lógica de eliminar
+                setOpenDelete(employee);
                 console.log("Eliminar empleado:", employee);
               }}
               className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"

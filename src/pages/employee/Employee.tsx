@@ -7,7 +7,7 @@ import useGetEmployee from "../../hooks/employee/useGetEmployee";
 import { useServerTableState } from "../../components/common/tabla/useServerTableState";
 //context de la sucursal
 import { useBranch } from "../../context/BranchContext";
-import { ModalEmployee } from "@/components/Personal/ModalEmployee";
+import { ModalEmployee } from "@/components/Eployee/ModalEmployee";
 import { useState } from "react";
 //tipo para el formulario de empleado
 import { type Employee, type FormEmployeeInput } from "@/types/employee";
@@ -15,6 +15,8 @@ import { type Employee, type FormEmployeeInput } from "@/types/employee";
 import { useCreateEmployee } from "@/hooks/employee/useCreateEmployee";
 import { toast } from "sonner";
 import { useUpdateEmployee } from "@/hooks/employee/useUpdateEmployee";
+import { useDeleteEmployee } from "@/hooks/employee/useDeleteEmployee";
+import { AlertDelete } from "@/components/common/AlertDelet";
 //context de branch
 
 export default function PersonalPage() {
@@ -22,7 +24,8 @@ export default function PersonalPage() {
   const tableState = useServerTableState({});
   const { currentBranch } = useBranch();
   const { data, isLoading } = useGetEmployee(tableState, currentBranch || null);
-
+  //estado para contorlar el form de solo lectura
+  const [disableMod, setDesableMod] = useState(false);
   //logica para crear y actualizar el empleado
   const create = useCreateEmployee();
   const update = useUpdateEmployee();
@@ -58,9 +61,45 @@ export default function PersonalPage() {
     handleOpen();
   };
 
+  //funcion para abrir el modal desde el boton de editar
+  const openEditModal = (empSelected: Employee) => {
+    setDesableMod(false);
+    setEmpSelected(empSelected);
+    handleOpen();
+  };
+
+  //funcion para abrir el modal desde el boton de ver
+  const openViewModal = (empSelected: Employee, disable: boolean) => {
+    setEmpSelected(empSelected);
+    setDesableMod(disable);
+    handleOpen();
+  };
+  //logica para el modal de eliminacion
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const handleOpenDelete = () => {
+    setIsOpenDelete(!isOpenDelete);
+  };
+  const openDeleteAlert = (empSelected: Employee) => {
+    setEmpSelected(empSelected);
+    handleOpenDelete();
+  };
+  //Logica de eliminacion del empleado
+  const deleteE = useDeleteEmployee();
+  //funcion para eliminar empleado
+  const handleDeleteEmployee = () => {
+    const promise = deleteE.mutateAsync(empSelected?.id || "");
+    toast.promise(promise, {
+      loading: "Eliminando empleado...",
+      success: "Empleado eliminado con éxito",
+      error: "Error al eliminar el empleado",
+      position: "top-right",
+      duration: 3500,
+    });
+  };
+
   return (
     // calcular alture - 64px del header
-    <div className="h-[calc(100vh-64px)] flex flex-col px-4 py-4 gap-4">
+    <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-4 gap-4 px-4">
       {/* HEADER - Altura fija */}
       <div className="flex items-center justify-between shrink-0">
         <h1 className="text-2xl font-bold text-gray-900">
@@ -74,6 +113,7 @@ export default function PersonalPage() {
           <Button
             onClick={() => {
               setEmpSelected(undefined);
+              setDesableMod(false);
               handleOpen();
             }}
             className="cursor-pointer"
@@ -92,10 +132,9 @@ export default function PersonalPage() {
       <div className="flex-1 min-h-0">
         <DataTable
           columns={columnsPersonal({
-            setOpen: (empSelected: any) => {
-              setEmpSelected(empSelected);
-              handleOpen();
-            },
+            setOpenEdit: openEditModal,
+            setOpenView: openViewModal,
+            setOpenDelete: openDeleteAlert,
           })}
           data={data?.data || []}
           rowCount={data?.meta.total ?? 0}
@@ -114,6 +153,16 @@ export default function PersonalPage() {
         onSubmit={handleSubmit}
         initialValues={empSelected}
         branchIdC={currentBranch || undefined}
+        isViewMode={disableMod}
+      />
+
+      {/* modal de eliminacion */}
+      <AlertDelete
+        title="Eliminar empleado"
+        description="El empleado se eliminará permanentemente. ¿Estás seguro de que deseas continuar?"
+        isOpen={isOpenDelete}
+        setOpenAlert={handleOpenDelete}
+        funDelete={handleDeleteEmployee}
       />
     </div>
   );

@@ -28,12 +28,13 @@ export function BranchSelected() {
   const { isMobile } = useSidebar();
 
   //funcion para cambiar el id de la sucursal en el contexto
-  const { setBranchId } = useBranch();
+  const { setBranchId, currentBranch } = useBranch();
 
   //logica de obtención de sucursales
   const { data: branches } = useGetBranches();
-  //brach activa
-  const [brachActive, setBranchActive] = React.useState<BranchOutput>();
+  //branch activa
+  const branchContext = branches?.find((b) => b.id === currentBranch);
+  const [branchActive, setBranchActive] = React.useState<BranchOutput | undefined>(branchContext);
   //funcion para cambiar la sucursal activa y actualizar el contexto
   const handleSetBranch = (branchId: string | null, branch?: BranchOutput) => {
     setBranchId(branchId);
@@ -58,7 +59,7 @@ export function BranchSelected() {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {!brachActive ? "Vista Global" : brachActive.branchName}
+                  {!branchActive ? "Vista Global" : branchActive.branchName}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto" />

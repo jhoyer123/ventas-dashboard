@@ -8,6 +8,7 @@ import {
   Command,
   Frame,
   GalleryVerticalEnd,
+  icons,
   Map,
   PieChart,
   Settings2,
@@ -168,8 +169,13 @@ const data = {
       icon: PieChart,
     },
     {
-      name: "Home",
-      url: "/dashboard/home",
+      name: "Productos",
+      url: "/dashboard/product",
+      icon: Map,
+    },
+    {
+      name: "Categorias",
+      url: "/dashboard/categories",
       icon: Map,
     },
   ],

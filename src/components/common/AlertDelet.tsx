@@ -13,7 +13,7 @@ interface AlertDeleteProps {
   title: string;
   description: string;
   isOpen: boolean;
-  setOpenAlert: (open: boolean) => void;
+  setOpenAlert: () => void;
   funDelete: () => void;
 }
 
