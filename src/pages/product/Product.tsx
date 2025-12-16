@@ -1,26 +1,14 @@
 import { DataTable } from "../../components/common/tabla/DataTable";
 import { DebouncedInput } from "../../components/common/tabla/DebouncedInput";
 import { Button } from "@/components/ui/button";
-//import { columnsPersonal } from "./columnsEmployee";
-import useGetEmployee from "../../hooks/employee/useGetEmployee";
-// Importamos el nuevo Hook
 import { useServerTableState } from "../../components/common/tabla/useServerTableState";
 //context de la sucursal
 import { useBranch } from "../../context/BranchContext";
-import { ModalEmployee } from "@/components/Eployee/ModalEmployee";
-import { useState } from "react";
-//tipo para el formulario de empleado
-import { type Employee, type FormEmployeeInput } from "@/types/employee";
-//importar el hook de creacion de empleado
-import { useCreateEmployee } from "@/hooks/employee/useCreateEmployee";
-import { toast } from "sonner";
-import { useUpdateEmployee } from "@/hooks/employee/useUpdateEmployee";
-import { useDeleteEmployee } from "@/hooks/employee/useDeleteEmployee";
-import { AlertDelete } from "@/components/common/AlertDelet";
+//hook para obtener productos
 import useGetprodut from "@/hooks/product/useGetProduct";
+//columnas de la tabla
 import { columnsProduct } from "./ColumnsProduct";
 import { Link } from "react-router-dom";
-//context de branch
 
 export default function Product() {
   //logica de la tabla
@@ -29,8 +17,10 @@ export default function Product() {
   //usamos el contexto de sucursal
   const { currentBranch } = useBranch();
 
+  //obtenemos los productos segun el estado de la tabla y la sucursal actual
   const { data, isLoading } = useGetprodut(tableState, currentBranch);
-  //console.log("data products:", data);
+
+  
 
   return (
     // calcular alture - 64px del header
@@ -40,8 +30,8 @@ export default function Product() {
         <h1 className="text-2xl font-bold text-gray-900">Lista de Productos</h1>
 
         <div className="flex items-center gap-2">
-          <Button className="cursor-pointer">
-            <Link to="../createp">Agregar producto</Link>
+          <Button asChild  className="cursor-pointer relative">
+            <Link to="../createp" className="absolute inset-0">Agregar producto</Link>
           </Button>
           <DebouncedInput
             valueDafault={tableState.globalFilter ?? ""}
@@ -64,25 +54,6 @@ export default function Product() {
           isLoading={isLoading}
         />
       </div>
-
-      {/* Renderizar Modal de acciones */}
-      {/* <ModalEmployee
-        isOpen={isOpen}
-        setOpen={handleOpen}
-        onSubmit={handleSubmit}
-        initialValues={empSelected}
-        branchIdC={currentBranch || undefined}
-        isViewMode={disableMod}
-      /> */}
-
-      {/* modal de eliminacion */}
-      {/* <AlertDelete
-        title="Eliminar empleado"
-        description="El empleado se eliminará permanentemente. ¿Estás seguro de que deseas continuar?"
-        isOpen={isOpenDelete}
-        setOpenAlert={handleOpenDelete}
-        funDelete={handleDeleteEmployee}
-      /> */}
     </div>
   );
 }

@@ -40,10 +40,15 @@ const AppRouter = () => {
           <Route index element={<Dashboard />} />
           {/* rutas de empleados */}
           <Route path="personal" element={<Personal />} />
-          <Route path="sucursales" element={<Branch />} />
+          <Route path="branches" element={<Branch />} />
           <Route path="categories" element={<Category />} />
-          <Route path="product" element={<Product />} />
+          <Route path="products" element={<Product />} />
+          {/* ruta de creación del producto */}
           <Route path="createp" element={<CreateProduct />} />
+          {/* ruta de edición del producto */}
+          <Route path="editp/:id" element={<CreateProduct />} />
+          {/* modo vista */}
+          <Route path="viewp/:id" element={<CreateProduct mode={"view"} />} />
         </Route>
       </Routes>
       <Toaster theme="dark" />

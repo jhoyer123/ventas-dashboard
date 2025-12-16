@@ -71,6 +71,7 @@ const FormEmployee = ({
               <Input
                 {...register("name")}
                 placeholder="Ingresa el nombre del empleado"
+                className="bg-white"
               />
               {errors.name && (
                 <p className="text-sm text-red-500 mt-1">
@@ -193,7 +194,6 @@ const FormEmployee = ({
                           setOpen(false); // Cierra el popover
                         }}
                         // 🚀 5. Propiedad para Zod/RHF
-                        initialFocus
                       />
                     </PopoverContent>
                   </Popover>

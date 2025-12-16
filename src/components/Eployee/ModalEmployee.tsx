@@ -31,7 +31,7 @@ export function ModalEmployee({
 }: ModalEmployeeProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] bg-gray-300">
         <DialogHeader>
           <DialogTitle>
             {!initialValues ? "Crear un nuevo empleado" : "Actualizar empleado"}

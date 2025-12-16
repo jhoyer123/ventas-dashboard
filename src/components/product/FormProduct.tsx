@@ -1,165 +1,222 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // Shadcn components
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectItem,
-  SelectValue,
-  SelectContent,
-} from "@/components/ui/select";
 //type actegory
 import type { categoryType } from "@/types/category";
-//type product
+//import del supertype
+import { type ProductType } from "@/types/product";
+//type product types
 import {
   productFormSchema,
-  type ProductFormInput,
-  type productInputService,
-} from "@/types/product";
-import { Button } from "../ui/button";
-import { useState } from "react";
+  type ProductInputService,
+  productFormSchemaUpdate,
+} from "@/schemes/product";
+//components del form
 import RichTextEditor from "./RichTextEditor";
+import { FormInput } from "@/components/common/Form/FormInput";
+import { FormSelect } from "../common/Form/FormSelect";
+import InputFile from "./InputFile";
+import { useEffect } from "react";
 
 interface CreateProductProps {
   categories: categoryType[];
-  funParent: (data: productInputService) => void;
-  initialData?: ProductFormInput;
+  funParent: (data: ProductInputService) => void;
+  initialData?: ProductType;
+  mode: "create" | "update" | "view";
 }
 
 const FormProduct = ({
   categories,
   funParent,
   initialData,
+  mode,
 }: CreateProductProps) => {
   const {
     register,
     control,
     handleSubmit,
-    setValue,
     reset,
+    setValue,
     formState: { errors },
-  } = useForm<ProductFormInput>({
-    resolver: zodResolver(productFormSchema),
+  } = useForm<ProductType>({
+    resolver: zodResolver(
+      mode === "update" ? productFormSchemaUpdate : productFormSchema
+    ),
     defaultValues: initialData || {
-      activo: true, // por ejemplo
-      categoryId: "",
+      categoryId: undefined,
+      imageToDelete: [],
     },
   });
 
+  //hidratar el Form
+  useEffect(() => {
+    if ((mode === "update" || mode === "view") && initialData) {
+      reset({
+        nameProd: initialData.nameProd,
+        sku: initialData.sku ?? "",
+        brand: initialData.brand ?? "",
+        price: initialData.price,
+        cost: initialData.cost,
+        description: initialData.description,
+        categoryId: initialData.categoryId,
+
+        // imágenes existentes
+        imageExisting: initialData.imageExisting,
+        imageToDelete: [],
+      });
+    }
+  }, [initialData]);
+
+  //refinar las categorias para el select
+  const categoryOptions = categories.map((cat) => ({
+    value: cat.id,
+    label: cat.nameCat,
+  }));
+
   // Función helper para transformar los datos
-  function transformProductData(data: ProductFormInput) {
+  function transformProductData(data: ProductType) {
     return {
       ...data,
-      price: parseFloat(data.price),
-      cost: parseFloat(data.cost),
-      images: Array.from(data.images),
+      images: Array.from(data.images || []),
     };
   }
-
-  //estado para las imagenes
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
-
-  const onSubmit = (data: ProductFormInput) => {
-    // Transforma los datos manualmente después de la validación del formulario
+  //manejo del submit
+  const onSubmit = (data: ProductType) => {
     const transformedData = transformProductData(data);
-    console.log("Datos transformados:", transformedData);
+    console.log("Transformed Data:", transformedData);
     funParent(transformedData);
-    reset();
-    setPreviewImages([]);
-    setSelectedImages([]);
+    //Forzamos el valor a undefined explícitamente
+    reset({
+      ...initialData, // o valores por defecto
+      nameProd: "",
+      brand: "",
+      sku: "",
+      categoryId: undefined, // CLAVE: debe ser undefined
+      description: "",
+      price: 0,
+      cost: 0,
+      images: undefined,
+      imageExisting: [],
+      imageToDelete: [],
+    });
   };
 
-  const handleRemoveImage = (index: number) => {
-    const newFiles = selectedImages.filter((_, i) => i !== index);
-    const newPreviews = previewImages.filter((_, i) => i !== index);
-
-    setSelectedImages(newFiles);
-    setPreviewImages(newPreviews);
-
-    // Muy importante actualizar hook form
-    setValue("images", newFiles as any, { shouldValidate: true });
-  };
+  useEffect(() => {
+    register("imageToDelete");
+  }, [register]);
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="w-full mx-auto grid gap-6"
+      id="product-form"
     >
       <div className="grid md:grid-cols-2 gap-6">
         {/* Nombre del producto */}
-        <div className="grid gap-2">
-          <Label>Nombre del Producto</Label>
-          <Input {...register("nameProd")} placeholder="Ej: Laptop Gamer" />
-          {errors.nameProd && (
-            <p className="text-sm text-red-500">{errors.nameProd.message}</p>
-          )}
-        </div>
-        {/* Marca */}
-        <div className="grid gap-2">
-          <Label>Marca</Label>
-          <Input {...register("brand")} placeholder="Ej: Samsung" />
-        </div>
+        <FormInput
+          label="Nombre"
+          name="nameProd"
+          register={register}
+          errors={errors}
+          inputProps={{
+            type: "text",
+            placeholder: "Ej: Laptop Gamer",
+            disabled: mode === "view",
+          }}
+        />
+        <FormSelect
+          label="Categoría"
+          name="categoryId"
+          control={control}
+          options={categoryOptions ?? []}
+          placeholder="Categoría"
+          errors={errors}
+          disabled={mode === "view"}
+        />
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* SKU */}
-        <div className="grid gap-2">
-          <Label>SKU (Código Único)</Label>
-          <Input {...register("sku")} placeholder="Ej: PROD-00123" />
-          {errors.sku && (
-            <p className="text-sm text-red-500">{errors.sku.message}</p>
-          )}
-        </div>
-        {/* Categoría */}
-        <div className="grid gap-2">
-          <Label>Categoría</Label>
-          <Controller
-            control={control}
-            name="categoryId"
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecciona una categoría" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories?.map((c) => (
-                    <SelectItem value={c.id} key={c.id}>
-                      {c.nameCat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* SKU */}
+          <FormInput
+            label="Código"
+            name="sku"
+            register={register}
+            errors={errors}
+            inputProps={{
+              type: "text",
+              placeholder: "PROD-00123",
+              disabled: mode === "view",
+            }}
           />
-          {errors.categoryId && (
-            <p className="text-sm text-red-500">{errors.categoryId.message}</p>
-          )}
+          {/* Marca */}
+          <FormInput
+            label="Marca"
+            name="brand"
+            register={register}
+            errors={errors}
+            inputProps={{
+              type: "text",
+              disabled: mode === "view",
+              placeholder: "samsung",
+            }}
+          />
         </div>
-      </div>
 
-      {/* Precio + Costo */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="grid gap-2">
-          <Label>Precio</Label>
-          <Input type="number" {...register("price")} placeholder="1200" />
-          {errors.price && (
-            <p className="text-sm text-red-500">{errors.price.message}</p>
-          )}
-        </div>
-        <div className="grid gap-2">
-          <Label>Costo</Label>
-          <Input type="number" {...register("cost")} placeholder="900" />
-          {errors.cost && (
-            <p className="text-sm text-red-500">{errors.cost.message}</p>
-          )}
+        {/* Precio + Costo */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid gap-2">
+            {/* precio */}
+            <FormInput
+              label="Precio"
+              name="price"
+              register={register}
+              errors={errors}
+              inputProps={{
+                type: "number",
+                step: "0.01",
+                min: 0,
+                placeholder: "0.00",
+                disabled: mode === "view",
+              }}
+            />
+          </div>
+          {/* costo */}
+          <div className="grid gap-2">
+            {/* <FormInput
+              type="number"
+              label="Costo"
+              name="cost"
+              placeholder="900"
+              register={(name) => register(name, { valueAsNumber: true })}
+              errors={errors}
+              inputProps={{
+                type: "number",
+                step: "0.01",
+                min: 0,
+                placeholder: "0.00",
+              }}
+            /> */}
+            <FormInput
+              label="Costo"
+              name="cost"
+              register={register}
+              errors={errors}
+              inputProps={{
+                type: "number",
+                step: "0.01",
+                min: 0,
+                placeholder: "0.00",
+                disabled: mode === "view",
+              }}
+            />
+          </div>
         </div>
       </div>
 
       {/* descripcion */}
-      <div>
+      <div className="grid gap-2">
         <Label>Descripción</Label>
         {/* Rich Text con Tiptap */}
         <Controller
@@ -169,80 +226,35 @@ const FormProduct = ({
             <RichTextEditor
               value={field.value || ""}
               onChange={field.onChange}
+              disabled={mode === "view"}
             />
           )}
         />
-        {errors.description && <p>{errors.description.message}</p>}
+        {errors.description && (
+          <p className="text-sm text-red-500">{errors.description.message}</p>
+        )}
       </div>
 
-      {/* activar o desactivar producto */}
-      <div className="grid gap-2">
-        <div className="flex items-center gap-2">
-          <input id="activo" type="checkbox" {...register("activo")} />
-          <label htmlFor="activo" className="text-sm font-medium">
-            Activo (visible en catálogo)
-          </label>
-        </div>
-        <p className="text-xs text-gray-500">
-          Desactiva para ocultar este producto en la tienda sin borrarlo.
-        </p>
-      </div>
-
-      {/* input para subir imagenes */}
+      {/* input images */}
       <div className="grid gap-2">
         <Label>Imágenes del producto</Label>
-        <p className="text-xs text-red-500">Debes subir al menos una imagen.</p>
-        <Input
-          type="file"
-          accept="image/*"
-          multiple
-          {...register("images")}
-          onChange={(e) => {
-            const files = Array.from(e.target.files || []);
-            setSelectedImages(files);
-            const urls = files.map((file) => URL.createObjectURL(file));
-            setPreviewImages(urls);
-          }}
+        <Controller
+          name="images"
+          control={control}
+          render={({ field: { onChange, value, onBlur } }) => (
+            <InputFile
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={errors.images?.message}
+              maxFiles={5}
+              maxSizeMB={5}
+              imgExisting={initialData?.imageExisting}
+              setValue={setValue}
+              disabled={mode === "view"}
+            />
+          )}
         />
-
-        {/* {errors.images && (
-          <p className="text-sm text-red-500">{errors.images.message}</p>
-        )} */}
-      </div>
-      {/* previsualización de imágenes */}
-      {previewImages.length > 0 && (
-        <div className="flex gap-4 flex-wrap">
-          {previewImages.map((src, index) => (
-            <div key={index} className="relative">
-              <img
-                src={src}
-                className="w-24 h-24 object-cover rounded-md border"
-              />
-
-              {/* Botón eliminar */}
-              <button
-                type="button"
-                className="absolute top-1 right-1 bg-red-500 text-white rounded-full px-2 text-xs"
-                onClick={() => handleRemoveImage(index)}
-              >
-                X
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/*botones */}
-      <div className="flex gap-4 w-full justify-between mt-4">
-        {/* boton de cancelar y volver */}
-        <Button type="button" className="cursor-pointer" variant="outline">
-          Cancelar
-        </Button>
-
-        {/* Botón de enviar */}
-        <Button type="submit" className="cursor-pointer">
-          Crear Producto
-        </Button>
       </div>
     </form>
   );

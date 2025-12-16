@@ -2,14 +2,17 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
-export default function RichTextEditor({ value, onChange }: Props) {
+export default function RichTextEditor({ value, onChange, disabled }: Props) {
+  const [, forceUpdate] = useState({});
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -23,6 +26,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
       }),
     ],
     content: value,
+    editable: !disabled,
     editorProps: {
       attributes: {
         class: "prose prose-sm max-w-none focus:outline-none min-h-[150px] p-3",
@@ -30,9 +34,17 @@ export default function RichTextEditor({ value, onChange }: Props) {
     },
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
+      forceUpdate({}); // Forzar actualización de la UI
+    },
+    onSelectionUpdate: () => {
+      forceUpdate({}); // Actualizar cuando cambia la selección
     },
   });
-
+  //deshabilitar editor en modo view
+  useEffect(() => {
+    if (!editor) return;
+    editor.setEditable(!disabled);
+  }, [disabled, editor]);
   // Sincronizar valor externo con el editor
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
@@ -55,17 +67,20 @@ export default function RichTextEditor({ value, onChange }: Props) {
   }) => (
     <button
       type="button"
-      onMouseDown={(e) => {
-        e.preventDefault(); // Previene que el editor pierda el foco
+      onClick={(e) => {
+        e.preventDefault();
         onClick();
+        // Forzar actualización inmediata del estado
+        setTimeout(() => forceUpdate({}), 0);
       }}
       title={title}
       className={`
         px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-150
+        focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1
         ${
           isActive
-            ? "bg-blue-600 text-white shadow-sm"
-            : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
+            ? "bg-blue-600 text-white shadow-lg scale-105 ring-2 ring-blue-300"
+            : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300 hover:border-gray-400 hover:shadow-sm"
         }
       `}
     >
@@ -76,167 +91,94 @@ export default function RichTextEditor({ value, onChange }: Props) {
   return (
     <div className="w-full border border-gray-300 rounded-lg overflow-hidden shadow-sm">
       {/* TOOLBAR */}
-      <div className="flex flex-wrap gap-2 p-3 bg-gray-50 border-b border-gray-300">
-        {/* Formato de texto */}
-        <div className="flex gap-1">
-          <ToolbarButton
-            isActive={editor.isActive("bold")}
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            title="Negrita (Ctrl+B)"
-          >
-            <strong>B</strong>
-          </ToolbarButton>
+      {!disabled && (
+        <div className="flex flex-wrap gap-2 p-3 bg-gray-50 border-b border-gray-300">
+          {/* Formato de texto */}
+          <div className="flex gap-1">
+            <ToolbarButton
+              isActive={editor.isActive("bold")}
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              title="Negrita (Ctrl+B)"
+            >
+              <strong>B</strong>
+            </ToolbarButton>
 
-          <ToolbarButton
-            isActive={editor.isActive("italic")}
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            title="Cursiva (Ctrl+I)"
-          >
-            <em>I</em>
-          </ToolbarButton>
+            <ToolbarButton
+              isActive={editor.isActive("italic")}
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              title="Cursiva (Ctrl+I)"
+            >
+              <em>I</em>
+            </ToolbarButton>
 
-          <ToolbarButton
-            isActive={editor.isActive("underline")}
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            title="Subrayado (Ctrl+U)"
-          >
-            <u>U</u>
-          </ToolbarButton>
+            <ToolbarButton
+              isActive={editor.isActive("underline")}
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+              title="Subrayado (Ctrl+U)"
+            >
+              <u>U</u>
+            </ToolbarButton>
 
-          <ToolbarButton
-            isActive={editor.isActive("strike")}
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            title="Tachado"
-          >
-            <s>S</s>
-          </ToolbarButton>
+            <ToolbarButton
+              isActive={editor.isActive("strike")}
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              title="Tachado"
+            >
+              <s>S</s>
+            </ToolbarButton>
+          </div>
+
+          {/* Separador */}
+          <div className="w-px bg-gray-300 h-8 self-center"></div>
+
+          {/* Encabezados */}
+          <div className="flex gap-1">
+            <ToolbarButton
+              isActive={editor.isActive("heading", { level: 1 })}
+              onClick={() =>
+                editor.chain().focus().toggleHeading({ level: 1 }).run()
+              }
+              title="Título 1"
+            >
+              H1
+            </ToolbarButton>
+
+            <ToolbarButton
+              isActive={editor.isActive("heading", { level: 2 })}
+              onClick={() =>
+                editor.chain().focus().toggleHeading({ level: 2 }).run()
+              }
+              title="Título 2"
+            >
+              H2
+            </ToolbarButton>
+
+            <ToolbarButton
+              isActive={editor.isActive("heading", { level: 3 })}
+              onClick={() =>
+                editor.chain().focus().toggleHeading({ level: 3 }).run()
+              }
+              title="Título 3"
+            >
+              H3
+            </ToolbarButton>
+          </div>
+
+          {/* Separador */}
+          <div className="w-px bg-gray-300 h-8 self-center"></div>
+
+          {/* Listas */}
+          <div className="flex gap-1">
+            <ToolbarButton
+              isActive={editor.isActive("bulletList")}
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+              title="Lista con viñetas"
+            >
+              • Lista
+            </ToolbarButton>
+          </div>
         </div>
-
-        {/* Separador */}
-        <div className="w-px bg-gray-300 h-8 self-center"></div>
-
-        {/* Encabezados */}
-        <div className="flex gap-1">
-          <ToolbarButton
-            isActive={editor.isActive("heading", { level: 1 })}
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 1 }).run()
-            }
-            title="Título 1"
-          >
-            H1
-          </ToolbarButton>
-
-          <ToolbarButton
-            isActive={editor.isActive("heading", { level: 2 })}
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-            title="Título 2"
-          >
-            H2
-          </ToolbarButton>
-
-          <ToolbarButton
-            isActive={editor.isActive("heading", { level: 3 })}
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 3 }).run()
-            }
-            title="Título 3"
-          >
-            H3
-          </ToolbarButton>
-        </div>
-
-        {/* Separador */}
-        <div className="w-px bg-gray-300 h-8 self-center"></div>
-
-        {/* Listas */}
-        <div className="flex gap-1">
-          <ToolbarButton
-            isActive={editor.isActive("bulletList")}
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            title="Lista con viñetas"
-          >
-            • Lista
-          </ToolbarButton>
-
-          <ToolbarButton
-            isActive={editor.isActive("orderedList")}
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            title="Lista numerada"
-          >
-            1. Lista
-          </ToolbarButton>
-        </div>
-
-        {/* Separador */}
-        {/* <div className="w-px bg-gray-300 h-8 self-center"></div> */}
-
-        {/* Cita */}
-        {/* <ToolbarButton
-          isActive={editor.isActive("blockquote")}
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          title="Cita"
-        >
-          " Cita
-        </ToolbarButton> */}
-
-        {/* Separador */}
-        <div className="w-px bg-gray-300 h-8 self-center"></div>
-
-        {/* Alineación */}
-        <div className="flex gap-1">
-          <ToolbarButton
-            isActive={editor.isActive({ textAlign: "left" })}
-            onClick={() => editor.chain().focus().setTextAlign("left").run()}
-            title="Alinear a la izquierda"
-          >
-            ⬅️
-          </ToolbarButton>
-
-          <ToolbarButton
-            isActive={editor.isActive({ textAlign: "center" })}
-            onClick={() => editor.chain().focus().setTextAlign("center").run()}
-            title="Centrar"
-          >
-            ⬆️
-          </ToolbarButton>
-
-          <ToolbarButton
-            isActive={editor.isActive({ textAlign: "right" })}
-            onClick={() => editor.chain().focus().setTextAlign("right").run()}
-            title="Alinear a la derecha"
-          >
-            ➡️
-          </ToolbarButton>
-        </div>
-
-        {/* Separador */}
-        <div className="w-px bg-gray-300 h-8 self-center"></div>
-
-        {/* Línea horizontal */}
-        <ToolbarButton
-          isActive={false}
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          title="Línea horizontal"
-        >
-          ―
-        </ToolbarButton>
-
-        {/* Limpiar formato */}
-        <button
-          type="button"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            editor.chain().focus().clearNodes().unsetAllMarks().run();
-          }}
-          title="Limpiar formato"
-          className="px-3 py-1.5 rounded-md text-sm font-medium bg-red-50 text-red-700 hover:bg-red-100 border border-red-300 transition-all duration-150"
-        >
-          🧹 Limpiar
-        </button>
-      </div>
+      )}
 
       {/* EDITOR */}
       <EditorContent
@@ -277,19 +219,6 @@ export default function RichTextEditor({ value, onChange }: Props) {
                    [&_.ProseMirror_u]:underline
                    [&_.ProseMirror_s]:line-through"
       />
-
-      {/* Info de ayuda */}
-      <div className="px-4 py-2 bg-gray-50 border-t border-gray-300 text-xs text-gray-500">
-        💡 Usa{" "}
-        <kbd className="px-1 py-0.5 bg-gray-200 rounded text-gray-700">
-          Ctrl+B
-        </kbd>{" "}
-        para negrita,
-        <kbd className="px-1 py-0.5 bg-gray-200 rounded text-gray-700 ml-1">
-          Ctrl+I
-        </kbd>{" "}
-        para cursiva
-      </div>
     </div>
   );
 }

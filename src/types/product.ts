@@ -24,39 +24,28 @@ export interface ProductImage {
   product_id: string;
   image_url: string;
   position: number;
-  createdAt: string;
-  updatedAt: string;
+  created_at?: string;
+  updated_at?: string;
 }
-//lo validacion de campos del formulario
-import { z } from "zod";
 
-export const productFormSchema = z.object({
-  sku: z.string().optional(),
-  nameProd: z.string().min(1, "El nombre del producto es obligatorio"),
-  //slug: z.string().optional(),
-  price: z.string().min(1, "El precio es obligatorio"),
-  cost: z.string().min(1, "El costo es obligatorio"),
-  description: z.string().optional(),
-  activo: z.boolean(),
-  brand: z.string().optional(),
-  categoryId: z.string().min(1, "La categoría es obligatoria"),
-  images: z
-    .instanceof(FileList)
-    .refine((files) => files.length > 0, "Debes subir al menos una imagen"),
-});
-
-export type ProductFormInput = z.infer<typeof productFormSchema>;
-
-//lo que se envia al servicio
-export interface productInputService {
+//super type para el formulario
+export interface ProductType {
   sku?: string;
   nameProd: string;
   slug?: string;
   price: number;
   cost: number;
-  description?: string;
-  activo: boolean;
+  description: string;
   brand?: string;
   categoryId: string;
-  images: File[];
+
+  // superset de ambos schemas
+  images?: FileList | null;
+  imageExisting?: string[];
+  imageToDelete?: string[];
 }
+
+// Este es el tipo que usaremos para pasar los datos YA LIMPIOS al servicio.
+export type ProductSupT = Omit<ProductType, "images"> & {
+  images: File[]; // <--- Sobreescribimos FileList a File[]
+};

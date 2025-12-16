@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface ColumnProps {
   setOpenEdit: (empleado: Product) => void;
@@ -95,14 +96,18 @@ export const columnsProduct = (): ColumnDef<Product>[] => [
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem className="cursor-pointer">
-              <Eye className="mr-2 h-4 w-4" />
-              <span>Ver detalles</span>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link to={`/dashboard/viewp/${product.id}`}>
+                <Eye className="mr-2 h-4 w-4" />
+                <span>Ver Detalles</span>
+              </Link>
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => {}} className="cursor-pointer">
-              <Pencil className="mr-2 h-4 w-4" />
-              <span>Editar</span>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link to={`/dashboard/editp/${product.id}`}>
+                <Pencil className="mr-2 h-4 w-4" />
+                <span>Editar</span>
+              </Link>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
