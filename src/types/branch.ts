@@ -10,13 +10,14 @@ export interface updateType {
   dataBranch: BranchInput;
 }
 
-// Definición de tipos para el resultado de la sucursal (ajusta según tu esquema)
+// Definición de tipos para el resultado de la sucursal
 export interface BranchOutput {
   id: string; // uuid
   branchName: string; // DB: branchName
   address: string; // DB: address
   activo: boolean; // DB: activo
-  createdAt: string; // DB: createdAt
+  created_at: Date; // DB: createdAt
+  updated_at: Date; // DB: updatedAt
   // Campos "simulados" o calculados para que el dashboard se vea completo
   empleados?: number;
   managersName?: string;

@@ -5,7 +5,6 @@ import { type Product } from "@/types/product";
 import type { PaginatedResponse } from "@/components/common/tabla/api";
 
 const useGetEmployee = (tableState: any, branchId: string | null) => {
-  //console.log("Table State in useGetEmployee:", tableState);
   const paramsServer = {
     pageIndex: tableState.apiParams.page,
     pageSize: tableState.apiParams.limit,

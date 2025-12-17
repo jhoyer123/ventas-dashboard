@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // Shadcn components
 import { Label } from "@/components/ui/label";
 //type actegory
-import type { categoryType } from "@/types/category";
+import type { CategoryType } from "@/types/category";
 //import del supertype
 import { type ProductType } from "@/types/product";
 //type product types
@@ -20,7 +20,7 @@ import InputFile from "./InputFile";
 import { useEffect } from "react";
 
 interface CreateProductProps {
-  categories: categoryType[];
+  categories: CategoryType[];
   funParent: (data: ProductInputService) => void;
   initialData?: ProductType;
   mode: "create" | "update" | "view";

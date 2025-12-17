@@ -10,12 +10,11 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
+//schema de creacion del producto
 export const productFormSchema = z.object({
   sku: z.string().optional(),
   nameProd: z.string().min(1, "El nombre del producto es obligatorio"),
   slug: z.string().optional(),
-  //price: z.string().min(1, "El precio es obligatorio"),
-  //cost: z.string().min(1, "El costo es obligatorio"),
   price: z
     .number({ message: "El precio es obligatorio" })
     .min(0.01, "El precio debe ser mayor a 0"),
@@ -25,7 +24,6 @@ export const productFormSchema = z.object({
   description: z
     .string({ message: "La descripción es obligatoria" })
     .min(1, "La descripción es obligatoria"),
-  //activo: z.boolean(),
   brand: z.string().optional(),
   categoryId: z
     .string({ message: "La categoría es obligatoria" })
@@ -48,7 +46,7 @@ export const productFormSchema = z.object({
         message: "Solo se permiten imágenes (JPG, PNG, WebP)",
       }
     )
-    // 4️⃣ Validar que NINGÚN archivo exceda el tamaño máximo
+    //Validar que NINGÚN archivo exceda el tamaño máximo
     .refine(
       (files) => Array.from(files).every((file) => file.size <= MAX_FILE_SIZE),
       {
@@ -58,7 +56,7 @@ export const productFormSchema = z.object({
       }
     ),
 });
-
+//type para el formulario en modo creacion
 export type ProductFormInput = z.infer<typeof productFormSchema>;
 
 // Este es el tipo que usaremos para pasar los datos YA LIMPIOS al servicio.
@@ -123,13 +121,13 @@ export const productFormSchemaUpdate = z
     // imágenes a eliminar (URLs)
     imageToDelete: z.array(z.string()).optional(),
   })
-  // 🔥 VALIDACIÓN GLOBAL (AQUÍ ESTÁ LA CLAVE)
+  //VALIDACIÓN GLOBAL (AQUÍ ESTÁ LA CLAVE)
   .superRefine((data, ctx) => {
     const newCount = data.images?.length ?? 0;
     const existingCount = data.imageExisting?.length ?? 0;
     const total = newCount + existingCount;
 
-    // ❌ no puede quedar en 0
+    //no puede quedar en 0
     if (total === 0) {
       ctx.addIssue({
         path: ["images"],
@@ -138,7 +136,7 @@ export const productFormSchemaUpdate = z
       });
     }
 
-    // ❌ no puede exceder el máximo
+    //no puede exceder el máximo
     if (total > MAX_FILES) {
       ctx.addIssue({
         path: ["images"],

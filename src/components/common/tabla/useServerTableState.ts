@@ -44,7 +44,7 @@ export function useServerTableState({
       page: pagination.pageIndex + 1, // API necesita página base 1
       limit: pagination.pageSize,
       search: globalFilter,
-      sortField: sortItem?.id || "createdAt", // Campo a ordenar (por defecto 'createdAt')
+      sortField: sortItem?.id || "created_at", // Campo a ordenar (por defecto 'createdAt')
       sortOrder: sortItem?.desc ? "desc" : "asc",
     };
   }, [pagination, sorting, globalFilter]);

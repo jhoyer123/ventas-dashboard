@@ -1,0 +1,103 @@
+import { type ColumnDef } from "@tanstack/react-table";
+import { type CategoryType } from "@/types/category";
+import {
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Eye /* Calendar */,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+
+interface props {
+  setOpenEdit: (empleado: CategoryType) => void;
+  setOpenView: (empleado: CategoryType, disable: boolean) => void;
+  setOpenDelete: (empleado: CategoryType) => void;
+}
+
+export const columnsCategory = ({
+  setOpenEdit,
+  setOpenView,
+  setOpenDelete,
+}: props): ColumnDef<CategoryType>[] => [
+  {
+    accessorKey: "nameCat",
+    header: "Nombre Categoría",
+    enableSorting: true,
+  },
+  {
+    accessorKey: "description",
+    header: "Descripción",
+    enableSorting: false,
+    cell: ({ row }) => {
+      const description = row.original.description;
+      return (
+        <div className="max-w-sm truncate" title={description}>
+          {description}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "total_products",
+    header: "Productos Asociados",
+    enableSorting: true,
+  },
+  {
+    id: "actions",
+    header: "Acciones",
+    cell: ({ row }) => {
+      const category = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-gray-100">
+              <span className="sr-only">Abrir menú</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem className="cursor-pointer">
+              <Eye className="mr-2 h-4 w-4" />
+              <span>Ver detalles</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={() => {
+                setOpenEdit(category);
+                console.log("Editar empleado:", category);
+              }}
+              className="cursor-pointer"
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              <span>Editar</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              onClick={() => {
+                setOpenDelete(category);
+              }}
+              className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              <span>Eliminar</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];

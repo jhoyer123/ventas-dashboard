@@ -9,18 +9,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { FormCategory } from "./FormCategory";
-import { type categoryInput } from "@/types/category";
+import { type categoryInput, type CategoryType } from "@/types/category";
 
 interface propsModalCategory {
   isOpen: boolean;
   setIsOpen: () => void;
   funSubParent: (data: categoryInput) => void;
+  initialData?: CategoryType;
 }
 
 export function ModalCategory({
   isOpen,
   setIsOpen,
   funSubParent,
+  initialData,
 }: propsModalCategory) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -32,13 +34,13 @@ export function ModalCategory({
           </DialogDescription>
         </DialogHeader>
         {/* formulario category */}
-        <FormCategory funSubParent={funSubParent} />
+        <FormCategory funSubParent={funSubParent} initialData={initialData} />
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancelar</Button>
           </DialogClose>
           <Button type="submit" form="form-category">
-            Crear
+            {initialData ? "Actualizar" : "Crear"}
           </Button>
         </DialogFooter>
       </DialogContent>

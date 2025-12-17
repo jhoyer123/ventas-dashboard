@@ -5,6 +5,7 @@ import {
   Pencil,
   Trash2,
   Eye /* Calendar */,
+  PackagePlus,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -18,12 +19,14 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 interface ColumnProps {
-  setOpenEdit: (empleado: Product) => void;
-  setOpenView: (empleado: Product, disable: boolean) => void;
-  setOpenDelete: (empleado: Product) => void;
+  setOpenDelete: (idProd: string) => void;
+  setOpenM: () => void;
 }
 
-export const columnsProduct = (): ColumnDef<Product>[] => [
+export const columnsProduct = ({
+  setOpenDelete,
+  setOpenM,
+}: ColumnProps): ColumnDef<Product>[] => [
   //mostrar nombre y la primera imgane del array de imagenes
   {
     accessorKey: "nameProd",
@@ -110,9 +113,20 @@ export const columnsProduct = (): ColumnDef<Product>[] => [
               </Link>
             </DropdownMenuItem>
 
+            <DropdownMenuItem
+              onClick={setOpenM}
+              className="cursor-pointer"
+            >
+              <PackagePlus className="mr-2 h-4 w-4" />
+              <span>Agregar a sucursal/es</span>
+            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
+            <DropdownMenuItem
+              onClick={() => setOpenDelete(product.id)}
+              className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               <span>Eliminar</span>
             </DropdownMenuItem>

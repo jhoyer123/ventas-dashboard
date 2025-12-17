@@ -1,11 +1,11 @@
 //lo que devuelve el servidor
 export interface Product {
   id: string;
-  activo: boolean;
+  deleted_at?: Date;
   brand?: string;
   categoryId: string;
   cost: number;
-  createdAt: string;
+  created_at: string;
   description?: string;
   endDate?: string;
   isOfferActive: boolean;
@@ -14,7 +14,7 @@ export interface Product {
   proceOffer?: number;
   sku?: string;
   slug?: string;
-  updatedAt: string;
+  updated_at: string;
   startDate?: string;
   product_images?: ProductImage[];
 }

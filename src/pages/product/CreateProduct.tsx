@@ -1,6 +1,6 @@
 import FormProduct from "@/components/product/FormProduct";
 //import del hook get category
-import { useGetCategory } from "@/hooks/category/useGetategory";
+import { useGetCategory } from "@/hooks/category/useGetcategory";
 //hook de creacion
 import { useCreateProduct } from "@/hooks/product/useCreateProduct";
 import { toast } from "sonner";

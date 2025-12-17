@@ -1,10 +1,12 @@
+//hook para obtener las categorias para la tabla dinamica
 import { useQuery } from "@tanstack/react-query";
-import { getEmployees } from "@/services/employeeService";
+//importamos el service de get
+import { getCategoriesT } from "@/services/categoryServices";
 //type employee
-import { type Employee } from "@/types/employee";
+import { type CategoryType } from "@/types/category";
 import type { PaginatedResponse } from "@/components/common/tabla/api";
 
-const useGetEmployee = (tableState: any, branchId: string | null) => {
+const useGetCategoryT = (tableState: any, branchId: string | null) => {
   const paramsServer = {
     pageIndex: tableState.apiParams.page,
     pageSize: tableState.apiParams.limit,
@@ -18,9 +20,9 @@ const useGetEmployee = (tableState: any, branchId: string | null) => {
         ]
       : [],
   };
-  return useQuery<PaginatedResponse<Employee>, Error>({
+  return useQuery<PaginatedResponse<CategoryType>, Error>({
     queryKey: [
-      "employees",
+      "categories",
       tableState.apiParams.page,
       tableState.apiParams.limit,
       tableState.apiParams.search,
@@ -29,10 +31,10 @@ const useGetEmployee = (tableState: any, branchId: string | null) => {
       branchId,
     ],
 
-    queryFn: () => getEmployees(paramsServer, branchId),
+    queryFn: () => getCategoriesT(paramsServer),
 
     retry: false,
   });
 };
 
-export default useGetEmployee;
+export default useGetCategoryT;

@@ -68,13 +68,16 @@ export const getProducts = async (
   const from = (params.pageIndex - 1) * params.pageSize;
   const to = from + params.pageSize - 1;
 
-  let query = supabase.from("products").select(
-    `
+  let query = supabase
+    .from("products")
+    .select(
+      `
     *,
     product_images (*)
   `,
-    { count: "exact" }
-  );
+      { count: "exact" }
+    )
+    .is("deleted_at", null);
 
   // Búsqueda global
   if (params.globalFilter) {
@@ -214,16 +217,43 @@ export const updateProduct = async (id: string, dataProducto: ProductSupT) => {
   return data;
 };
 
-// SOFT DELETE — desactivar producto
-export const deleteProduct = async (id: number) => {
-  const { data, error } = await supabase
-    .from("products")
-    .update({ activo: false })
-    .eq("id", id)
-    .select()
-    .single();
+// SOFT DELETE — desactivar producto mediante el campo deleted_at
+export const deleteProductG = async (id: string) => {
+  const { data, error } = await supabase.rpc("delete_product_global", {
+    p_id: id,
+  });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.message.includes("PRODUCT_HAS_STOCK_IN_BRANCHES")) {
+      throw new Error(
+        "El producto no se puede eliminar porque tiene stock en una o más sucursales."
+      );
+    }
 
-  return data; // producto desactivado
+    throw new Error("Error al eliminar el producto: " + error.message);
+  }
+
+  return data;
+};
+
+//ELIMINAR PRODUCTO DE UNA SUCURSAL ESPECIFICA
+export const deleteProductByBranch = async (id: string, branchId: string) => {
+  const { data, error } = await supabase.rpc("delete_product_from_branch", {
+    p_id: id,
+    b_id: branchId,
+  });
+
+  if (error) {
+    if (error.message.includes("BRANCH_PRODUCT_HAS_STOCK")) {
+      throw new Error(
+        "El producto no se puede eliminar de la sucursal porque tiene stock disponible."
+      );
+    }
+
+    throw new Error(
+      "Error al eliminar el producto de la sucursal: " + error.message
+    );
+  }
+
+  return data;
 };
