@@ -32,7 +32,10 @@ export const updateCategory = async (id: string, catData: categoryInput) => {
 
 //get categorias para los forms
 export const getCategories = async () => {
-  const { data, error } = await supabase.from("categories").select();
+  const { data, error } = await supabase
+    .from("categories")
+    .select()
+    .is("deleted_at", null);
 
   if (error) throw new Error(error.message);
 

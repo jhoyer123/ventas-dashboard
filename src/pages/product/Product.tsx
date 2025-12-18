@@ -1,22 +1,40 @@
+//imports para la tabla
 import { DataTable } from "../../components/common/tabla/DataTable";
 import { DebouncedInput } from "../../components/common/tabla/DebouncedInput";
-import { Button } from "@/components/ui/button";
 import { useServerTableState } from "../../components/common/tabla/useServerTableState";
+//columnas de la tabla
+import { columnsProduct } from "./ColumnsProduct";
 //context de la sucursal
 import { useBranch } from "../../context/BranchContext";
+//context del usuario
+import { useAuth } from "@/context/AuthContext";
 //hook para obtener productos
 import useGetprodut from "@/hooks/product/useGetProduct";
 //hook para eliminar producto simulado - soft delete de manera global
 import { useDeleteProduct } from "@/hooks/product/useDeleteProduct";
 //hook para eliminar producto de una sucursal especifica
 import { useDeleteProductE } from "@/hooks/product/useDeleteProductE";
-//columnas de la tabla
-import { columnsProduct } from "./ColumnsProduct";
+//hook para agregar producto a sucursal/es
+import { useStockBranch } from "@/hooks/stockBranch/useStockBranch";
+//hook para quitar stock a un producto en una sucursal
+import { useRemoveStockFromBranch } from "@/hooks/stockBranch/useRemoveStockFromBranch";
+//hook para transferir stock entre sucursales
+import { useTransferStock } from "@/hooks/stockBranch/useTransferStock";
+//type para el input de stock por sucursal
+import type { StockBranchI } from "@/types/stockProdBranch";
+//hook de logica de modales
+import { useProductModals } from "@/hooks/product/hooksLogic/useProductModals";
+import { ProductModals } from "./ProductModals";
+//shadcn - react
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { AlertDelete } from "@/components/common/AlertDelet";
-import { useState } from "react";
 import { toast } from "sonner";
-import { ModalBranches } from "@/components/product/ModalBranches";
+import { useAddStockBranch } from "@/hooks/stockBranch/useAddStockBranch";
+import type {
+  AddStockFormValues,
+  RemoveStockValues,
+  TransferStockValues,
+} from "@/schemes/branchProd";
 
 export default function Product() {
   //logica de la tabla
@@ -24,53 +42,113 @@ export default function Product() {
 
   //usamos el contexto de sucursal
   const { currentBranch } = useBranch();
+  //usamos el contexto de usuario
+  const { user } = useAuth();
 
   //obtenemos los productos segun el estado de la tabla y la sucursal actual
   const { data, isLoading } = useGetprodut(tableState, currentBranch);
 
-  //logica de eliminar producto
-  const [openAlert, setOpenAlert] = useState(false);
-  const [idProd, setIdProd] = useState<string | null>(null);
-
-  const handleOpenAlert = (id: string) => {
-    setIdProd(id);
-    setOpenAlert(!openAlert);
-  };
+  //usamos el hook de modales y sus funciones para abrir y cerrar
+  const { modal, openModal, closeModal } = useProductModals();
 
   //logica de elimnacion con condicion o es global o es especifica
-  const deleteProd = useDeleteProduct();
-  const deleteProdE = useDeleteProductE();
-
-  const handleDelete = () => {
-    if (!idProd) return;
-
+  const deleteProd = useDeleteProduct(); //global
+  const deleteProdE = useDeleteProductE(); //especifica
+  //funcion para eliminar producto
+  const handleDelete = (id: string) => {
     const promise = currentBranch
-      ? deleteProdE.mutateAsync({
-          id: idProd as string,
-          branchId: currentBranch,
-        })
-      : deleteProd.mutateAsync(idProd as string);
+      ? deleteProdE.mutateAsync({ id, branchId: currentBranch })
+      : deleteProd.mutateAsync(id);
+
     toast.promise(promise, {
       loading: "Eliminando producto...",
       success: currentBranch
-        ? "Producto eliminado de la sucursal correctamente"
-        : "Producto eliminado globalmente correctamente",
-      error: (err) => {
-        if (!currentBranch) {
-          return err.message || "Error al eliminar el producto";
-        } else {
-          return err.message || "Error al eliminar el producto de la sucursal";
-        }
-      },
+        ? "Producto eliminado de la sucursal"
+        : "Producto eliminado globalmente",
+      error: (err) => err.message || "Error al eliminar producto",
       position: "top-right",
       duration: 4000,
     });
-    setIdProd(null);
-    setOpenAlert(false);
   };
 
-  //logica para el modal de agregar a sucursal/es
-  const [openBranches, setOpenBranches] = useState(false);
+  //logica para agregar producto a sucursal/es
+  const addprod = useStockBranch();
+  //funcion para agregar producto a sucursal/es
+  const handleAddProdBranch = (
+    dataStock: StockBranchI[],
+    productId: string
+  ) => {
+    const promise = addprod.mutateAsync({
+      dataStock,
+      pId: productId,
+    });
+
+    toast.promise(promise, {
+      loading: "Agregando producto a sucursal/es...",
+      success: "Producto agregado a sucursal/es correctamente",
+      error: (err) =>
+        err.message || "Error al agregar el producto a sucursal/es",
+      position: "top-right",
+      duration: 4000,
+    });
+  };
+
+  //logica para agregar stock a un producto en la sucursal actual
+  const addStock = useAddStockBranch();
+  //funcion para agregar stock
+  const handleAddStock = (dataI: AddStockFormValues) => {
+    const promise = addStock.mutateAsync({
+      branchId: currentBranch!,
+      productId: modal.productId!,
+      dataI,
+      userId: user?.id!,
+    });
+    toast.promise(promise, {
+      loading: "Agregando stock...",
+      success: "Stock agregado correctamente",
+      error: (err) => err.message || "Error al agregar stock",
+      position: "top-right",
+      duration: 4000,
+    });
+  };
+
+  //logica para quitar stock a un producto en la sucursal actual
+  const removeStock = useRemoveStockFromBranch();
+  //funcion para quitar stock
+  const handleRemoveStock = (dataI: RemoveStockValues) => {
+    const promise = removeStock.mutateAsync({
+      branchId: currentBranch!,
+      productId: modal.productId!,
+      dataI,
+      userId: user?.id!,
+    });
+    toast.promise(promise, {
+      loading: "Quitando stock...",
+      success: "Stock quitado correctamente",
+      error: (err) => err.message || "Error al quitar stock",
+      position: "top-right",
+      duration: 4000,
+    });
+  };
+
+  //logica para transferir stock entre sucursales
+  const transferStock = useTransferStock();
+  //funcion para transferir stock
+  const handleTransferStock = (dataI: TransferStockValues) => {
+    const promise = transferStock.mutateAsync({
+      dataI,
+      branchFrom: currentBranch!,
+      userId: user?.id!,
+      productId: modal.productId!,
+    });
+    toast.promise(promise, {
+      loading: "Transfiriendo stock...",
+      success: "Stock transferido correctamente",
+      error: (err) => err.message || "Error al transferir stock",
+      position: "top-right",
+      duration: 4000,
+    });
+  };
 
   return (
     // calcular alture - 64px del header
@@ -78,7 +156,6 @@ export default function Product() {
       {/* HEADER - Altura fija */}
       <div className="flex items-center justify-between shrink-0">
         <h1 className="text-2xl font-bold text-gray-900">Lista de Productos</h1>
-
         <div className="flex items-center gap-2">
           {!currentBranch && (
             <Button asChild className="cursor-pointer relative">
@@ -99,8 +176,13 @@ export default function Product() {
       <div className="flex-1 min-h-0">
         <DataTable
           columns={columnsProduct({
-            setOpenDelete: handleOpenAlert,
-            setOpenM: () => setOpenBranches(!openBranches),
+            setOpenDelete: (id) => openModal("delete", id),
+            setOpenPAB: (id) => openModal("addBranch", id),
+            setOpenAdd: (id) => openModal("addBranchStock", id),
+            setOpenTransfer: (id, stockCurrent) =>
+              openModal("transfer", id, stockCurrent),
+            setOpenRemove: (id, stockCurrent) =>
+              openModal("remove", id, stockCurrent),
           })}
           data={data?.data || []}
           rowCount={data?.meta.total ?? 0}
@@ -112,22 +194,15 @@ export default function Product() {
         />
       </div>
 
-      {/* modal de alert para eliminar producto */}
-      <AlertDelete
-        title="Eliminar Producto"
-        description="¿Estás seguro de que deseas eliminar este producto de forma global de todas las sucursales? Esta acción no se puede deshacer."
-        isOpen={openAlert}
-        setOpenAlert={() => {
-          setOpenAlert(!openAlert);
-          setIdProd(null);
-        }}
-        funDelete={handleDelete}
-      />
-
-      {/* Modal para Agregar a sucursal/es */}
-      <ModalBranches
-        open={openBranches}
-        setOpen={() => setOpenBranches(!openBranches)}
+      {/* MODALES */}
+      <ProductModals
+        modal={modal}
+        closeModal={closeModal}
+        onDelete={handleDelete}
+        onAddBranch={handleAddProdBranch}
+        onAddStock={handleAddStock}
+        onRemoveStock={handleRemoveStock}
+        onTransferStock={handleTransferStock}
       />
     </div>
   );

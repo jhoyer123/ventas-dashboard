@@ -6,6 +6,8 @@ import {
   Trash2,
   Eye /* Calendar */,
   PackagePlus,
+  Plus,
+  Repeat,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,15 +19,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+//context de la sucursal
+import { useBranch } from "../../context/BranchContext";
 
 interface ColumnProps {
   setOpenDelete: (idProd: string) => void;
-  setOpenM: () => void;
+  setOpenPAB: (idProd: string) => void;
+  setOpenAdd: (idProd: string) => void;
+  setOpenTransfer: (idProd: string, stockCurrent: number) => void;
+  setOpenRemove: (idProd: string, stockCurrent: number) => void;
 }
 
 export const columnsProduct = ({
   setOpenDelete,
-  setOpenM,
+  setOpenPAB,
+  setOpenAdd,
+  setOpenTransfer,
+  setOpenRemove,
 }: ColumnProps): ColumnDef<Product>[] => [
   //mostrar nombre y la primera imgane del array de imagenes
   {
@@ -37,7 +47,7 @@ export const columnsProduct = ({
         <div className="flex items-center gap-3">
           <img
             loading="lazy"
-            src={row.original.product_images?.[0]?.image_url || ""}
+            src={row.original.main_image || undefined}
             alt={row.original.nameProd}
             className="w-10 h-10 object-cover rounded"
           />
@@ -50,13 +60,18 @@ export const columnsProduct = ({
   },
   {
     accessorKey: "sku",
-    header: "Codigo SKU",
+    header: "Cod. unico",
     enableSorting: true,
     cell: ({ row }) => (
       <span className="text-gray-600 font-mono text-sm">
         {row.original.sku}
       </span>
     ),
+  },
+  {
+    accessorKey: "category_name",
+    header: "Categoría",
+    enableSorting: true,
   },
   {
     accessorKey: "brand",
@@ -82,11 +97,17 @@ export const columnsProduct = ({
     enableSorting: true,
   },
   {
+    accessorKey: "total_stock",
+    header: "Stock Total",
+    enableSorting: true,
+  },
+  {
     id: "actions",
     header: "Acciones",
     cell: ({ row }) => {
       const product = row.original;
-
+      //sucursal actual
+      const { currentBranch } = useBranch();
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -105,21 +126,49 @@ export const columnsProduct = ({
                 <span>Ver Detalles</span>
               </Link>
             </DropdownMenuItem>
-
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link to={`/dashboard/editp/${product.id}`}>
-                <Pencil className="mr-2 h-4 w-4" />
-                <span>Editar</span>
-              </Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={setOpenM}
-              className="cursor-pointer"
-            >
-              <PackagePlus className="mr-2 h-4 w-4" />
-              <span>Agregar a sucursal/es</span>
-            </DropdownMenuItem>
+            {/* ESTO SOLO SE MUESTRA EN VISTA GLOBAL */}
+            {!currentBranch && (
+              <>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to={`/dashboard/editp/${product.id}`}>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    <span>Editar</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setOpenPAB(product.id)}
+                  className="cursor-pointer"
+                >
+                  <PackagePlus className="mr-2 h-4 w-4" />
+                  <span>Agregar a sucursal/es</span>
+                </DropdownMenuItem>
+              </>
+            )}
+            {/* ESTO SE CON LA VISTA ESPECIFICA DE SUCURSAL */}
+            {!!currentBranch && (
+              <>
+                <DropdownMenuItem onClick={() => setOpenAdd(product.id)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  <span>Aumentar Strock</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    setOpenRemove(product.id, product.total_stock as number)
+                  }
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  <span>Quitar Strock</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    setOpenTransfer(product.id, product.total_stock as number)
+                  }
+                >
+                  <Repeat className="mr-2 h-4 w-4" />
+                  <span>Transferir Strock</span>
+                </DropdownMenuItem>
+              </>
+            )}
 
             <DropdownMenuSeparator />
 

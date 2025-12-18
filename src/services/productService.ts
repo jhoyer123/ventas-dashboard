@@ -21,7 +21,6 @@ export const createProduct = async (dataProducto: ProductInputService) => {
     .single();
 
   if (error) {
-    console.log(error);
     throw new Error(error.message);
   }
 
@@ -46,12 +45,10 @@ export const createProduct = async (dataProducto: ProductInputService) => {
     });
 
     if (upload.error) {
-      //console.log(upload.error);
       throw new Error(upload.error.message);
     }
 
     if (insert.error) {
-      //console.log(insert.error);
       throw new Error(insert.error.message);
     }
   }
@@ -67,17 +64,42 @@ export const getProducts = async (
   // Calculamos la paginación
   const from = (params.pageIndex - 1) * params.pageSize;
   const to = from + params.pageSize - 1;
+  let query: any;
+  //ahora verificar si traer solo los productos de una sucursal o de todas
 
-  let query = supabase
-    .from("products")
-    .select(
-      `
-    *,
-    product_images (*)
-  `,
-      { count: "exact" }
+  if (!branchId) {
+    query = supabase.from("v_global_inventory").select("*", { count: "exact" });
+  } else {
+    query = supabase
+      .from("branchStocks")
+      .select(
+        `
+    stock,
+    product:products!inner (
+      id,
+      nameProd,
+      price,
+      sku,
+      cost,
+      brand,
+      isOfferActive,
+      created_at,
+      deleted_at,
+      category:categories (
+        nameCat
+      ),
+      product_images (
+        image_url
+      ),
+      tstocks:branchStocks (stock)
     )
-    .is("deleted_at", null);
+  `,
+        { count: "exact" }
+      )
+      .eq("branchId", branchId)
+      .is("product.deleted_at", null)
+      .limit(1, { foreignTable: "product.product_images" });
+  }
 
   // Búsqueda global
   if (params.globalFilter) {
@@ -85,11 +107,6 @@ export const getProducts = async (
     query = query.or(
       `nameProd.ilike.%${search}%,sku.ilike.%${search}%,brand.ilike.%${search}%,price.ilike.%${search}%`
     );
-  }
-
-  //ahora verificar si traer solo los empleados de una sucursal o de todas
-  if (branchId !== null) {
-    query = query.eq("branchId", branchId);
   }
 
   // Aplicamos ordenamiento
@@ -105,14 +122,23 @@ export const getProducts = async (
   // Ejecutamos la query
   const { data, error, count } = await query;
 
-  //console.log("Llamada");
   if (error) {
-    //console.error("Error en query:", error);
     throw error;
   }
-  console.log("Productos obtenidos:", data);
+
+  //refinamos los datos si es que es por sucursal
+  let dataRefined;
+  if (!!branchId) {
+    dataRefined = data.map((pr: any) => ({
+      ...pr.product,
+      total_stock: pr.stock,
+      category_name: pr.product.category.nameCat,
+      main_image: pr.product.product_images[0]?.image_url || null,
+    }));
+  }
   return {
-    data: data || [],
+    //data: !branchId ? data : data.map((item: any) => item.product),
+    data: !branchId ? data : dataRefined || [],
     meta: {
       total: count || 0,
       page: params.pageIndex,
@@ -133,7 +159,6 @@ export const getProductById = async (id: string) => {
   if (error) {
     throw new Error(error.message);
   }
-
   return data;
 };
 
@@ -203,12 +228,10 @@ export const updateProduct = async (id: string, dataProducto: ProductSupT) => {
       });
 
       if (upload.error) {
-        //console.log(upload.error);
         throw new Error(upload.error.message);
       }
 
       if (insert.error) {
-        //console.log(insert.error);
         throw new Error(insert.error.message);
       }
     }

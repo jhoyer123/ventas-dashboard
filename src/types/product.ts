@@ -16,7 +16,10 @@ export interface Product {
   slug?: string;
   updated_at: string;
   startDate?: string;
-  product_images?: ProductImage[];
+  //campos agregados no propios del producto en su tabla
+  main_image?: string;
+  category_name?: string;
+  total_stock?: number; //stock total en todas las sucursales
 }
 
 export interface ProductImage {

@@ -110,7 +110,7 @@ const CreateProduct = (mode: Props) => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 bg-gray-200 w-full flex flex-col items-center justify-center">
+    <div className="max-w-7xl mx-auto p-4 w-full flex flex-col items-center justify-center my-auto">
       <div className="flex w-full justify-between mb-6">
         <h1 className="text-2xl font-bold text-center my-auto">
           {mode?.mode === "view"

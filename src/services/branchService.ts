@@ -1,6 +1,35 @@
 import { supabase } from "@/api/supabaseClient";
 //importamos el type de branch
 import type { BranchInput, BranchOutput } from "@/types/branch";
+import { type updateType } from "@/types/branch";
+
+//funcion para obtener todas las sucursales donde no esta un producto
+export const getBranchWP = async (productId: string) => {
+  const { data: assigned, error: assignedError } = await supabase
+    .from("branchStocks")
+    .select("branchId")
+    .eq("productId", productId);
+
+  if (assignedError) {
+    throw new Error(assignedError.message);
+  }
+
+  const assignedBranchIds = assigned.map((item) => item.branchId);
+
+  let query = supabase.from("branches").select("*");
+
+  if (assignedBranchIds.length > 0) {
+    query = query.not("id", "in", `(${assignedBranchIds.join(",")})`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
 
 //función para obtener todas las sucursales
 export const getBranches = async (): Promise<BranchOutput[]> => {
@@ -23,8 +52,6 @@ export const createBranch = async (branchData: BranchInput) => {
 
   return data;
 };
-
-import { type updateType } from "@/types/branch";
 
 //funcion para actualizar una sucursal
 export const updateBranch = async ({ id, dataBranch }: updateType) => {
