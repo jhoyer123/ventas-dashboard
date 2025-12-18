@@ -187,7 +187,7 @@ const Branch = () => {
                   >
                     <Calendar size={14} />
                     <span>
-                      {new Date(sucursal.createdAt).toLocaleDateString()}
+                      {new Date(sucursal.created_at).toLocaleDateString()}
                     </span>
                   </div>
                 </div>

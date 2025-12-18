@@ -80,7 +80,7 @@ const Category = () => {
 
   //hook que trae los datos
   const tableState = useServerTableState({});
-  const { data, isLoading, error } = useGetCategoryT(tableState, null);
+  const { data, isLoading } = useGetCategoryT(tableState, null);
 
   return (
     <div className="max-w-7xl flex flex-col items-center justify-center mx-auto pt-5">

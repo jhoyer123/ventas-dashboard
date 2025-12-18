@@ -18,7 +18,6 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {

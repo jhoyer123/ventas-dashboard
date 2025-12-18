@@ -24,7 +24,7 @@ interface props {
 
 export const columnsCategory = ({
   setOpenEdit,
-  setOpenView,
+  //npmsetOpenView,
   setOpenDelete,
 }: props): ColumnDef<CategoryType>[] => [
   {
