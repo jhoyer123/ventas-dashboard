@@ -39,16 +39,16 @@ const FormProduct = ({
     reset,
     setValue,
     formState: { errors },
-  } = useForm<ProductType>({
+  } = useForm({
     resolver: zodResolver(
       mode === "update" ? productFormSchemaUpdate : productFormSchema
     ),
+    mode: "onChange",
     defaultValues: initialData || {
       categoryId: undefined,
       imageToDelete: [],
     },
   });
-
   //hidratar el Form
   useEffect(() => {
     if ((mode === "update" || mode === "view") && initialData) {
@@ -84,7 +84,6 @@ const FormProduct = ({
   //manejo del submit
   const onSubmit = (data: ProductType) => {
     const transformedData = transformProductData(data);
-    console.log("Transformed Data:", transformedData);
     funParent(transformedData);
     //Forzamos el valor a undefined explícitamente
     reset({
@@ -184,20 +183,6 @@ const FormProduct = ({
           </div>
           {/* costo */}
           <div className="grid gap-2">
-            {/* <FormInput
-              type="number"
-              label="Costo"
-              name="cost"
-              placeholder="900"
-              register={(name) => register(name, { valueAsNumber: true })}
-              errors={errors}
-              inputProps={{
-                type: "number",
-                step: "0.01",
-                min: 0,
-                placeholder: "0.00",
-              }}
-            /> */}
             <FormInput
               label="Costo"
               name="cost"

@@ -66,7 +66,6 @@ export const getProducts = async (
   const to = from + params.pageSize - 1;
   let query: any;
   //ahora verificar si traer solo los productos de una sucursal o de todas
-
   if (!branchId) {
     query = supabase.from("v_global_inventory").select("*", { count: "exact" });
   } else {
@@ -101,18 +100,37 @@ export const getProducts = async (
       .limit(1, { foreignTable: "product.product_images" });
   }
 
-  // Búsqueda global
+  // Búsqueda global corregida
   if (params.globalFilter) {
-    const search = params.globalFilter;
-    query = query.or(
-      `nameProd.ilike.%${search}%,sku.ilike.%${search}%,brand.ilike.%${search}%,price.ilike.%${search}%`
-    );
+    const search = `%${params.globalFilter}%`;
+
+    if (!branchId) {
+      // Caso Vista Global: Las columnas existen directamente en la raíz
+      query = query.or(
+        `nameProd.ilike.${search},sku.ilike.${search},brand.ilike.${search}`
+      );
+    } else {
+      // Caso Sucursal: Las columnas están en la tabla relacionada 'products'
+      query = query.or(
+        `nameProd.ilike.${search},sku.ilike.${search},brand.ilike.${search}`,
+        { foreignTable: "products" }
+      );
+    }
   }
 
-  // Aplicamos ordenamiento
+  // Aplicamos ordenamiento corregido
   if (params.sorting.length > 0) {
     params.sorting.forEach((sort) => {
-      query = query.order(sort.id, { ascending: !sort.desc });
+      if (!branchId) {
+        // Vista global: la columna está ahí
+        query = query.order(sort.id, { ascending: !sort.desc });
+      } else {
+        // Por sucursal: hay que indicarle que ordene por la columna del producto
+        query = query.order(sort.id, {
+          foreignTable: "products",
+          ascending: !sort.desc,
+        });
+      }
     });
   }
 
@@ -123,7 +141,8 @@ export const getProducts = async (
   const { data, error, count } = await query;
 
   if (error) {
-    throw error;
+    console.log(error);
+    throw new Error(error.message);
   }
 
   //refinamos los datos si es que es por sucursal

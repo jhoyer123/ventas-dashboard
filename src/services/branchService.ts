@@ -31,7 +31,7 @@ export const getBranchWP = async (productId: string) => {
   return data;
 };
 
-//función para obtener todas las sucursales
+//función para obtener todas las sucursales directo sin stats sin nada solo datos basicos
 export const getBranches = async (): Promise<BranchOutput[]> => {
   const { data, error } = await supabase.from("branches").select("*");
 
@@ -40,11 +40,21 @@ export const getBranches = async (): Promise<BranchOutput[]> => {
   return data;
 };
 
+//trae las sucursales para la vista de sucursales con stats
+export const getBranchesES = async () => {
+  const { data, error } = await supabase.rpc("get_branches_with_stats");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
 //función para crear una nueva sucursal
 export const createBranch = async (branchData: BranchInput) => {
   const { data, error } = await supabase
     .from("branches")
-    .insert({ branchName: branchData.branchName, address: branchData.address })
+    .insert({ branchName: branchData.branch_name, address: branchData.address })
     .select()
     .single();
 
@@ -58,7 +68,7 @@ export const updateBranch = async ({ id, dataBranch }: updateType) => {
   //lógica de actualización
   const { data, error } = await supabase
     .from("branches")
-    .update({ branchName: dataBranch.branchName, address: dataBranch.address })
+    .update({ branchName: dataBranch.branch_name, address: dataBranch.address })
     .eq("id", id)
     .select()
     .single();

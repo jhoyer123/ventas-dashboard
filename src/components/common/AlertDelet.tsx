@@ -15,6 +15,7 @@ interface AlertDeleteProps {
   isOpen: boolean;
   setOpenAlert: () => void;
   funDelete: () => void;
+  nameDelete?: string;
 }
 
 export function AlertDelete({
@@ -23,12 +24,15 @@ export function AlertDelete({
   isOpen,
   setOpenAlert,
   funDelete,
+  nameDelete,
 }: AlertDeleteProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={setOpenAlert}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogTitle>
+            {title}: <span className="text-red-500">{nameDelete}</span>
+          </AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/dialog";
 //importamos el formulario de sucursal
 import FormBranch from "./FormBranch";
-import { type BranchInput } from "@/types/branch";
+import { type BranchInput, type BranchOutput } from "@/types/branch";
 
 interface ModalAddBranchProps {
   isOpen: boolean;
   setOpen: (open: boolean) => void;
   onSubmit: (data: BranchInput) => void;
-  initialValues?: BranchInput;
+  initialValues?: BranchOutput;
 }
 
 export function ModalAddBranch({

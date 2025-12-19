@@ -20,10 +20,10 @@ interface DropDownActionProps {
 export const DropDownAction = ({ items }: DropDownActionProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="cursor-pointer">
-        <MoreHorizontalIcon className="text-gray-200" />
+      <DropdownMenuTrigger className="cursor-pointer text-black">
+        <MoreHorizontalIcon className="text-black" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="text-wrap max-w-60 mr-8">
+      <DropdownMenuContent className="text-wrap max-w-60 mr-8 text-black">
         <DropdownMenuLabel>Acción</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {items?.map((item, index) => (

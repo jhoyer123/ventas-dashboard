@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Users, Building2, Plus, Calendar } from "lucide-react";
+import { MapPin, Users, Building2, Plus, Calendar, Box } from "lucide-react";
 // Importamos el modal (asegúrate que la ruta sea correcta)
 import { ModalAddBranch } from "@/components/branch/ModalAddBranch";
 // Importamos el hook y tipos (asegúrate que la ruta sea correcta)
@@ -13,16 +13,18 @@ import { useUpdateBranch } from "@/hooks/branch/useUpdateBranch";
 import { toast } from "sonner";
 import { useDeleteBranch } from "@/hooks/branch/useDeleteBranch";
 import { AlertDelete } from "@/components/common/AlertDelet";
+//context de la surcursal
+import { useBranch } from "@/context/BranchContext";
 
 // --- Variables de color
-const CARD_BG = "bg-gray-900/90"; // Fondo de tarjetas
-const TEXT_LIGHT = "text-gray-200"; // Texto principal
-const TEXT_MUTED = "text-gray-200"; // Texto secundario/descripciones
 const BORDER_COLOR = "border-gray-600"; // Bordes sutiles
 const PRIMARY_COLOR = "bg-indigo-500 hover:bg-indigo-600 text-white"; // Botones y acentos primarios (el violeta/azul de la imagen)
-const PRIMARY_TEXT = "text-indigo-500";
 
 const Branch = () => {
+  //context sucursal
+  const { setBranchId, currentBranch } = useBranch();
+  //hook de obtención de sucursales
+  const { data: branches } = useGetBranches();
   //logica para delete y update
   const [branchS, setBranchS] = useState<BranchOutput | undefined>(undefined);
   // Lógica del modal
@@ -63,9 +65,6 @@ const Branch = () => {
     }
   };
 
-  //hook de obtención de sucursales
-  const { data: branches } = useGetBranches();
-
   //estado de la alerta de eliminación
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const handleOpenAlertDelete = () => {
@@ -85,65 +84,62 @@ const Branch = () => {
         position: "top-right",
         duration: 4000,
       });
+      //poner estado global de la sucrusal en nulo
+      if (currentBranch === idBranch) {
+        setBranchId(null);
+      }
     } catch (error) {
       console.error("Error capturado después de la mutación:", error);
     }
   };
 
   return (
-    <div className={`p-6 sm:p-8 font-sans text-black`}>
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header Section: Título y Acción Principal */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="px-4 sm:px-6 lg:px-8 py-6 font-sans text-black">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className={`text-2xl sm:text-3xl font-bold tracking-tight`}>
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
               Gestión de Sucursales
             </h1>
-            <p className={`mt-1 text-sm sm:text-base`}>
-              Administra las ubicaciones operativas de tu negocio.
+            <p className="mt-1 text-sm text-gray-500">
+              Administra las ubicaciones operativas de tu negocio
             </p>
           </div>
-          {/* Botón de Nueva Sucursal */}
+
           <Button
             onClick={() => {
               setBranchS(undefined);
               handleOpenModal();
             }}
-            className={`p-4 text-md cursor-pointer ${PRIMARY_COLOR}`}
+            className={`flex items-center gap-2 ${PRIMARY_COLOR}`}
           >
-            <Plus
-              size={18}
-              className="group-hover:rotate-90 transition-transform"
-            />
+            <Plus size={18} />
             <span>Nueva Sucursal</span>
           </Button>
         </div>
 
-        {/* Grid de Sucursales: Diseño "Card Enterprise" */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {branches?.map((sucursal) => (
             <div
               key={sucursal.id}
-              className={`group ${CARD_BG} rounded-xl border ${BORDER_COLOR} shadow-xl hover:shadow-2xl hover:border-indigo-500 transition-all duration-300 flex flex-col`}
+              className={`rounded-lg border ${BORDER_COLOR} bg-white shadow-sm hover:shadow-md transition`}
             >
-              {/* Card Header */}
+              {/* Card header */}
               <div
-                className={`p-5 border-b ${BORDER_COLOR} flex justify-between items-start`}
+                className={`flex items-start justify-between gap-3 p-4 border-b ${BORDER_COLOR}`}
               >
-                <div className="flex gap-3 items-center justify-center">
-                  <div
-                    className={`p-2.5 rounded-lg h-fit bg-indigo-900/50 text-indigo-400`}
-                  >
-                    <Building2 size={20} />
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2 rounded-md bg-indigo-100 text-indigo-600 shrink-0">
+                    <Building2 size={18} />
                   </div>
-                  <div>
-                    <h3
-                      className={`font-semibold ${TEXT_LIGHT} leading-tight group-hover:${PRIMARY_TEXT} transition-colors mx-auto`}
-                    >
-                      {sucursal.branchName}
-                    </h3>
-                  </div>
+
+                  <h3 className="font-medium text-gray-900 truncate">
+                    {sucursal.branch_name}
+                  </h3>
                 </div>
+
                 <DropDownAction
                   items={[
                     {
@@ -164,27 +160,25 @@ const Branch = () => {
                 />
               </div>
 
-              {/* Card Body */}
-              <div className="p-5 space-y-4 flex-1">
-                <div className={`flex items-start gap-3 text-sm ${TEXT_MUTED}`}>
-                  <MapPin
-                    size={16}
-                    className="mt-0.5 text-indigo-400 shrink-0"
-                  />
+              {/* Card body */}
+              <div className="p-4 space-y-3">
+                {/* Address */}
+                <div className="flex items-start gap-2 text-sm text-gray-600">
+                  <MapPin size={16} className="mt-0.5 shrink-0" />
                   <span className="line-clamp-2">{sucursal.address}</span>
                 </div>
 
-                {/* Datos derivados (Employees, CreatedAt) */}
-                <div className="flex items-center justify-between pt-2">
-                  <div
-                    className={`flex items-center gap-2 text-sm ${TEXT_LIGHT} bg-gray-700/50 px-3 py-1.5 rounded-md border ${BORDER_COLOR}`}
-                  >
-                    <Users size={14} className={PRIMARY_TEXT} />
-                    <span>{sucursal.empleados || 0} Empleados</span>
+                {/* Footer info */}
+                <div className="flex items-center justify-between text-xs text-gray-500 pt-2">
+                  <div className="flex items-center gap-1.5">
+                    <Users size={14} />
+                    <span>{sucursal.total_employees || 0} empleados</span>
                   </div>
-                  <div
-                    className={`flex items-center gap-2 text-xs ${TEXT_MUTED}`}
-                  >
+                  <div className="flex items-center gap-1.5">
+                    <Box size={14} />
+                    <span>{sucursal.total_products || 0} productos</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
                     <Calendar size={14} />
                     <span>
                       {new Date(sucursal.created_at).toLocaleDateString()}
@@ -207,7 +201,7 @@ const Branch = () => {
 
       {/* Alert de eliminación */}
       <AlertDelete
-        title="Eliminar Sucursal"
+        title="Eliminar"
         description="¿Estás seguro de que deseas eliminar esta sucursal? Esta acción no se puede deshacer."
         isOpen={isOpenDelete}
         setOpenAlert={handleOpenAlertDelete}
@@ -216,6 +210,7 @@ const Branch = () => {
             handleDeleteBranch(branchS.id);
           }
         }}
+        nameDelete={branchS?.branch_name}
       />
     </div>
   );

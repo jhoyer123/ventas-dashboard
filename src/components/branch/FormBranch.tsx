@@ -3,9 +3,10 @@ import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { BranchOutput } from "@/types/branch";
 
 const branchSchema = z.object({
-  branchName: z
+  branch_name: z
     .string()
     .nonempty("campo requerido")
     .min(3, "El nombre debe tener mas de 3 letras"),
@@ -19,7 +20,7 @@ type FormBranchInput = z.infer<typeof branchSchema>;
 
 interface BranchProps {
   funParent: (data: FormBranchInput) => void;
-  initialValues?: FormBranchInput;
+  initialValues?: BranchOutput;
 }
 
 const FormBranch = ({ funParent, initialValues }: BranchProps) => {
@@ -40,12 +41,12 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
         <div className="grid gap-3">
           <Label>Nombre de la Sucursal</Label>
           <Input
-            {...register("branchName")}
+            {...register("branch_name")}
             placeholder="Ingresa el nombre de la Sucursal"
           />
-          {errors.branchName && (
+          {errors.branch_name && (
             <p className="text-sm text-red-500 mt-1">
-              {errors.branchName.message}
+              {errors.branch_name.message}
             </p>
           )}
         </div>
@@ -64,6 +65,6 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
       </div>
     </form>
   );
-}
+};
 
 export default FormBranch;

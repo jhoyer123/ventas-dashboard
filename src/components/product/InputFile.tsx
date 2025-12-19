@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Upload, X, Plus } from "lucide-react";
-import { type UseFormSetValue } from "react-hook-form";
-import type { ProductType } from "@/types/product";
+//import { type UseFormSetValue } from "react-hook-form";
+//import type { ProductType } from "@/types/product";
 
 interface Props {
   value?: FileList | null;
@@ -12,7 +12,8 @@ interface Props {
   maxSizeMB?: number;
   disabled?: boolean;
   imgExisting?: string[];
-  setValue?: UseFormSetValue<ProductType>;
+  //setValue?: UseFormValue<ProductType>;
+  setValue?: any;
 }
 
 const InputFile = ({

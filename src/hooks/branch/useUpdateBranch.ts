@@ -13,18 +13,10 @@ export const useUpdateBranch = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches"] });
-      /* toast.success("Sucursal actualizada con éxito", {
-        position: "top-right",
-        duration: 4000,
-      }); */
     },
 
     onError: (error) => {
       console.error("Error al actualizar sucursal:", error.message);
-      /* toast.error("Error al actualizar sucursal", {
-        position: "top-right",
-        duration: 4000,
-      }); */
     },
   });
 };

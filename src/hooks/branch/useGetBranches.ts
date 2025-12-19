@@ -2,9 +2,9 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 //import lis types
 import type { BranchOutput } from "@/types/branch";
 //import del service
-import { getBranches } from "@/services/branchService";
+import { getBranchesES } from "@/services/branchService";
 
-// 3. El Custom Hook Profesional
+//El Custom Hook Profesional (este hook trae sucursales de una funcion RPC con stats)
 export const useGetBranches = () => {
   return useQuery<BranchOutput[], Error>({
     // La queryKey incluye los filtros. Si "filters" cambia,
@@ -12,7 +12,7 @@ export const useGetBranches = () => {
     queryKey: ["branches"],
 
     // La función que ejecuta la promesa
-    queryFn: getBranches,
+    queryFn: getBranchesES,
 
     // CONFIGURACIÓN PRO:
 

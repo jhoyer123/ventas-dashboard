@@ -18,8 +18,6 @@ import {
 } from "@/components/ui/sidebar";
 //import hoook get branches
 import { useGetBranches } from "@/hooks/branch/useGetBranches";
-//types de branches
-import type { BranchOutput } from "@/types/branch";
 //contexto del branch para obtener la sucursal actual
 import { useBranch } from "@/context/BranchContext";
 
@@ -33,18 +31,18 @@ export function BranchSelected() {
   //logica de obtención de sucursales
   const { data: branches } = useGetBranches();
   //branch activa
-  const branchContext = branches?.find((b) => b.id === currentBranch);
-  const [branchActive, setBranchActive] = React.useState<BranchOutput | undefined>(branchContext);
+  const branchActive = React.useMemo(() => {
+    return branches?.find((b) => b.id === currentBranch);
+  }, [branches, currentBranch]);
+
   //funcion para cambiar la sucursal activa y actualizar el contexto
-  const handleSetBranch = (branchId: string | null, branch?: BranchOutput) => {
+  const handleSetBranch = (branchId: string | null) => {
     setBranchId(branchId);
-    setBranchActive(branch);
   };
   //console.log("Sucursal activa:", brachActive);
   if (!branches) {
     return null;
   }
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -59,7 +57,7 @@ export function BranchSelected() {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {!branchActive ? "Vista Global" : branchActive.branchName}
+                  {!branchActive ? "Vista Global" : branchActive.branch_name}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
@@ -74,17 +72,17 @@ export function BranchSelected() {
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Sucursales Existentes
             </DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => handleSetBranch(null, undefined)}>
+            <DropdownMenuItem onClick={() => handleSetBranch(null)}>
               Vista Global
               <DropdownMenuShortcut>⌘</DropdownMenuShortcut>
             </DropdownMenuItem>
             {branches?.map((branch /* index */) => (
               <DropdownMenuItem
-                key={branch.branchName}
-                onClick={() => handleSetBranch(branch.id, branch)}
-                className="gap-2 p-2"
+                key={branch.branch_name}
+                onClick={() => handleSetBranch(branch.id)}
+                className="gap-2 p-2 overflow-hidden text-ellipsis"
               >
-                {branch.branchName}
+                {branch.branch_name}
                 <DropdownMenuShortcut>⌘</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}

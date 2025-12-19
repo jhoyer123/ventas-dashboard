@@ -1,6 +1,6 @@
 // Definición de tipos para los datos de entrada
 export interface BranchInput {
-  branchName: string;
+  branch_name: string;
   address: string;
 }
 
@@ -13,12 +13,11 @@ export interface updateType {
 // Definición de tipos para el resultado de la sucursal
 export interface BranchOutput {
   id: string; // uuid
-  branchName: string; // DB: branchName
+  branch_name: string; // DB: branchName
   address: string; // DB: address
-  activo: boolean; // DB: activo
   created_at: Date; // DB: createdAt
   updated_at: Date; // DB: updatedAt
   // Campos "simulados" o calculados para que el dashboard se vea completo
-  empleados?: number;
-  managersName?: string;
+  total_employees?: number;
+  total_products?: number;
 }

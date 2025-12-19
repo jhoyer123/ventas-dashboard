@@ -32,11 +32,7 @@ interface Props {
 }
 
 export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
-  const {
-    data: branches,
-    isLoading,
-    isFetching,
-  } = useGetBranckSP(productId || "");
+  const { data: branches } = useGetBranckSP(productId || "");
   const form = useForm<BranchStockFormValues>({
     resolver: zodResolver(branchStockSchema),
     defaultValues: { branches: [] },
@@ -104,8 +100,13 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
           </DialogHeader>
 
           <div className="py-4 space-y-4 max-h-[400px] overflow-y-auto px-1">
-            {(isLoading || isFetching) && <p>Cargando...</p>}
-
+            {/* si no hay sucursales mostramos mensage claro */}
+            {branches && branches.length === 0 && (
+              <p className="text-sm text-gray-600 mx-auto my-auto text-center p-5">
+                Este producto ya esta agregado en todas las sucursales
+                existentes.
+              </p>
+            )}
             {fields.map((field, index) => (
               <div
                 key={field.id}
@@ -116,7 +117,7 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
                   <input
                     type="checkbox"
                     {...register(`branches.${index}.selected`)}
-                    onChange={(e) => toggleBranch(index, e.target.checked)} // <--- Aquí ocurre la magia
+                    onChange={(e) => toggleBranch(index, e.target.checked)}
                     className="size-4"
                   />
                   <Label className="font-medium">{field.branchName}</Label>
@@ -141,7 +142,6 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
                 </div>
               </div>
             ))}
-
             {/* Error global (si no seleccionó ninguna sucursal) */}
             {errors.branches?.root && (
               <p className="text-xs text-destructive font-medium">
