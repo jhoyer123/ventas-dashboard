@@ -72,7 +72,7 @@ const CreateProduct = (mode: Props) => {
     toast.promise(promise, {
       loading: id ? "Actualizando producto..." : "Creando producto...",
       success: () => {
-        if (id) navigate("/dashboard/products"); // Solo redirige si es update
+        navigate("/dashboard/products"); // Solo redirige si es update
         return id
           ? "Producto actualizado con éxito"
           : "Producto creado con éxito";

@@ -16,6 +16,7 @@ import Branch from "@/pages/branch/Branch";
 import CreateProduct from "@/pages/product/CreateProduct";
 import Category from "@/pages/categories/Category";
 import Product from "@/pages/product/Product";
+import { Sale } from "@/pages/sale/Sale";
 
 const AppRouter = () => {
   return (
@@ -49,6 +50,8 @@ const AppRouter = () => {
           <Route path="editp/:id" element={<CreateProduct />} />
           {/* modo vista */}
           <Route path="viewp/:id" element={<CreateProduct mode={"view"} />} />
+          {/* Pagina de ventas */}
+          <Route path="sale" element={<Sale />} />
         </Route>
       </Routes>
       <Toaster theme="dark" />

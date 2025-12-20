@@ -42,7 +42,18 @@ export const getCategories = async () => {
   return data;
 };
 
-//get categoria por para la Tabla con productos asociados
+//get de categorias para la vista de ventas
+export const getCategoriesForSales = async () => {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("id, nameCat")
+    .is("deleted_at", null);
+
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+//get categoria para la Tabla con productos asociados
 export const getCategoriesT = async (params: TableParams) => {
   // Calculamos la paginación
   const from = (params.pageIndex - 1) * params.pageSize;

@@ -83,7 +83,7 @@ const Category = () => {
   const { data, isLoading } = useGetCategoryT(tableState, null);
 
   return (
-    <div className="max-w-7xl flex flex-col items-center justify-center mx-auto pt-5">
+    <div className="max-w-7xl flex flex-col items-center justify-center mx-auto p-4">
       <div className="flex justify-between items-center w-full mb-4">
         <h1 className="text-2xl font-semibold">Lista de categorías</h1>
         <div className="flex items-center gap-6">

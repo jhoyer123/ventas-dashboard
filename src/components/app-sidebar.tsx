@@ -177,6 +177,11 @@ const data = {
       url: "/dashboard/categories",
       icon: Map,
     },
+    {
+      name: "Punto de Venta",
+      url: "/dashboard/sale",
+      icon: Map,
+    },
   ],
 };
 

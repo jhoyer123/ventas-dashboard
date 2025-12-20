@@ -94,7 +94,7 @@ const Branch = () => {
   };
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-6 font-sans text-black">
+    <div className="px-10 sm:px-6 lg:px-8 py-6 font-sans text-black">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
