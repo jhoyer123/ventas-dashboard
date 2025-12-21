@@ -5,7 +5,7 @@ interface Props {
   addToCart: (product: ProductPos) => void;
   products: ProductPos[];
   isPending: boolean;
-  loadProducts: () => void;
+  loadMore: () => void;
   getAvailableStock: (productId: string) => number;
 }
 
@@ -13,7 +13,7 @@ export const ProductsPos = ({
   products,
   addToCart,
   isPending,
-  loadProducts,
+  loadMore,
   getAvailableStock,
 }: Props) => {
   return (
@@ -75,7 +75,7 @@ export const ProductsPos = ({
       )}
 
       <button
-        onClick={() => loadProducts()}
+        onClick={() => loadMore()}
         disabled={isPending}
         className="mt-8 mx-auto flex items-center gap-2 px-8 py-3 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm active:scale-95 disabled:opacity-50"
       >

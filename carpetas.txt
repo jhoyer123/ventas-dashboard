@@ -52,3 +52,30 @@ src/
 │   ├── formatDate.js
 │   └── validators.js
 └── App.jsx                  # Punto de entrada
+
+
+Ejemplo de tabla en frontend
+ID Venta	Fecha	Vendedor	Sucursal	Cliente	Total	Descuento	Final	Pago	Estado	Deuda
+1	20/12/25	Juan P.	La Paz	Pedro G.	200	20	180	Contado	Completada	0
+
+Vista de Tabla (Resumen)
+Fecha: created_at (formateada a algo legible como "DD/MM/YYYY").
+
+Cliente: clientName.
+
+Total: finalAmount.
+
+Estado: status (puedes usar colores: verde para pagado, rojo para deuda).
+
+Método de Pago: paymentMethod.
+
+Vista de Detalle (Modal o página aparte)
+Aquí es donde el usuario ve todo lo que mostraste en tu tabla:
+
+Subtotal: totalAmount.
+
+Descuentos: discountAmount.
+
+Monto de Deuda: debtAmount (si aplica).
+
+Vendedor/Sucursal: userId o branchId (mapeado a nombres reales).

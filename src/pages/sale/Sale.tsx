@@ -9,13 +9,15 @@ import { HeaderPos } from "@/components/Pos/HeaderPos";
 import { ProductsPos } from "@/components/Pos/ProductsPos";
 import { CircleAlert } from "lucide-react";
 import { AsidePos } from "@/components/Pos/AsidePos";
-import { useCart } from "@/hooks/pos/hooksLogic/useCart";
-import { useProducts } from "@/hooks/pos/hooksLogic/useProducts";
+import { useCart } from "@/hooks/sale/pos/useCart";
+import { useProducts } from "@/hooks/sale/pos/useProducts";
 import { FooterPos } from "@/components/Pos/FooterPos";
 import { ModalPosE } from "@/components/Pos/ModalPosE";
-import { ca } from "date-fns/locale";
 import type { SaleInput } from "@/types/Sale";
 import type { SaleFormValues } from "@/schemes/saleExecute";
+//hook para crrear la venta
+import { useCreateSale } from "@/hooks/sale/useCreateSale";
+import { toast } from "sonner";
 
 // Interfaces
 export interface ProductPos {
@@ -76,8 +78,9 @@ export const Sale = () => {
   //estado del modal de finalizar venta
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //hook para crear la venta
+  const createSaleMutation = useCreateSale();
   //FUNCION PARA EJECUTAR VENTA
-  //aqui usaremos el hook
   const executeSale = (
     carts: CartItem[],
     totals: Totals,
@@ -93,6 +96,10 @@ export const Sale = () => {
           : item.price,
       totalPrice: item.subtotal,
     }));
+
+    const total = totals.calculatedTotal;
+    const manual = Number(cartLogic.manualAmount || 0);
+
     const datosE: SaleInput = {
       branchId: currentBranch!,
       userId: user!.id,
@@ -100,24 +107,30 @@ export const Sale = () => {
       clientNit: dataF.idNit!,
       paymentMethod: dataF.paymentMethod!,
       status: dataF.status!,
-      totalAmount: totals.calculatedTotal,
+
+      totalAmount: Number(total.toFixed(2)),
+
       discountAmount: cartLogic.isDebt
         ? 0
         : cartLogic.manualAmount !== ""
-        ? totals.calculatedTotal - Number(cartLogic.manualAmount)
+        ? Number((total - manual).toFixed(2))
         : 0,
+
       finalAmount:
-        cartLogic.manualAmount !== ""
-          ? Number(cartLogic.manualAmount)
-          : totals.calculatedTotal,
-      debtAmount: cartLogic.isDebt
-        ? totals.calculatedTotal - Number(cartLogic.manualAmount)
-        : 0,
+        cartLogic.manualAmount !== "" ? manual : Number(total.toFixed(2)),
+
+      debtAmount: cartLogic.isDebt ? Number((total - manual).toFixed(2)) : 0,
+
       products: prodRef,
     };
-    //logica para ejecutar la venta
-    //promesa simulada
-    //mandamos la promesa al toast
+    const promise = createSaleMutation.mutateAsync(datosE);
+    toast.promise(promise, {
+      loading: "Procesando venta...",
+      success: "Venta realizada con exito!",
+      error: (err) => `Error al procesar la venta: ${err.message}`,
+      position: "top-right",
+      duration: 4000,
+    });
     console.log("Ejecutando venta con los siguientes datos:", datosE);
     cartLogic.setCart([]); // Limpiar el carrito después de la venta
     cartLogic.setManualAmount("");

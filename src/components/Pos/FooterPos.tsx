@@ -59,7 +59,7 @@ export const FooterPos = ({
               disabled={cart.length === 0}
               type="number"
               min={1}
-              placeholder={totals.calculatedTotal.toString()}
+              placeholder={totals.calculatedTotal.toFixed(2).toString()}
               value={manualAmount}
               onChange={(e) =>
                 setManualAmount(

@@ -12,7 +12,7 @@ interface Props {
   maxSizeMB?: number;
   disabled?: boolean;
   imgExisting?: string[];
-  //setValue?: UseFormValue<ProductType>;
+  //setValue?: UseFormSetValue<ProductType>;
   setValue?: any;
 }
 
