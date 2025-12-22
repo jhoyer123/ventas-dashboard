@@ -98,7 +98,7 @@ const FormEmployee = ({
                           <SelectLabel>Sucursales</SelectLabel>
                           {branches?.map((branch) => (
                             <SelectItem key={branch.id} value={branch.id}>
-                              {branch.branchName}
+                              {branch.branch_name}
                             </SelectItem>
                           ))}
                         </SelectGroup>
