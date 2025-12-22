@@ -1,3 +1,4 @@
+//type para las ventas (sales) el historial de ventas
 export interface SaleH {
   id: string;
   totalAmount: number;

@@ -17,7 +17,7 @@ import CreateProduct from "@/pages/product/CreateProduct";
 import Category from "@/pages/categories/Category";
 import Product from "@/pages/product/Product";
 import Pos from "@/pages/Pos/Pos";
-import Sale from "@/pages/sale/Sale";
+import Sale from "@/pages/Sale/Sale";
 
 const AppRouter = () => {
   return (

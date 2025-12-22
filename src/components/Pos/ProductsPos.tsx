@@ -1,4 +1,4 @@
-import type { ProductPos } from "@/pages/sale/Sale";
+import type { ProductPos } from "@/pages/Pos/Pos";
 import { Loader2, Plus } from "lucide-react";
 
 interface Props {

@@ -43,7 +43,7 @@ export function ModalTransferStock({
     .filter((b) => b.id !== currentBranch)
     .map((b) => ({
       value: b.id,
-      label: b.branchName,
+      label: b.branch_name,
     }));
 
   const {

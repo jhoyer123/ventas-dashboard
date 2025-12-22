@@ -1,4 +1,4 @@
-import type { CartItem, Totals } from "@/pages/sale/Sale";
+import type { CartItem, Totals } from "@/pages/Pos/Pos";
 import React from "react";
 
 interface Props {
