@@ -2,14 +2,14 @@
 import { DataTable } from "@/components/common/tabla/DataTable";
 import { useServerTableState } from "@/components/common/tabla/useServerTableState";
 import { useBranch } from "@/context/BranchContext";
-import { columnsSaleH } from "@/pages/Sale/ColumnsSale";
+import { columnsSaleH } from "@/pages/sale/ColumnsSale";
 //hook que trae las ventas realizadas
 import { useGetSalesH } from "@/hooks/sale/useGetSales";
 import { DebouncedInput } from "@/components/common/tabla/DebouncedInput";
 //import del hook para los modales
 import { useModalsState } from "@/hooks/sale/hookslogic/useModalsState";
 //import de los modales
-import { SalesModals } from "@/pages/Sale/SalesModals";
+import { SalesModals } from "@/pages/sale/SalesModals";
 //import del hook para el pago de deudas
 import { usePayDebt } from "@/hooks/sale/usePayDebt";
 import type { DebtPaymentForm } from "@/schemes/debPay";
