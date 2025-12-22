@@ -1,6 +1,6 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query"; // 1. Importar la función
-import { getProdutsPos } from "@/services/salesService";
-import type { getProdutsPosI } from "@/services/salesService";
+import { getProdutsPos } from "@/services/posService";
+import type { getProdutsPosI } from "@/services/posService";
 
 export const useGetProdPos = (data: getProdutsPosI) => {
   return useQuery({

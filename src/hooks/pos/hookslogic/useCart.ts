@@ -1,4 +1,4 @@
-import type { CartItem, EditingQtyMap, ProductPos } from "@/pages/sale/Sale";
+import type { CartItem, EditingQtyMap, ProductPos } from "@/pages/Pos/Pos";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 

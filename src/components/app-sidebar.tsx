@@ -8,10 +8,13 @@ import {
   Command,
   Frame,
   GalleryVerticalEnd,
-  Map,
-  PieChart,
+  History,
+  List,
+  Package,
   Settings2,
+  ShoppingCart,
   SquareTerminal,
+  Store,
 } from "lucide-react";
 
 import { NavDropDown } from "@/components/nav-main";
@@ -165,22 +168,27 @@ const data = {
     {
       name: "Sucursales",
       url: "/dashboard/branches",
-      icon: PieChart,
+      icon: Store,
     },
     {
       name: "Productos",
       url: "/dashboard/products",
-      icon: Map,
+      icon: Package,
     },
     {
       name: "Categorias",
       url: "/dashboard/categories",
-      icon: Map,
+      icon: List,
     },
     {
       name: "Punto de Venta",
-      url: "/dashboard/sale",
-      icon: Map,
+      url: "/dashboard/pos",
+      icon: ShoppingCart,
+    },
+    {
+      name: "Ventas",
+      url: "/dashboard/sales",
+      icon: History,
     },
   ],
 };

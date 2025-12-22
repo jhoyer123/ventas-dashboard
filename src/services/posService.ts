@@ -1,5 +1,7 @@
 import { supabase } from "@/api/supabaseClient";
-import type { SaleInput } from "@/types/Sale";
+import type { SaleInput } from "@/types/salePos";
+
+//services para la seccion de POS
 
 //service que trae los productos para la vista de punto de venta
 export interface getProdutsPosI {

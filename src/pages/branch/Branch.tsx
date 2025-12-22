@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { MapPin, Users, Building2, Plus, Calendar, Box } from "lucide-react";
+import {
+  MapPin,
+  Users,
+  Building2,
+  Plus,
+  Calendar,
+  Box,
+  Hash,
+} from "lucide-react";
 // Importamos el modal (asegúrate que la ruta sea correcta)
 import { ModalAddBranch } from "@/components/branch/ModalAddBranch";
 // Importamos el hook y tipos (asegúrate que la ruta sea correcta)
@@ -42,7 +50,11 @@ const Branch = () => {
     //Determinar qué promesa ejecutar
     const promise = !branchS
       ? create.mutateAsync(data) // Retorna la promesa de creación
-      : update.mutateAsync({ id: branchS.id, dataBranch: data }); // Retorna la promesa de actualizacións
+      : update.mutateAsync({
+          id: branchS.id,
+          dataBranch: data,
+          code: data.code,
+        }); // Retorna la promesa de actualizacións
     try {
       //Envolver la promesa con toast.promise
       await toast.promise(promise, {
@@ -79,8 +91,7 @@ const Branch = () => {
       await toast.promise(promise, {
         loading: "Eliminando sucursal...",
         success: "Sucursal eliminada con éxito.",
-        error: (err) =>
-          `Fallo al eliminar: ${err.message || "Error desconocido"}`,
+        error: (err) => `${err.message || "Error desconocido"}`,
         position: "top-right",
         duration: 4000,
       });
@@ -183,6 +194,10 @@ const Branch = () => {
                     <span>
                       {new Date(sucursal.created_at).toLocaleDateString()}
                     </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-red-400">
+                    <Hash size={14} />
+                    <span>{sucursal.code}</span>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { createSale } from "@/services/salesService";
+import { createSale } from "@/services/posService";
 
 //hook para crear ventas
 export const useCreateSale = () => {

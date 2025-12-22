@@ -14,6 +14,10 @@ const branchSchema = z.object({
     .string()
     .nonempty("campo requerido")
     .min(3, "La dirección debe tener mas de 3 letras"),
+  code: z
+    .string({ message: "campo requerido" })
+    .nonempty("campo requerido")
+    .min(3, "El codigo debe tener mas de 3 letras"),
 });
 
 type FormBranchInput = z.infer<typeof branchSchema>;
@@ -38,7 +42,7 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
   return (
     <form onSubmit={onSubmit} id="branch-form" noValidate>
       <div className="grid gap-4">
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           <Label>Nombre de la Sucursal</Label>
           <Input
             {...register("branch_name")}
@@ -50,7 +54,7 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
             </p>
           )}
         </div>
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           <Label>Dirección de la Sucursal</Label>
           <Input
             {...register("address")}
@@ -60,6 +64,16 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
             <p className="text-sm text-red-500 mt-1">
               {errors.address.message}
             </p>
+          )}
+        </div>
+        <div className="grid gap-2">
+          <Label>Codigo de Sucursal</Label>
+          <Input
+            {...register("code")}
+            placeholder="Ingresa el codigo de la Sucursal"
+          />
+          {errors.code && (
+            <p className="text-sm text-red-500 mt-1">{errors.code.message}</p>
           )}
         </div>
       </div>

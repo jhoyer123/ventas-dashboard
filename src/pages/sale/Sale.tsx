@@ -1,185 +1,84 @@
-import { useState } from "react";
-//branch context
+//context de la sucursal
+import { DataTable } from "@/components/common/tabla/DataTable";
+import { useServerTableState } from "@/components/common/tabla/useServerTableState";
 import { useBranch } from "@/context/BranchContext";
-//user context
-import { useAuth } from "@/context/AuthContext";
-//hook de categorias get
-import { useGetCatForSale } from "@/hooks/category/useGetCatForSale";
-import { HeaderPos } from "@/components/Pos/HeaderPos";
-import { ProductsPos } from "@/components/Pos/ProductsPos";
-import { CircleAlert } from "lucide-react";
-import { AsidePos } from "@/components/Pos/AsidePos";
-import { useCart } from "@/hooks/sale/pos/useCart";
-import { useProducts } from "@/hooks/sale/pos/useProducts";
-import { FooterPos } from "@/components/Pos/FooterPos";
-import { ModalPosE } from "@/components/Pos/ModalPosE";
-import type { SaleInput } from "@/types/Sale";
-import type { SaleFormValues } from "@/schemes/saleExecute";
-//hook para crrear la venta
-import { useCreateSale } from "@/hooks/sale/useCreateSale";
+import { columnsSaleH } from "@/pages/Sale/ColumnsSale";
+//hook que trae las ventas realizadas
+import { useGetSalesH } from "@/hooks/sale/useGetSales";
+import { DebouncedInput } from "@/components/common/tabla/DebouncedInput";
+//import del hook para los modales
+import { useModalsState } from "@/hooks/sale/hookslogic/useModalsState";
+//import de los modales
+import { SalesModals } from "@/pages/Sale/SalesModals";
+//import del hook para el pago de deudas
+import { usePayDebt } from "@/hooks/sale/usePayDebt";
+import type { DebtPaymentForm } from "@/schemes/debPay";
 import { toast } from "sonner";
 
-// Interfaces
-export interface ProductPos {
-  id: string;
-  name_prod: string;
-  sku: string | null;
-  price: number;
-  price_offer: number | null;
-  is_offer_active: boolean;
-  stock: number;
-  main_image: string;
-}
-
-export interface CartItem extends ProductPos {
-  quantity: number;
-  subtotal: number;
-}
-
-export interface Totals {
-  subtotal: number;
-  tax: number;
-  calculatedTotal: number;
-  finalAmount: number;
-  difference: number;
-}
-
-export interface Client {
-  name: string;
-  idNit?: string;
-}
-
-export type EditingQtyMap = Record<string, string>;
-
-export const Sale = () => {
-  //usamos el context de sucursal
+const Sale = () => {
+  //hook de la tabla
+  const tableState = useServerTableState({});
+  //context de sucursal
   const { currentBranch } = useBranch();
-  //usamos el context del userAuth
-  const { user } = useAuth();
-  //usamos el hook de traer las categorias
-  const { data: categories } = useGetCatForSale();
-  //estados locales para el componente
-  const [category, setCategory] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const LIMIT = 20;
-  //usamos el hook de traer los productos para el punto de venta
-
-  //USAMOS EL HOOK USECART
-  const cartLogic = useCart();
-  //USAMOS EL HOOK DEL PRODUCTOS
-  const productsLogic = useProducts({
-    currentBranch,
-    category,
-    search,
-    LIMIT,
-    cart: cartLogic.cart,
+  //hook que trae las ventas realizadas
+  const { data, isLoading } = useGetSalesH({
+    ...tableState.apiParams,
+    branchId: currentBranch || null,
   });
 
-  //estado del modal de finalizar venta
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  //hook para los modales
+  const modals = useModalsState();
 
-  //hook para crear la venta
-  const createSaleMutation = useCreateSale();
-  //FUNCION PARA EJECUTAR VENTA
-  const executeSale = (
-    carts: CartItem[],
-    totals: Totals,
-    dataF: SaleFormValues
-  ) => {
-    //primero que nada refinar los datos
-    const prodRef = carts.map((item) => ({
-      productId: item.id,
-      quantity: item.quantity,
-      unitPrice:
-        item.is_offer_active && item.price_offer
-          ? item.price_offer
-          : item.price,
-      totalPrice: item.subtotal,
-    }));
-
-    const total = totals.calculatedTotal;
-    const manual = Number(cartLogic.manualAmount || 0);
-
-    const datosE: SaleInput = {
-      branchId: currentBranch!,
-      userId: user!.id,
-      clientName: dataF.name,
-      clientNit: dataF.idNit!,
-      paymentMethod: dataF.paymentMethod!,
-      status: dataF.status!,
-
-      totalAmount: Number(total.toFixed(2)),
-
-      discountAmount: cartLogic.isDebt
-        ? 0
-        : cartLogic.manualAmount !== ""
-        ? Number((total - manual).toFixed(2))
-        : 0,
-
-      finalAmount:
-        cartLogic.manualAmount !== "" ? manual : Number(total.toFixed(2)),
-
-      debtAmount: cartLogic.isDebt ? Number((total - manual).toFixed(2)) : 0,
-
-      products: prodRef,
-    };
-    const promise = createSaleMutation.mutateAsync(datosE);
+  //hook para realizar abonos en deudas
+  const payDebtMutation = usePayDebt();
+  //funcion que maneja el pago de deuda
+  const handlePayDebt = (dataForm: DebtPaymentForm) => {
+    const promise = payDebtMutation.mutateAsync({
+      p_sale_id: modals.typeModal?.sale?.id!,
+      p_amount: dataForm.amount,
+      p_payment_method: dataForm.paymentMethod!,
+      p_note: dataForm.note || "",
+    });
     toast.promise(promise, {
-      loading: "Procesando venta...",
-      success: "Venta realizada con exito!",
-      error: (err) => `Error al procesar la venta: ${err.message}`,
+      loading: "Procesando el pago de la deuda...",
+      success: "Deuda pagada con exito",
+      error: "Error al procesar el pago de la deuda",
       position: "top-right",
       duration: 4000,
     });
-    console.log("Ejecutando venta con los siguientes datos:", datosE);
-    cartLogic.setCart([]); // Limpiar el carrito después de la venta
-    cartLogic.setManualAmount("");
-    cartLogic.setIsDebt(false);
+    modals.closeModal();
   };
 
-  if (!currentBranch) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] gap-6 p-10">
-        <CircleAlert className="size-20 text-red-400 animate-pulse" />
-        <h2 className="text-center text-3xl font-bold text-slate-700 max-w-2xl">
-          Seleccione una sucursal para comenzar la venta.
-        </h2>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex h-full bg-[#f8fafc] text-slate-900 overflow-hidden">
-      {/* PANEL IZQUIERDO: CATÁLOGO */}
-      <main className="flex-1 flex flex-col min-w-0">
-        {/* buscador + categorias */}
-        <HeaderPos
-          setSearch={setSearch}
-          search={search}
-          categories={categories || []}
-          category={category}
-          setCategory={setCategory}
+    <div className="max-w-7xl mx-auto">
+      <div className="flex justify-between items-center py-2">
+        <h1 className="text-2xl font-bold ">Historial de Ventas</h1>
+        <DebouncedInput
+          valueDafault={tableState.globalFilter ?? ""}
+          onChange={tableState.onGlobalFilterChange}
+          placeholder="Buscar ventas..."
         />
+      </div>
+      <DataTable
+        columns={columnsSaleH({ openM: modals.handleModal })}
+        data={data?.data || []}
+        rowCount={data?.meta.total ?? 0}
+        pagination={tableState.pagination}
+        setPagination={tableState.setPagination}
+        sorting={tableState.sorting}
+        setSorting={tableState.setSorting}
+        isLoading={isLoading}
+      />
 
-        {/* Grid de Productos */}
-        <ProductsPos addToCart={cartLogic.addToCart} {...productsLogic} />
-
-        {/* footer: close venta */}
-        <FooterPos {...cartLogic} openModal={() => setIsModalOpen(true)} />
-      </main>
-
-      {/* PANEL DERECHO: CARRITO */}
-      <AsidePos {...cartLogic} />
-
-      {/* modal de Finalizar Venta */}
-      <ModalPosE
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-        carts={cartLogic.cart}
-        totals={cartLogic.totals}
-        executeSale={executeSale}
-        manualMount={cartLogic.manualAmount}
+      {/* Modales */}
+      <SalesModals
+        type={modals.typeModal?.typeModal || null}
+        sale={modals.typeModal?.sale || null}
+        closeModal={modals.closeModal}
+        handlePayDebt={handlePayDebt}
       />
     </div>
   );
 };
+
+export default Sale;

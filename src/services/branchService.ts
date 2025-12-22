@@ -45,8 +45,13 @@ export const getBranchesES = async () => {
   const { data, error } = await supabase.rpc("get_branches_with_stats");
 
   if (error) {
+    console.error(
+      "Error al obtener sucursales con estadísticas:",
+      error.message
+    );
     throw new Error(error.message);
   }
+
   return data;
 };
 
@@ -54,11 +59,21 @@ export const getBranchesES = async () => {
 export const createBranch = async (branchData: BranchInput) => {
   const { data, error } = await supabase
     .from("branches")
-    .insert({ branchName: branchData.branch_name, address: branchData.address })
+    .insert({
+      branchName: branchData.branch_name,
+      address: branchData.address,
+      code: branchData.code.toUpperCase(),
+    })
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    // Error de UNIQUE en Postgres
+    if (error.code === "23505") {
+      throw new Error("El código de sucursal ya existe");
+    }
+    throw error;
+  }
 
   return data;
 };
@@ -68,7 +83,11 @@ export const updateBranch = async ({ id, dataBranch }: updateType) => {
   //lógica de actualización
   const { data, error } = await supabase
     .from("branches")
-    .update({ branchName: dataBranch.branch_name, address: dataBranch.address })
+    .update({
+      branchName: dataBranch.branch_name,
+      address: dataBranch.address,
+      code: dataBranch.code.toUpperCase(),
+    })
     .eq("id", id)
     .select()
     .single();
@@ -80,12 +99,9 @@ export const updateBranch = async ({ id, dataBranch }: updateType) => {
 
 //función para eliminar una sucursal
 export const deleteBranch = async (idBranch: string) => {
-  const { data, error } = await supabase
-    .from("branches")
-    .delete()
-    .eq("id", idBranch)
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc("soft_delete_branch", {
+    p_branch_id: idBranch,
+  });
 
   if (error) throw error;
 

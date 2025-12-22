@@ -16,7 +16,8 @@ import Branch from "@/pages/branch/Branch";
 import CreateProduct from "@/pages/product/CreateProduct";
 import Category from "@/pages/categories/Category";
 import Product from "@/pages/product/Product";
-import { Sale } from "@/pages/sale/Sale";
+import Pos from "@/pages/Pos/Pos";
+import Sale from "@/pages/Sale/Sale";
 
 const AppRouter = () => {
   return (
@@ -51,7 +52,9 @@ const AppRouter = () => {
           {/* modo vista */}
           <Route path="viewp/:id" element={<CreateProduct mode={"view"} />} />
           {/* Pagina de ventas */}
-          <Route path="sale" element={<Sale />} />
+          <Route path="pos" element={<Pos />} />
+          {/* pagina de info de las ventas realizadas */}
+          <Route path="sales" element={<Sale />} />
         </Route>
       </Routes>
       <Toaster theme="dark" />
