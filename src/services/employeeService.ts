@@ -15,9 +15,11 @@ export const getEmployees = async (
 
   // UNA SOLA QUERY con count incluido
   //let query = supabase.from("employees").select("*", { count: "exact" });
-    let query = supabase
-    .from("v_employees_without_user")
-    .select("*", { count: "exact" });
+  let query = supabase
+    .from("employees")
+    .select(`id,name,cedula,address,phone,birthDate,job,branchId`, {
+      count: "exact",
+    });
 
   // Búsqueda global
   if (params.globalFilter) {
@@ -45,9 +47,7 @@ export const getEmployees = async (
   // Ejecutamos la query
   const { data, error, count } = await query;
 
-  //console.log("Llamada");
   if (error) {
-    console.error("Error en query:", error);
     throw error;
   }
 

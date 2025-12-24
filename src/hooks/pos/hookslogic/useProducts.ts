@@ -1,5 +1,6 @@
 import { useGetProdPos } from "@/hooks/pos/useGetProdPos";
-import type { CartItem, ProductPos } from "@/pages/Pos/Pos";
+//types para el pos y la venta
+import type { ProductPos, CartItem } from "@/types/salePos";
 import { useMemo, useState } from "react";
 
 interface Props {

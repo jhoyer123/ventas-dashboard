@@ -1,6 +1,7 @@
 import FormLogin from "../../components/loginComp/FormLogin";
+//hook de login tanstack-react-query
 import { useLogin } from "../../hooks/auth/useLogin";
-import { type loginCredentials } from "../../services/authService";
+import type { loginCredentials } from "@/schemes/auth";
 
 const LoginCard = () => {
   const { mutate, isPending, isError } = useLogin();
@@ -10,15 +11,15 @@ const LoginCard = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 font-body">
+    <div className="flex items-center justify-center h-screen">
       {/* fondo */}
       <img
-        src="https://i.pinimg.com/1200x/20/7a/23/207a23ca8a5c0e723c30a0517cbca611.jpg"
+        src="https://i.pinimg.com/736x/43/9e/07/439e0745fd00e29a1f6a4d10b41d425e.jpg"
         alt="imagen de fondo"
         className="absolute w-full h-full object-cover z-0 opacity-95"
       />
       {/* Card principal */}
-      <div className="relative w-full max-w-md p-8 space-y-6 bg-indigo-950/40 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl">
+      <div className="relative w-full max-w-md p-8 space-y-6">
         {/* Icono y título */}
         <div className="flex flex-col items-center space-y-3 text-center text-white">
           <div className="relative w-12 h-12">

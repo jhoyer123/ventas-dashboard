@@ -1,5 +1,6 @@
 import { Minus, Package, Plus, ShoppingCart, Trash2 } from "lucide-react";
-import type { CartItem } from "@/pages/Pos/Pos";
+//types para el pos y la venta
+import type { CartItem } from "@/types/salePos";
 
 interface Props {
   cart: CartItem[];

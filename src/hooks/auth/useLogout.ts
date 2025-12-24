@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logout } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
-
+//hook para cerrar sesión
 export const useLogout = () => {
   
   const navigate = useNavigate();

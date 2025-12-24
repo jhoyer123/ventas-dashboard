@@ -19,6 +19,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import type { SaleH } from "@/types/saleh";
+//import utils para formatear moneda y fecha
+import { formatCurrency, formatDate } from "@/utils/dataFormat";
 
 interface SaleDetailsModalProps {
   sale: SaleH;
@@ -32,23 +34,6 @@ export const ModalDetSale = ({
   sale,
   closeModal,
 }: SaleDetailsModalProps) => {
-  // Convierte un número en formato de moneda boliviana
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("es-BO", {
-      style: "currency",
-      currency: "BOB",
-    }).format(amount);
-  };
-  // Convierte una fecha en un formato legible con día, mes, año, hora y minutos de bolivia
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("es-BO", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(date));
-  };
   // Devuelve un badge visual para mostrar el estado de la venta con color y etiqueta
   const getStatusBadge = (status: string) => {
     //console.log("Status:", status);

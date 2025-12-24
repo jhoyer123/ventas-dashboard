@@ -15,7 +15,8 @@ import { Label } from "@/components/ui/label";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { CartItem, Totals } from "@/pages/Pos/Pos";
+//types para el pos y la venta
+import type { CartItem, Totals } from "@/types/salePos";
 import { saleFormSchema, type SaleFormValues } from "@/schemes/saleExecute";
 import { FormSelect } from "../common/Form/FormSelect";
 

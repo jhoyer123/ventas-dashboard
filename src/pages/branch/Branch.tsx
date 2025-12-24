@@ -24,10 +24,6 @@ import { AlertDelete } from "@/components/common/AlertDelet";
 //context de la surcursal
 import { useBranch } from "@/context/BranchContext";
 
-// --- Variables de color
-const BORDER_COLOR = "border-gray-600"; // Bordes sutiles
-const PRIMARY_COLOR = "bg-indigo-500 hover:bg-indigo-600 text-white"; // Botones y acentos primarios (el violeta/azul de la imagen)
-
 const Branch = () => {
   //context sucursal
   const { setBranchId, currentBranch } = useBranch();
@@ -105,16 +101,27 @@ const Branch = () => {
   };
 
   return (
-    <div className="px-10 sm:px-6 lg:px-8 py-6 font-sans text-black">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="p-6 bg-background-view">
+      <div
+        className="max-w-7xl mx-auto space-y-3
+      lg:space-y-5"
+      >
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-              Gestión de Sucursales
+          {/* titulo mas descripcion */}
+          <div className="space-y-1">
+            <h1
+              className="tracking-wide font-title text-xl text-foreground
+            lg:text-2xl"
+            >
+              Lista de Sucursales
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Administra las ubicaciones operativas de tu negocio
+            <p
+              className="text-sm text-muted-foreground
+            lg:text-base"
+            >
+              Gestiona y administra las sucursales de tu empresa desde este
+              panel.
             </p>
           </div>
 
@@ -123,7 +130,7 @@ const Branch = () => {
               setBranchS(undefined);
               handleOpenModal();
             }}
-            className={`flex items-center gap-2 ${PRIMARY_COLOR}`}
+            className={`flex items-center gap-2`}
           >
             <Plus size={18} />
             <span>Nueva Sucursal</span>
@@ -131,22 +138,25 @@ const Branch = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2
+        lg:gap-4"
+        >
           {branches?.map((sucursal) => (
             <div
               key={sucursal.id}
-              className={`rounded-lg border ${BORDER_COLOR} bg-white shadow-sm hover:shadow-md transition`}
+              className={`rounded-xl border border-border bg-card shadow-sm hover:shadow-md transition text-card-foreground space-y-2 flex flex-col justify-between`}
             >
               {/* Card header */}
               <div
-                className={`flex items-start justify-between gap-3 p-4 border-b ${BORDER_COLOR}`}
+                className={`flex items-center justify-between gap-3 p-2 border-0`}
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="p-2 rounded-md bg-indigo-100 text-indigo-600 shrink-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="p-2 rounded-lg text-popover shrink-0 bg-primary/70">
                     <Building2 size={18} />
                   </div>
 
-                  <h3 className="font-medium text-gray-900 truncate">
+                  <h3 className="font-title text-sm truncate">
                     {sucursal.branch_name}
                   </h3>
                 </div>
@@ -172,15 +182,17 @@ const Branch = () => {
               </div>
 
               {/* Card body */}
-              <div className="p-4 space-y-3">
+              <div className="py-2 px-3">
                 {/* Address */}
-                <div className="flex items-start gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin size={16} className="mt-0.5 shrink-0" />
                   <span className="line-clamp-2">{sucursal.address}</span>
                 </div>
+              </div>
 
-                {/* Footer info */}
-                <div className="flex items-center justify-between text-xs text-gray-500 pt-2">
+              {/* Footer info */}
+              <div className="flex flex-col gap-3 items-center justify-between text-sm p-2 bg-chart-3 rounded-b-lg text-brand-foreground">
+                <div className="flex justify-between w-full">
                   <div className="flex items-center gap-1.5">
                     <Users size={14} />
                     <span>{sucursal.total_employees || 0} empleados</span>
@@ -189,15 +201,17 @@ const Branch = () => {
                     <Box size={14} />
                     <span>{sucursal.total_products || 0} productos</span>
                   </div>
+                </div>
+                <div className="flex justify-between w-full">
                   <div className="flex items-center gap-1.5">
                     <Calendar size={14} />
                     <span>
                       {new Date(sucursal.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-red-400">
+                  <div className="flex items-center gap-1.5">
                     <Hash size={14} />
-                    <span>{sucursal.code}</span>
+                    <span>Cod. {sucursal.code}</span>
                   </div>
                 </div>
               </div>

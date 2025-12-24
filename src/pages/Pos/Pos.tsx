@@ -5,6 +5,7 @@ import { useBranch } from "@/context/BranchContext";
 import { useAuth } from "@/context/AuthContext";
 //hook de categorias get
 import { useGetCatForSale } from "@/hooks/category/useGetCatForSale";
+//componentes del pos
 import { HeaderPos } from "@/components/Pos/HeaderPos";
 import { ProductsPos } from "@/components/Pos/ProductsPos";
 import { CircleAlert } from "lucide-react";
@@ -13,41 +14,16 @@ import { useCart } from "@/hooks/pos/hookslogic/useCart";
 import { useProducts } from "@/hooks/pos/hookslogic/useProducts";
 import { FooterPos } from "@/components/Pos/FooterPos";
 import { ModalPosE } from "@/components/Pos/ModalPosE";
-import type { SaleInput } from "@/types/salePos";
+//types para el pos y la venta
+import type {
+  SaleInput,
+  CartItem,
+  Totals,
+} from "@/types/salePos";
 import type { SaleFormValues } from "@/schemes/saleExecute";
 //hook para crrear la venta
 import { useCreateSale } from "@/hooks/pos/useCreateSale";
 import { toast } from "sonner";
-
-// Interfaces
-export interface ProductPos {
-  id: string;
-  name_prod: string;
-  sku: string | null;
-  price: number;
-  price_offer: number | null;
-  is_offer_active: boolean;
-  stock: number;
-  main_image: string;
-}
-
-export interface CartItem extends ProductPos {
-  quantity: number;
-  subtotal: number;
-}
-
-export interface Totals {
-  subtotal: number;
-  tax: number;
-  calculatedTotal: number;
-  finalAmount: number;
-  difference: number;
-}
-
-export interface Client {
-  name: string;
-  idNit?: string;
-}
 
 export type EditingQtyMap = Record<string, string>;
 

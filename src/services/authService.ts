@@ -1,9 +1,31 @@
 import { supabase } from "@/api/supabaseClient";
+import type { loginCredentials } from "@/schemes/auth";
+import type { PasswordChange } from "@/types/auth";
 
-export interface loginCredentials {
-  email: string;
-  password: string;
-}
+//funcion para el cambio de contraseña
+export const changePassword = async ({
+  email,
+  currentPassword,
+  newPassword,
+}: PasswordChange) => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password: currentPassword,
+  });
+
+  if (error) throw new Error("La contraseña actual es incorrecta.");
+
+  //Si el login funcionó, actualizamos a la nueva contraseña
+  const { error: updateError } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  if (updateError) {
+    throw updateError;
+  }
+
+  return data.user;
+};
 
 //función para iniciar sesión con supabase
 export const login = async ({ email, password }: loginCredentials) => {
@@ -13,7 +35,6 @@ export const login = async ({ email, password }: loginCredentials) => {
   });
 
   if (error) throw error;
-
   return data.user;
 };
 
@@ -42,22 +63,25 @@ export const userAuthData = async (authUserId: string) => {
     id,
     email,
     role,
-    employeeId
+    forcePasswordChange,
+    employeeId,
+    avatar
   `
     )
-    .eq("auth_user_id", authUserId).single();
+    .eq("auth_user_id", authUserId)
+    .single();
 
-  if (error) throw error;
+  if (error) throw new Error(error.message);
 
-  //console.log("userAuthDsdsdata:", data);
   return data;
 };
 
 export const userEmployee = async (employeeId: string) => {
   const { data, error } = await supabase
     .from("employees")
-    .select("id,name,branchId")
-    .eq("id", employeeId).single();
+    .select("id,name,phone,branchId")
+    .eq("id", employeeId)
+    .single();
 
   if (error) throw error;
 

@@ -19,7 +19,7 @@ import { useDeleteEmployee } from "@/hooks/employee/useDeleteEmployee";
 import { AlertDelete } from "@/components/common/AlertDelet";
 //context de branch
 
-export default function PersonalPage() {
+export default function Employee() {
   //logica de la tabla
   const tableState = useServerTableState({});
   const { currentBranch } = useBranch();

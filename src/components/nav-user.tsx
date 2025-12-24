@@ -1,12 +1,4 @@
-import {
-  //BadgeCheck,
-  //Bell,
-  ChevronsUpDown,
-  //CreditCard,
-  LogOut,
-  //Sparkles,
-  UserRoundPen,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut, UserRoundPen } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -26,6 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 //para el logout
 import { useLogout } from "@/hooks/auth/useLogout";
+import { Link } from "react-router-dom";
 
 export function NavUser({
   user,
@@ -74,7 +67,7 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">SU</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
@@ -83,33 +76,14 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup> */}
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserRoundPen />
-                Perfil
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard/profile">
+                  <UserRoundPen />
+                  Perfil
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            {/* <DropdownMenuSeparator /> */}
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => handleLogout()}>
               <LogOut />

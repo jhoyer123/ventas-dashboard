@@ -17,7 +17,6 @@ import { EmployeeSchema } from "@/types/employee";
 import type { FormEmployeeInput, Employee } from "@/types/employee";
 import { FormInput } from "../common/Form/FormInput";
 import { FormSelect } from "../common/Form/FormSelect";
-import SectionUser from "./SectionUser";
 
 interface EmployeeProps {
   funParent: (data: FormEmployeeInput) => void;
@@ -36,7 +35,6 @@ const FormEmployee = ({
     control,
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormEmployeeInput>({
     resolver: zodResolver(EmployeeSchema),
@@ -49,31 +47,16 @@ const FormEmployee = ({
   const { data: branches } = useGetBranches();
   //funcion para el submit
   const onsubmit = (data: FormEmployeeInput) => {
-    console.log(data);
-    //funParent(data);
+    //console.log(data);
+    funParent(data);
   };
   //open del datepicker
   const [open, setOpen] = useState(false);
-  const hasAccess = watch("hasSystemAccess");
+
   return (
     <fieldset disabled={isViewMode}>
       <form onSubmit={handleSubmit(onsubmit)} id="form-employee">
         <div className="grid gap-4">
-          {hasAccess && (
-            <SectionUser
-              control={control}
-              register={register}
-              errors={errors}
-              isViewMode={isViewMode}
-            />
-          )}
-          <div>
-            <input type="checkbox" {...register("hasSystemAccess")} />
-            <label className="ml-2 text-sm text-foreground-secondary">
-              Marca y llena los campos de arriba solo si el empleado tendrá
-              acceso al sistema.
-            </label>
-          </div>
           <div className="grid grid-cols-2 gap-4">
             <FormInput
               label="Nombre"
@@ -140,6 +123,7 @@ const FormEmployee = ({
               <Label htmlFor="birthDate" className="px-1">
                 Fecha de Nacimiento
               </Label>
+
               {/* Usar Controller para birthDate */}
               <Controller
                 name="birthDate"
@@ -192,7 +176,6 @@ const FormEmployee = ({
               label="Puesto"
               name="job"
               options={[
-                { value: "GERENTE DE SUCURSAL", label: "Gerente de Sucursal" },
                 { value: "ALMACEN", label: "Almacen" },
                 { value: "SOPORTE ALMACEN", label: "Soporte de Almacen" },
                 { value: "SEGURIDAD", label: "Seguridad" },
@@ -209,3 +192,58 @@ const FormEmployee = ({
 };
 
 export default FormEmployee;
+
+
+
+
+//tipado con typescript
+type job =
+  | "CEO"
+  | "GERENTE DE SUCURSAL"
+  | "ALMACEN"
+  | "SEGURIDAD"
+  | "SOPORTE ALMACEN";
+
+export type Employee = {
+  id: string;
+  name: string;
+  cedula?: string;
+  address?: string;
+  phone?: string;
+  birthDate?: Date; // La fecha viene como string del backend
+  job: job;
+  // Si incluyes la relación 'branches' en el servicio:
+  branchId?: string;
+  branchName?: { branchName: string } | null;
+};
+
+//tipado con zod para validacion de datos
+import { z } from "zod";
+
+const Jobs = [
+  "CEO",
+  "GERENTE DE SUCURSAL",
+  "ALMACEN",
+  "SEGURIDAD",
+  "SOPORTE ALMACEN",
+] as const;
+
+export const EmployeeSchema = z.object({
+  name: z
+    .string()
+    .nonempty("campo requerido")
+    .min(3, "El nombre debe tener mas de 3 letras"),
+  cedula: z.string().optional(),
+  address: z.string().optional(),
+  phone: z.string().optional(),
+  birthDate: z
+    .date()
+    .max(new Date(), "La fecha no puede ser en el futuro")
+    .optional(),
+  job: z.enum(Jobs, {
+    message: "El rol es obligatorio y debe ser seleccionado.",
+  }),
+  branchId: z.string().nonempty("La sucursal es obligatoria."),
+});
+
+export type FormEmployeeInput = z.infer<typeof EmployeeSchema>;

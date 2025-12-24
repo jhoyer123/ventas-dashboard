@@ -11,13 +11,16 @@ import { BranchProvider } from "../context/BranchContext";
 import { Toaster } from "@/components/ui/sonner";
 //improt pages
 import Dashboard from "@/pages/dashboard/Dashboard";
-import Personal from "../pages/employee/Employee";
+import Employee from "../pages/employee/Employee";
 import Branch from "@/pages/branch/Branch";
 import CreateProduct from "@/pages/product/CreateProduct";
 import Category from "@/pages/categories/Category";
 import Product from "@/pages/product/Product";
-import Pos from "@/pages/Pos/Pos";
+import Pos from "@/pages/pos/Pos";
 import Sale from "@/pages/sale/Sale";
+import Movements from "@/pages/movements/Movements";
+import Profile from "@/pages/profile/Profile";
+import User from "@/pages/users/User";
 
 const AppRouter = () => {
   return (
@@ -41,7 +44,7 @@ const AppRouter = () => {
         >
           <Route index element={<Dashboard />} />
           {/* rutas de empleados */}
-          <Route path="personal" element={<Personal />} />
+          <Route path="employees" element={<Employee />} />
           <Route path="branches" element={<Branch />} />
           <Route path="categories" element={<Category />} />
           <Route path="products" element={<Product />} />
@@ -55,6 +58,12 @@ const AppRouter = () => {
           <Route path="pos" element={<Pos />} />
           {/* pagina de info de las ventas realizadas */}
           <Route path="sales" element={<Sale />} />
+          {/* pagina de movimientos */}
+          <Route path="movements" element={<Movements />} />
+          {/* Perfil del usuario */}
+          <Route path="profile" element={<Profile />} />
+          {/* pagina de usuarios con acceso al sistema */}
+          <Route path="users" element={<User />} />
         </Route>
       </Routes>
       <Toaster theme="dark" />

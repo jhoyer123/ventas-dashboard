@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { Input } from "../ui/input";
-import { Label } from "@radix-ui/react-dropdown-menu";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { BranchOutput } from "@/types/branch";
+import { Label } from "../ui/label";
 
 const branchSchema = z.object({
   branch_name: z
@@ -43,37 +43,44 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
     <form onSubmit={onSubmit} id="branch-form" noValidate>
       <div className="grid gap-4">
         <div className="grid gap-2">
-          <Label>Nombre de la Sucursal</Label>
+          <Label>
+            Nombre de la Sucursal
+            <span className="text-destructive">*</span>
+          </Label>
           <Input
             {...register("branch_name")}
             placeholder="Ingresa el nombre de la Sucursal"
           />
           {errors.branch_name && (
-            <p className="text-sm text-red-500 mt-1">
+            <p className="text-sm text-destructive">
               {errors.branch_name.message}
             </p>
           )}
         </div>
         <div className="grid gap-2">
-          <Label>Dirección de la Sucursal</Label>
+          <Label>
+            Dirección de la Sucursal
+            <span className="text-destructive">*</span>
+          </Label>
           <Input
             {...register("address")}
             placeholder="Ingresa la dirección de la Sucursal"
           />
           {errors.address && (
-            <p className="text-sm text-red-500 mt-1">
-              {errors.address.message}
-            </p>
+            <p className="text-sm text-destructive">{errors.address.message}</p>
           )}
         </div>
         <div className="grid gap-2">
-          <Label>Codigo de Sucursal</Label>
+          <Label>
+            Codigo de Sucursal
+            <span className="text-destructive">*</span>
+          </Label>
           <Input
             {...register("code")}
             placeholder="Ingresa el codigo de la Sucursal"
           />
           {errors.code && (
-            <p className="text-sm text-red-500 mt-1">{errors.code.message}</p>
+            <p className="text-sm text-destructive">{errors.code.message}</p>
           )}
         </div>
       </div>

@@ -1,7 +1,4 @@
-/* ==================================== */
 /* 1. Todos los @import van al inicio */
-/* ==================================== */
-
 /* TIPOGRAFÍA */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap");
 @import "tailwindcss";
@@ -12,23 +9,42 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-/* ==================================== */
-/* 2. El resto de declaraciones van después */
-/* ==================================== */
 
-/* SISTEMA DE COLORES BASE Y TIPOGRAFÍA */
+/*2. El resto de declaraciones van después 
+ SISTEMA DE COLORES BASE Y TIPOGRAFÍA*/
 :root {
-  --bg: #0b1020;
+  /* CAMBIO 1: El background ahora es un gris muy sutil (Slate 50 aprox), no blanco puro */
+  --background-view: oklch(0.985 0.002 247.858);
+
+  /* La card se queda en blanco puro para resaltar sobre el fondo gris */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+
+  /* ... (tus otras variables existentes primary, popover, etc) ... */
+
+  /* NUEVOS COLORES PERSONALES (Ejemplo: Un tono "Marca" o "Brand") */
+  /* Un violeta vibrante para destacar sobre tu azul primary */
+  --brand: oklch(0.623 0.214 263.99);
+  --brand-foreground: oklch(1 0 0); /* Texto blanco */
+
+  /* Para cards especiales (ej. "Plan Premium" o "Destacado") */
+  /* Un azul muy clarito, casi blanco */
+  --card-highlight: oklch(0.97 0.01 265.75);
+  --card-highlight-foreground: oklch(0.208 0.042 265.755);
+  /*LO DE ARRIBA SON COLORES PERSONALES */
+
+  /* --bg: #0b1020; */
   --card: oklch(1 0 0);
   --primary: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
   --border: oklch(0.929 0.013 255.508);
-  --text: #e5e7eb;
+  /* --text: #e5e7eb; */
 
   /* Variables de fuente */
   --font-title: "Poppins", sans-serif;
   --font-body: "Inter", sans-serif;
   --radius: 0.625rem;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card-foreground: oklch(0.129 0.042 264.695);
@@ -107,9 +123,38 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ... tus variables anteriores ... */
+
+  /* AGREGA ESTAS LÍNEAS AL FINAL DE @theme inline */
+  --color-background-view: var(--background-view);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+
+  --color-card-highlight: var(--card-highlight);
+  --color-card-highlight-foreground: var(--card-highlight-foreground);
 }
 
 .dark {
+  /* En dark mode, el background es muy oscuro */
+  --background: oklch(0.129 0.042 264.695);
+
+  /* CAMBIO 2: La card debe ser un poco más clara que el fondo para que "flote" */
+  /* He subido un poco la luminosidad respecto a tu background */
+  --card: oklch(0.18 0.042 264.695);
+  --card-foreground: oklch(0.985 0.002 247.858);
+
+  /* ... (tus otras variables dark existentes) ... */
+
+  /* CONTRARIOS DE LOS NUEVOS COLORES */
+  /* El mismo violeta pero un poco más claro o igual, asegurando contraste */
+  --brand: oklch(0.623 0.214 263.99);
+  --brand-foreground: oklch(1 0 0);
+
+  /* La card destacada en dark mode será un azul oscuro pero distinto al fondo */
+  --card-highlight: oklch(0.25 0.042 265.75);
+  --card-highlight-foreground: oklch(0.985 0.002 247.858);
+  /*LO DE ARRIBA SON COLORES PERSONALES */
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);

@@ -1,4 +1,4 @@
-export type Role = "ADMIN" | "SELLER" | "INVENTORY";
+/* export type Role = "ADMIN" | "SELLER" | "INVENTORY";
 
 export interface User {
   id: string;
@@ -14,4 +14,17 @@ export interface User {
     name: string;
     phone?: string;
   };
+}
+ */
+
+export type Role = "ADMIN" | "SELLER" | "INVENTORY";
+
+export interface UserSystem {
+  id: string;
+  email: string;
+  created_at: Date;
+  name: string;
+  role: Role;
+  forcePasswordChange: boolean;
+  avatar: string | null;
 }

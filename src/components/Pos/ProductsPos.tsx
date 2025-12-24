@@ -1,4 +1,5 @@
-import type { ProductPos } from "@/pages/Pos/Pos";
+//types para el pos y la venta
+import type { ProductPos } from "@/types/salePos";
 import { Loader2, Plus } from "lucide-react";
 
 interface Props {
@@ -13,7 +14,7 @@ export const ProductsPos = ({
   products,
   addToCart,
   isPending,
-  loadMore,
+  //loadMore,
   getAvailableStock,
 }: Props) => {
   return (
@@ -74,14 +75,14 @@ export const ProductsPos = ({
         </div>
       )}
 
-      <button
+      {/* <button
         onClick={() => loadMore()}
         disabled={isPending}
         className="mt-8 mx-auto flex items-center gap-2 px-8 py-3 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm active:scale-95 disabled:opacity-50"
       >
         {isPending && <Loader2 className="animate-spin size-4" />}
         Cargar más productos
-      </button>
+      </button> */}
     </div>
   );
 };

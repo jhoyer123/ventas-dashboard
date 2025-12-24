@@ -3,17 +3,12 @@
 import * as React from "react";
 import {
   AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
   History,
+  IdCardLanyard,
   List,
   Package,
-  Settings2,
   ShoppingCart,
-  SquareTerminal,
   Store,
 } from "lucide-react";
 
@@ -43,45 +38,13 @@ const data = {
     email: "m@example.com",
     role: "SELLER", // <--- Agrega esto también para cumplir con 'Role'
     avatar:
-      "https://i.pinimg.com/736x/01/07/8c/01078c4a824ea92e1bb3e742ccd6f216.jpg",
+      "https://i.pinimg.com/736x/1a/1c/51/1a1c51325cf801bc1362bf363e3b584f.jpg",
   },
-  sucursales: [
-    {
-      name: "Todas las Sucursales",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Sucursal de La Paz del prado comercio",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
       title: "Empleados",
       url: "#",
-      icon: SquareTerminal,
+      icon: IdCardLanyard,
       items: [
         {
           title: "Usuarios",
@@ -89,72 +52,7 @@ const data = {
         },
         {
           title: "Personal",
-          url: "/dashboard/personal",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          url: "/dashboard/employees",
         },
       ],
     },
@@ -181,14 +79,19 @@ const data = {
       icon: List,
     },
     {
-      name: "Punto de Venta",
-      url: "/dashboard/pos",
-      icon: ShoppingCart,
-    },
-    {
       name: "Ventas",
       url: "/dashboard/sales",
       icon: History,
+    },
+    {
+      name: "Movimientos",
+      url: "/dashboard/movements",
+      icon: AudioWaveform,
+    },
+    {
+      name: "Punto de Venta",
+      url: "/dashboard/pos",
+      icon: ShoppingCart,
     },
   ],
 };
@@ -196,9 +99,6 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   //user desde el context
   let usera = useAuth().user ?? data.user;
-  //el avatar debe venir desde el backend, por ahora lo sobreescribo
-  usera.avatar =
-    "https://i.pinimg.com/736x/01/07/8c/01078c4a824ea92e1bb3e742ccd6f216.jpg";
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

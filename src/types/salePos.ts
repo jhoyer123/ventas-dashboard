@@ -23,3 +23,33 @@ export interface SaleInput {
   debtAmount: number;
   products: ProductSaleInput[];
 }
+
+// Interfaces para el punto de venta
+export interface ProductPos {
+  id: string;
+  name_prod: string;
+  sku: string | null;
+  price: number;
+  price_offer: number | null;
+  is_offer_active: boolean;
+  stock: number;
+  main_image: string;
+}
+
+export interface CartItem extends ProductPos {
+  quantity: number;
+  subtotal: number;
+}
+
+export interface Totals {
+  subtotal: number;
+  tax: number;
+  calculatedTotal: number;
+  finalAmount: number;
+  difference: number;
+}
+
+export interface Client {
+  name: string;
+  idNit?: string;
+}

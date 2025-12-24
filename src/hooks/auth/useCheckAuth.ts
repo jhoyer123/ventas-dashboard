@@ -31,6 +31,8 @@ export const useCheckAuth = () => {
         email: userData.email,
         role: userData.role,
         branchId: employeeData.branchId,
+        avatar: userData.avatar,
+        phone: employeeData.phone,
       };
 
       return user;

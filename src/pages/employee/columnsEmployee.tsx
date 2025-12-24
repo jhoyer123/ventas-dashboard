@@ -147,7 +147,6 @@ export const columnsPersonal = ({
             <DropdownMenuItem
               onClick={() => {
                 setOpenDelete(employee);
-                console.log("Eliminar empleado:", employee);
               }}
               className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
             >

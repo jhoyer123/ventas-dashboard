@@ -1,16 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { LuEyeClosed, LuEye } from "react-icons/lu";
-// Asegúrate de que el CSS de 'inputs' no interfiera con el posicionamiento
-
-// tipado de los inputs del formulario
-type Inputs = {
-  email: string;
-  password: string;
-};
+//importamos de zod
+import { loginSchema, type loginCredentials } from "../../schemes/auth";
 
 interface FormLoginProps {
-  submitParent: (data: Inputs) => void;
+  submitParent: (data: loginCredentials) => void;
 }
 
 const FormLogin = ({ submitParent }: FormLoginProps) => {
@@ -18,9 +14,12 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
   const {
     register,
     handleSubmit,
-  } = useForm<Inputs>();
+    formState: { errors },
+  } = useForm<loginCredentials>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<loginCredentials> = (data) => {
     //console.log(data);
     submitParent(data);
   };
@@ -40,12 +39,19 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
             <label className="block text-sm font-medium text-gray-300">
               Correo
             </label>
-            <input
-              type="email"
-              placeholder="Ingresa tu email"
-              {...register("email", { required: true })}
-              className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-indigo-900/30 border border-indigo-700/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition"
-            />
+            <div>
+              <input
+                type="email"
+                placeholder="Ingresa tu email"
+                {...register("email", { required: true })}
+                className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-indigo-900/30 border border-indigo-700/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition"
+              />
+              {errors.email && (
+                <div className="text-red-400 text-sm mt-1">
+                  {errors.email.message}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Password */}
@@ -60,6 +66,11 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
                 {...register("password", { required: true })}
                 className="w-full px-4 py-3 pr-12 text-sm text-white placeholder-gray-400 bg-indigo-900/30 border border-indigo-700/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition"
               />
+              {errors.password && (
+                <div className="text-red-400 text-sm mt-1">
+                  {errors.password.message}
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}

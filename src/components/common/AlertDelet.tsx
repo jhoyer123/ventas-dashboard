@@ -30,18 +30,20 @@ export function AlertDelete({
     <AlertDialog open={isOpen} onOpenChange={setOpenAlert}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            {title}: <span className="text-red-500">{nameDelete}</span>
+          <AlertDialogTitle className="font-title">
+            {title} : <span className="ml-1.5 text-chart-3">{nameDelete}</span>
           </AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
+          <AlertDialogDescription className="font-body">
+            {description}
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <div className="flex w-full justify-between">
-            <AlertDialogCancel className="cursor-pointer bg-gray-200">
+            <AlertDialogCancel className="cursor-pointer bg-chart-4">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              className="cursor-pointer bg-red-500 hover:bg-red-600"
+              className="cursor-pointer bg-destructive"
               onClick={funDelete}
             >
               Eliminar
