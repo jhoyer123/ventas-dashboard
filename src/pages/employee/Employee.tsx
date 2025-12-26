@@ -2,22 +2,27 @@ import { DataTable } from "../../components/common/tabla/DataTable";
 import { DebouncedInput } from "../../components/common/tabla/DebouncedInput";
 import { Button } from "@/components/ui/button";
 import { columnsPersonal } from "./columnsEmployee";
-import useGetEmployee from "../../hooks/employee/useGetEmployee";
-// Importamos el nuevo Hook
 import { useServerTableState } from "../../components/common/tabla/useServerTableState";
-//context de la sucursal
-import { useBranch } from "../../context/BranchContext";
-import { ModalEmployee } from "@/components/Eployee/ModalEmployee";
-import { useState } from "react";
-//tipo para el formulario de empleado
-import { type Employee, type FormEmployeeInput } from "@/types/employee";
-//importar el hook de creacion de empleado
-import { useCreateEmployee } from "@/hooks/employee/useCreateEmployee";
-import { toast } from "sonner";
+//hooks para obtener,crear,actualizar y eliminar los empleados
+import useGetEmployee from "../../hooks/employee/useGetEmployee";
 import { useUpdateEmployee } from "@/hooks/employee/useUpdateEmployee";
 import { useDeleteEmployee } from "@/hooks/employee/useDeleteEmployee";
+import { useCreateEmployee } from "@/hooks/employee/useCreateEmployee";
+//hook para resertar credenciales
+import { useUpdateCredential } from "@/hooks/credential/useUpdateCredential";
+//context de la sucursal
+import { useBranch } from "../../context/BranchContext";
+//modales
+import { ModalEmployee } from "@/components/Eployee/ModalEmployee";
 import { AlertDelete } from "@/components/common/AlertDelet";
-//context de branch
+import { ModalCredencials } from "@/components/Eployee/ModalCredencials";
+//tipo para el formulario de empleado
+import { type Employee, type FormEmployeeInput } from "@/types/employee";
+//context del user
+import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { ResetCredentialsForm } from "@/schemes/credecials";
 
 export default function Employee() {
   //logica de la tabla
@@ -74,6 +79,7 @@ export default function Employee() {
     setDesableMod(disable);
     handleOpen();
   };
+
   //logica para el modal de eliminacion
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const handleOpenDelete = () => {
@@ -83,11 +89,15 @@ export default function Employee() {
     setEmpSelected(empSelected);
     handleOpenDelete();
   };
+
   //Logica de eliminacion del empleado
   const deleteE = useDeleteEmployee();
   //funcion para eliminar empleado
   const handleDeleteEmployee = () => {
-    const promise = deleteE.mutateAsync(empSelected?.id || "");
+    const promise = deleteE.mutateAsync({
+      idEmp: empSelected?.id || "",
+      hasSystemAccess: empSelected?.email ? true : false,
+    });
     toast.promise(promise, {
       loading: "Eliminando empleado...",
       success: "Empleado eliminado con éxito",
@@ -97,6 +107,33 @@ export default function Employee() {
     });
   };
 
+  //logica para el modal de resetear credenciales
+  const [openCM, setOpenCM] = useState(false);
+  const openCModal = (empSelected: Employee) => {
+    setEmpSelected(empSelected);
+    setOpenCM(true);
+  };
+  const resetC = useUpdateCredential();
+  const handleResetCredentials = (dataForm: ResetCredentialsForm) => {
+    const promise = resetC.mutateAsync({
+      email: dataForm.email,
+      employeeId: empSelected?.id || "",
+      resetPassword: dataForm.resetPassword,
+      password: dataForm.password,
+    });
+    toast.promise(promise, {
+      loading: "Actualizando credenciales...",
+      success: "Credenciales actualizadas con éxito",
+      error: "Error al actualizar las credenciales",
+      position: "top-right",
+      duration: 3500,
+    });
+    setOpenCM(false);
+  };
+
+  //role del usuario
+  const { user } = useAuth();
+  const role = user?.role || "SINROLE";
   return (
     // calcular alture - 64px del header
     <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-4 gap-4 px-4">
@@ -110,16 +147,18 @@ export default function Employee() {
         </h1>
 
         <div className="flex items-center gap-2">
-          <Button
-            onClick={() => {
-              setEmpSelected(undefined);
-              setDesableMod(false);
-              handleOpen();
-            }}
-            className="cursor-pointer"
-          >
-            Agregar Empleado
-          </Button>
+          {role === "SUPERADMIN" && (
+            <Button
+              onClick={() => {
+                setEmpSelected(undefined);
+                setDesableMod(false);
+                handleOpen();
+              }}
+              className="cursor-pointer"
+            >
+              Agregar Empleado
+            </Button>
+          )}
           <DebouncedInput
             valueDafault={tableState.globalFilter ?? ""}
             onChange={tableState.onGlobalFilterChange}
@@ -135,6 +174,7 @@ export default function Employee() {
             setOpenEdit: openEditModal,
             setOpenView: openViewModal,
             setOpenDelete: openDeleteAlert,
+            setOpenCM: openCModal,
           })}
           data={data?.data || []}
           rowCount={data?.meta.total ?? 0}
@@ -163,6 +203,14 @@ export default function Employee() {
         isOpen={isOpenDelete}
         setOpenAlert={handleOpenDelete}
         funDelete={handleDeleteEmployee}
+      />
+
+      {/* Modal Para Las Credenciales */}
+      <ModalCredencials
+        funParent={handleResetCredentials}
+        isOpen={openCM}
+        setOpen={() => setOpenCM(!openCM)}
+        emailC={empSelected?.email}
       />
     </div>
   );

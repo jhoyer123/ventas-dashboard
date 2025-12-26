@@ -17,9 +17,12 @@ export const getEmployees = async (
   //let query = supabase.from("employees").select("*", { count: "exact" });
   let query = supabase
     .from("employees")
-    .select(`id,name,cedula,address,phone,birthDate,job,branchId`, {
-      count: "exact",
-    });
+    .select(
+      `id,name,cedula,address,phone,birthDate,job,branchId,users(id,email,role)`,
+      {
+        count: "exact",
+      }
+    );
 
   // Búsqueda global
   if (params.globalFilter) {
@@ -50,9 +53,24 @@ export const getEmployees = async (
   if (error) {
     throw error;
   }
-
+  //refinar datos
+  const dataReifined = data.map((emp: any) => ({
+    id: emp.id,
+    name: emp.name,
+    cedula: emp.cedula,
+    address: emp.address,
+    phone: emp.phone,
+    // Convertimos el string de la fecha a un objeto Date real
+    birthDate: emp.birthDate ? new Date(emp.birthDate) : undefined,
+    job: emp.job,
+    branchId: emp.branchId,
+    // Aplanamos los datos del usuario si existen
+    email: emp.users?.email || null,
+    systemRole: emp.users?.role || null,
+    idUser: emp.users?.id || null,
+  }));
   return {
-    data: data || [],
+    data: dataReifined || [],
     meta: {
       total: count || 0,
       page: params.pageIndex,
@@ -63,54 +81,120 @@ export const getEmployees = async (
 };
 
 // Crear un nuevo empleado
-export const createEmployee = async (dataEmp: FormEmployeeInput) => {
-  // Lógica para crear un empleado
-  const { data, error } = await supabase
-    .from("employees")
-    .insert(dataEmp)
-    .select()
-    .single();
+export const createEmployee = async (payload: FormEmployeeInput) => {
+  if (payload.hasSystemAccess) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-  if (error) {
-    console.error("Error al crear empleado:", error);
-    throw error;
+    if (!session) throw new Error("No session");
+
+    const res = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-employee`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          p_name: payload.name,
+          p_job: payload.job,
+          p_branch_id: payload.branchId,
+          p_has_system: payload.hasSystemAccess,
+
+          p_cedula: payload.cedula,
+          p_address: payload.address,
+          p_phone: payload.phone,
+          p_birth_date: payload.birthDate,
+
+          p_email: payload.email,
+          p_password: payload.password,
+          p_system_role: payload.systemRole,
+          p_force_password_change: true,
+        }),
+      }
+    );
+
+    const json = await res.json();
+
+    if (!res.ok) throw new Error(json.error);
+
+    return json;
+  } else {
+    const { data, error } = await supabase.rpc("create_employee_and_user", {
+      p_name: payload.name,
+      p_job: payload.job,
+      p_branch_id: payload.branchId,
+      p_has_system: payload.hasSystemAccess,
+      p_cedula: payload.cedula,
+      p_address: payload.address,
+      p_phone: payload.phone,
+      p_birth_date: payload.birthDate,
+    });
+
+    if (error) {
+      throw new Error("Error al crear empleado sin acceso");
+    }
+
+    return data;
   }
-
-  return data;
 };
 
-//Actualizar un empleado
+// Actualizar un empleado
 export const updateEmployee = async (
-  dataEmp: FormEmployeeInput,
-  idEmp: string
+  employeeId: string,
+  dataEmp: FormEmployeeInput
 ) => {
-  const { data, error } = await supabase
-    .from("employees")
-    .update(dataEmp)
-    .eq("id", idEmp)
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc("update_employee_and_user", {
+    p_employee_id: employeeId,
+    p_name: dataEmp.name,
+    p_job: dataEmp.job,
+    p_branch_id: dataEmp.branchId,
+    p_cedula: dataEmp.cedula,
+    p_address: dataEmp.address,
+    p_phone: dataEmp.phone,
+    p_birth_date: dataEmp.birthDate,
+    p_system_role: dataEmp.systemRole,
+  });
 
   if (error) {
     console.error("Error al actualizar empleado:", error);
-    throw error;
+    throw new Error("Error al actualizar empleado");
   }
 
   return data;
 };
 
 //eliminar un empleado
-export const deleteEmployee = async (idEmp: string) => {
-  const { data, error } = await supabase
-    .from("employees")
-    .delete()
-    .eq("id", idEmp)
-    .select()
-    .single();
+export const deleteEmployee = async (
+  idEmp: string,
+  hasSystemAccess: boolean
+) => {
+  if (!hasSystemAccess) {
+    const { data, error } = await supabase.rpc("delete_employee_decision", {
+      p_employee_id: idEmp,
+    });
+
+    if (error) {
+      throw new Error("Error al eliminar empleado");
+    }
+
+    return data;
+  }
+
+  // EMPLEADO CON ACCESO → EDGE FUNCTION
+  const { data, error } = await supabase.functions.invoke(
+    "delete-employee", // nombre EXACTO de tu edge
+    {
+      body: {
+        employee_id: idEmp,
+      },
+    }
+  );
 
   if (error) {
-    console.error("Error al eliminar empleado:", error);
-    throw error;
+    throw new Error(error.message || "Error al eliminar empleado");
   }
 
   return data;

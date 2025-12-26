@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/popover";
 //traemos las sucursales (branches)
 import { useGetBranches } from "@/hooks/branch/useGetBranches";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 //importamos el schema y el tipo de zod
 import { EmployeeSchema } from "@/types/employee";
 import type { FormEmployeeInput, Employee } from "@/types/employee";
@@ -37,24 +37,30 @@ const FormEmployee = ({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<FormEmployeeInput>({
     resolver: zodResolver(EmployeeSchema),
     defaultValues: initialValues || {
       job: undefined,
       branchId: branchIdC ?? "",
+      hasSystemAccess: false,
     },
   });
+  //si no hay initial values seteamos el hasSystemAccess en false
+  useEffect(() => {
+    setValue("hasSystemAccess", false);
+  }, []);
   //obtenemos las sucursales
   const { data: branches } = useGetBranches();
   //funcion para el submit
   const onsubmit = (data: FormEmployeeInput) => {
-    console.log(data);
-    //funParent(data);
+    //console.log(data);
+    funParent(data);
   };
   //open del datepicker
   const [open, setOpen] = useState(false);
-  const hasAccess = watch("hasSystemAccess");
+  const hasAccess = !initialValues?.email ? watch("hasSystemAccess") : true;
   return (
     <fieldset disabled={isViewMode}>
       <form onSubmit={handleSubmit(onsubmit)} id="form-employee">
@@ -65,15 +71,22 @@ const FormEmployee = ({
               register={register}
               errors={errors}
               isViewMode={isViewMode}
+              initialValues={initialValues}
             />
           )}
-          <div>
-            <input type="checkbox" {...register("hasSystemAccess")} />
-            <label className="ml-2 text-sm text-foreground-secondary">
-              Marca y llena los campos de arriba solo si el empleado tendrá
-              acceso al sistema.
-            </label>
-          </div>
+          {!initialValues && (
+            <div>
+              <input
+                type="checkbox"
+                disabled={isViewMode}
+                {...register("hasSystemAccess")}
+              />
+              <label className="ml-2 text-sm text-foreground-secondary">
+                Marca y llena los campos de arriba solo si el empleado tendrá
+                acceso al sistema.
+              </label>
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4">
             <FormInput
               label="Nombre"
@@ -93,7 +106,7 @@ const FormEmployee = ({
               errors={errors}
               options={
                 branches?.map((branch) => ({
-                  value: branch.id,
+                  value: branch.id || "N/A",
                   label: branch.branch_name,
                 })) || []
               }

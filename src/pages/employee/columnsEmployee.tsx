@@ -5,6 +5,7 @@ import {
   Pencil,
   Trash2,
   Eye /* Calendar */,
+  Key,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -15,17 +16,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+//contest del user
+import { useAuth } from "@/context/AuthContext";
 
 interface ColumnProps {
   setOpenEdit: (empleado: Employee) => void;
   setOpenView: (empleado: Employee, disable: boolean) => void;
   setOpenDelete: (empleado: Employee) => void;
+  setOpenCM: (empleado: Employee) => void;
 }
 
 export const columnsPersonal = ({
   setOpenEdit,
   setOpenView,
   setOpenDelete,
+  setOpenCM,
 }: ColumnProps): ColumnDef<Employee>[] => [
   {
     accessorKey: "name",
@@ -68,36 +73,32 @@ export const columnsPersonal = ({
     ),
   },
   {
-    accessorKey: "birthDate",
+    accessorKey: "Edad",
     header: "Fecha de Nacimiento",
     enableSorting: true,
-    /* cell: ({ row }) => {
-      const dateValue = row.original.birthDate;
-      if (!dateValue) return <span className="text-gray-400">N/A</span>;
+    cell: ({ row }) => {
+      //calcular la edad a partir de la fecha de nacimiento
+      const hoy = new Date();
+      const cumpleanos = row.original.birthDate ? row.original.birthDate : "";
+      if (!cumpleanos) return "N/A";
+      let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+      const mes = hoy.getMonth() - cumpleanos.getMonth();
 
-      try {
-        const formattedDate = new Date(dateValue).toLocaleDateString("es-ES", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-        return (
-          <div className="flex items-center gap-2 text-gray-600">
-            <Calendar className="w-4 h-4 text-gray-400" />
-            <span>{formattedDate}</span>
-          </div>
-        );
-      } catch (e) {
-        return <span className="text-gray-400">{dateValue}</span>;
+      // Si no ha llegado su mes, o es su mes pero no ha llegado el día, restamos 1
+      if (mes < 0 || (mes === 0 && hoy.getDate() < cumpleanos.getDate())) {
+        edad--;
       }
-    }, */
+
+      return edad;
+    },
   },
   {
     id: "actions",
     header: "Acciones",
     cell: ({ row }) => {
       const employee = row.original;
-
+      const { user } = useAuth();
+      const role = user?.role || "SINROLE";
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -126,21 +127,36 @@ export const columnsPersonal = ({
               <span>Ver detalles</span>
             </DropdownMenuItem>
 
-            <DropdownMenuItem
-              onClick={() => {
-                const employEnviar = {
-                  ...employee,
-                  birthDate: employee.birthDate
-                    ? new Date(employee.birthDate + "T00:00")
-                    : undefined,
-                };
-                setOpenEdit(employEnviar);
-              }}
-              className="cursor-pointer"
-            >
-              <Pencil className="mr-2 h-4 w-4" />
-              <span>Editar</span>
-            </DropdownMenuItem>
+            {/* solo SUPERADMIN PUEDE HACE ESTO */}
+            {role === "SUPERADMIN" && (
+              <DropdownMenuItem
+                onClick={() => {
+                  const employEnviar = {
+                    ...employee,
+                    birthDate: employee.birthDate
+                      ? new Date(employee.birthDate + "T00:00")
+                      : undefined,
+                  };
+                  setOpenEdit(employEnviar);
+                }}
+                className="cursor-pointer"
+              >
+                <Pencil className="mr-2 h-4 w-4" />
+                <span>Editar</span>
+              </DropdownMenuItem>
+            )}
+
+            {role === "SUPERADMIN" && employee.email && (
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenCM(employee);
+                }}
+                className="cursor-pointer"
+              >
+                <Key className="mr-2 h-4 w-4" />
+                <span>Resetear Credenciales</span>
+              </DropdownMenuItem>
+            )}
 
             <DropdownMenuSeparator />
 

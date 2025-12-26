@@ -12,7 +12,7 @@ export const useUpdateEmployee = () => {
   const queryClient = useQueryClient();
 
   return useMutation<Employee, Error, dataInput>({
-    mutationFn: ({ id, dataEmployee }) => updateEmployee(dataEmployee, id),
+    mutationFn: ({ id, dataEmployee }) => updateEmployee(id, dataEmployee),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },

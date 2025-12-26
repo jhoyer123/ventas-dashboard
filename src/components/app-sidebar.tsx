@@ -12,7 +12,7 @@ import {
   Store,
 } from "lucide-react";
 
-import { NavDropDown } from "@/components/nav-main";
+//import { NavDropDown } from "@/components/nav-main";
 //import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 //import { TeamSwitcher } from "@/components/team-switcher";
@@ -62,36 +62,49 @@ const data = {
       name: "Dashboard",
       url: "/dashboard",
       icon: Frame,
+      permissions: "VIEW_DASHBOARD",
     },
     {
       name: "Sucursales",
       url: "/dashboard/branches",
       icon: Store,
+      permissions: "VIEW_BRANCHES",
     },
     {
       name: "Productos",
       url: "/dashboard/products",
       icon: Package,
+      permissions: "VIEW_PRODUCTS",
     },
     {
       name: "Categorias",
       url: "/dashboard/categories",
       icon: List,
+      permissions: "VIEW_CATEGORIES",
     },
     {
       name: "Ventas",
       url: "/dashboard/sales",
       icon: History,
+      permissions: "VIEW_SALES",
     },
     {
       name: "Movimientos",
       url: "/dashboard/movements",
       icon: AudioWaveform,
+      permissions: "VIEW_MOVEMENTS",
     },
     {
       name: "Punto de Venta",
       url: "/dashboard/pos",
       icon: ShoppingCart,
+      permissions: "VIEW_POS",
+    },
+    {
+      name: "Empleados",
+      url: "/dashboard/employees",
+      icon: IdCardLanyard,
+      permissions: "VIEW_EMPLOYEES",
     },
   ],
 };
@@ -99,19 +112,20 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   //user desde el context
   let usera = useAuth().user ?? data.user;
+  const role = usera?.role || "SINROLE";
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         {/* Banner en el sidebar */}
         <SidebarBanner />
         {/* Selector de sucursales */}
-        <BranchSelected /* teams={data.sucursales} */ />
+        {role === "SUPERADMIN" && <BranchSelected />}
       </SidebarHeader>
       <SidebarContent>
         {/* Botones normales */}
         <NavButton projects={data.buttons} />
         {/* Menu con dropdowns */}
-        <NavDropDown items={data.navMain} />
+        {/* <NavDropDown items={data.navMain} /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={usera ?? data.user} />

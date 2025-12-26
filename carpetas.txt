@@ -79,3 +79,11 @@ Descuentos: discountAmount.
 Monto de Deuda: debtAmount (si aplica).
 
 Vendedor/Sucursal: userId o branchId (mapeado a nombres reales).
+
+
+
+
+
+SUPABASE 
+npx supabase functions new create-employee
+npx supabase functions deploy create-employee

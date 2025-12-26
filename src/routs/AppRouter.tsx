@@ -20,7 +20,6 @@ import Pos from "@/pages/pos/Pos";
 import Sale from "@/pages/sale/Sale";
 import Movements from "@/pages/movements/Movements";
 import Profile from "@/pages/profile/Profile";
-import User from "@/pages/users/User";
 
 const AppRouter = () => {
   return (
@@ -62,8 +61,6 @@ const AppRouter = () => {
           <Route path="movements" element={<Movements />} />
           {/* Perfil del usuario */}
           <Route path="profile" element={<Profile />} />
-          {/* pagina de usuarios con acceso al sistema */}
-          <Route path="users" element={<User />} />
         </Route>
       </Routes>
       <Toaster theme="dark" />

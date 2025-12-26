@@ -3,8 +3,25 @@ export interface Permissions {
 }
 //definimos los permisos por rol
 export const permissions: Permissions = {
-  SUPERADMIN: ["Empleados", "Models" , "Documentation", "Settings"],
-  ADMIN: ["VIEW_DASHBOARD", "VIEW_REPORTS"],
-  SELLER: ["VIEW_DASHBOARD"],
+  SUPERADMIN: [
+    "VIEW_DASHBOARD",
+    "VIEW_BRANCHES",
+    "VIEW_PRODUCTS",
+    "VIEW_CATEGORIES",
+    "VIEW_SALES",
+    "VIEW_MOVEMENTS",
+    "VIEW_POS",
+    "VIEW_EMPLOYEES",
+  ],
+  ADMIN: [
+    "VIEW_DASHBOARD",
+    "VIEW_PRODUCTS",
+    "VIEW_CATEGORIES",
+    "VIEW_SALES",
+    "VIEW_MOVEMENTS",
+    "VIEW_POS",
+    "VIEW_EMPLOYEES",
+  ],
+  SELLER: ["VIEW_SALES", "VIEW_POS"],
   INVENTORY: ["VIEW_DASHBOARD", "MANAGE_INVENTORY"],
 };
