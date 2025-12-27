@@ -1,4 +1,4 @@
-import type { EditingQtyMap } from "@/pages/pos/Pos";
+import type {EditingQtyMap} from "@/pages/pos/Pos";
 //types para el pos y la venta
 import type { ProductPos, CartItem } from "@/types/salePos";
 import { useMemo, useState } from "react";
@@ -26,7 +26,7 @@ export const useCart = () => {
         duration: 4000,
       });
     }
-    setCart((prev) => {
+    setCart((prev: CartItem[]) => {
       const finalPrice = product.is_offer_active
         ? product.price_offer!
         : product.price;
@@ -52,14 +52,14 @@ export const useCart = () => {
       });
       value = item.quantity;
     }
-    setCart((prev) =>
+    setCart((prev: CartItem[]) =>
       prev.map((p) =>
         p.id === item.id
           ? { ...p, quantity: value, subtotal: value * p.price }
           : p
       )
     );
-    setEditingQty((prev) => {
+    setEditingQty((prev: EditingQtyMap) => {
       const copy = { ...prev };
       delete copy[item.id];
       return copy;
@@ -77,7 +77,7 @@ export const useCart = () => {
       setManualAmount("");
       setIsDebt(false);
     }
-    setCart((prev) => prev.filter((item) => item.id !== id));
+    setCart((prev: CartItem[]) => prev.filter((item) => item.id !== id));
   };
 
   //TOTALES
