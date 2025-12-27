@@ -22,6 +22,7 @@ interface Props {
   isDebt: boolean;
   setIsDebt: React.Dispatch<React.SetStateAction<boolean>>;
   handleManualAmount: (valueI: number | "") => void;
+  openModal: () => void;
 }
 
 export const AsidePos = ({
@@ -34,9 +35,10 @@ export const AsidePos = ({
   commitQuantity,
   setIsDebt,
   setManualAmount,
+  openModal,
 }: Props) => {
   return (
-    <aside className="hidden lg:flex w-[420px] bg-white border-l border-slate-200 flex-col shadow-xl">
+    <aside className="hidden relative lg:flex w-[420px] bg-white border-l border-slate-200 flex-col shadow-xl">
       <div className="px-2 py-2.5 border-b border-slate-100 flex justify-between items-center">
         <h2 className="text-xl font-black flex items-center gap-2">
           <ShoppingCart className="text-indigo-600" size={24} /> Venta
@@ -133,6 +135,20 @@ export const AsidePos = ({
           ))
         )}
       </div>
+      {/* Botón Finalizar */}
+      <button
+        onClick={openModal}
+        disabled={cart.length === 0}
+        className={`w-[90%] py-2 bg-black text-white my-2 mx-auto rounded-lg  ${
+          cart.length === 0
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:scale-102 cursor-pointer"
+        } duration-300 transition-all text-2xl font-title`}
+      >
+        <span className="relative z-10 flex items-center justify-center gap-2">
+          Finalizar Venta
+        </span>
+      </button>
     </aside>
   );
 };

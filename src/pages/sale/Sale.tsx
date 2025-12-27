@@ -12,6 +12,10 @@ import { useModalsState } from "@/hooks/sale/hookslogic/useModalsState";
 import { SalesModals } from "@/pages/sale/SalesModals";
 //import del hook para el pago de deudas
 import { usePayDebt } from "@/hooks/sale/usePayDebt";
+//hook para cancelar venta
+import { useCancelSale } from "@/hooks/sale/useCancelSale";
+//context del usuario
+import { useAuth } from "@/context/AuthContext";
 import type { DebtPaymentForm } from "@/schemes/debPay";
 import { toast } from "sonner";
 
@@ -49,8 +53,26 @@ const Sale = () => {
     modals.closeModal();
   };
 
+  //logica para cancelar una venta
+  const cancelSale = useCancelSale();
+  const { user } = useAuth();
+  const handleCancel = () => {
+    const promise = cancelSale.mutateAsync({
+      saleId: modals.typeModal?.sale?.id!,
+      userId: user?.id!,
+    });
+    toast.promise(promise, {
+      loading: "Cancelando la venta...",
+      success: "Venta cancelada con exito",
+      error: "Error al cancelar la venta",
+      position: "top-right",
+      duration: 4000,
+    });
+    modals.closeModal();
+  };
+
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-4 gap-4 px-4">
       <div className="flex justify-between items-center py-2">
         <h1 className="text-2xl font-bold ">Historial de Ventas</h1>
         <DebouncedInput
@@ -76,6 +98,7 @@ const Sale = () => {
         sale={modals.typeModal?.sale || null}
         closeModal={modals.closeModal}
         handlePayDebt={handlePayDebt}
+        funCancel={handleCancel}
       />
     </div>
   );

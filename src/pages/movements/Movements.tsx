@@ -31,8 +31,9 @@ const Movements = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex justify-between items-center py-2">
+    // calcular alture - 64px del header
+    <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-4 gap-4 px-4">
+      <div className="flex items-center justify-between shrink-0">
         <h1 className="text-2xl font-bold">Lista de Movimientos</h1>
         {/* buscador */}
         <DebouncedInput
@@ -42,16 +43,18 @@ const Movements = () => {
         />
       </div>
       {/* tabla */}
-      <DataTable
-        columns={columnsMovement({ openModal })}
-        data={data?.data || []}
-        rowCount={data?.meta.total ?? 0}
-        pagination={tableState.pagination}
-        setPagination={tableState.setPagination}
-        sorting={tableState.sorting}
-        setSorting={tableState.setSorting}
-        isLoading={isLoading}
-      />
+      <div className="flex-1 min-h-0">
+        <DataTable
+          columns={columnsMovement({ openModal })}
+          data={data?.data || []}
+          rowCount={data?.meta.total ?? 0}
+          pagination={tableState.pagination}
+          setPagination={tableState.setPagination}
+          sorting={tableState.sorting}
+          setSorting={tableState.setSorting}
+          isLoading={isLoading}
+        />
+      </div>
 
       {/* modal de detalles */}
       <ModalDetMovement

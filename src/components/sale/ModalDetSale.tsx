@@ -28,35 +28,36 @@ interface SaleDetailsModalProps {
   closeModal?: () => void;
 }
 
+// Devuelve un badge visual para mostrar el estado de la venta con color y etiqueta
+export const getStatusBadge = (status: string) => {
+  //console.log("Status:", status);
+  const statusConfig: Record<string, { label: string; color: string }> = {
+    COMPLETED: { label: "COMPLETADO", color: "bg-green-100 text-green-800" },
+    PENDING: { label: "PENDIENTE", color: "bg-yellow-100 text-yellow-800" },
+    CANCELLED: { label: "CANCELADO", color: "bg-red-100 text-red-800" },
+  };
+
+  const config = statusConfig[status] || {
+    label: status,
+    color: "bg-gray-100 text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${config.color}`}
+    >
+      <CheckCircle2 className="w-4 h-4" />
+      {config.label}
+    </span>
+  );
+};
+
 //ESTE MODAL MUESTRA LOS DETALLES DE UNA VENTA REALIZADA
 export const ModalDetSale = ({
   open,
   sale,
   closeModal,
 }: SaleDetailsModalProps) => {
-  // Devuelve un badge visual para mostrar el estado de la venta con color y etiqueta
-  const getStatusBadge = (status: string) => {
-    //console.log("Status:", status);
-    const statusConfig: Record<string, { label: string; color: string }> = {
-      COMPLETED: { label: "COMPLETED", color: "bg-green-100 text-green-800" },
-      PENDING: { label: "PENDING", color: "bg-yellow-100 text-yellow-800" },
-      CANCELLED: { label: "CANCELLED", color: "bg-red-100 text-red-800" },
-    };
-
-    const config = statusConfig[status] || {
-      label: status,
-      color: "bg-gray-100 text-gray-800",
-    };
-
-    return (
-      <span
-        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${config.color}`}
-      >
-        <CheckCircle2 className="w-4 h-4" />
-        {config.label}
-      </span>
-    );
-  };
   //funcion que traduce el metodo de pago
   const getPaymentMethod = (method: string) => {
     const methods: Record<string, string> = {
@@ -71,7 +72,7 @@ export const ModalDetSale = ({
 
   return (
     <Dialog open={open} onOpenChange={closeModal}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Detalles de Venta

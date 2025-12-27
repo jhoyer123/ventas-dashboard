@@ -12,14 +12,9 @@ import { CircleAlert } from "lucide-react";
 import { AsidePos } from "@/components/Pos/AsidePos";
 import { useCart } from "@/hooks/pos/hookslogic/useCart";
 import { useProducts } from "@/hooks/pos/hookslogic/useProducts";
-import { FooterPos } from "@/components/Pos/FooterPos";
 import { ModalPosE } from "@/components/Pos/ModalPosE";
 //types para el pos y la venta
-import type {
-  SaleInput,
-  CartItem,
-  Totals,
-} from "@/types/salePos";
+import type { SaleInput, CartItem } from "@/types/salePos";
 import type { SaleFormValues } from "@/schemes/saleExecute";
 //hook para crrear la venta
 import { useCreateSale } from "@/hooks/pos/useCreateSale";
@@ -57,11 +52,7 @@ const Pos = () => {
   //hook para crear la venta
   const createSaleMutation = useCreateSale();
   //FUNCION PARA EJECUTAR VENTA
-  const executeSale = (
-    carts: CartItem[],
-    totals: Totals,
-    dataF: SaleFormValues
-  ) => {
+  const executeSale = (carts: CartItem[], dataF: SaleFormValues) => {
     //primero que nada refinar los datos
     const prodRef = carts.map((item) => ({
       productId: item.id,
@@ -72,9 +63,9 @@ const Pos = () => {
           : item.price,
       totalPrice: item.subtotal,
     }));
-
-    const total = totals.calculatedTotal;
-    const manual = Number(cartLogic.manualAmount || 0);
+    //calculamos la deuda
+    const deb = dataF.totalCobrado - dataF.montoRecibido!;
+    const numDeb = Number(deb.toFixed(2));
 
     const datosE: SaleInput = {
       branchId: currentBranch!,
@@ -83,20 +74,10 @@ const Pos = () => {
       clientNit: dataF.idNit!,
       paymentMethod: dataF.paymentMethod!,
       status: dataF.status!,
-
-      totalAmount: Number(total.toFixed(2)),
-
-      discountAmount: cartLogic.isDebt
-        ? 0
-        : cartLogic.manualAmount !== ""
-        ? Number((total - manual).toFixed(2))
-        : 0,
-
-      finalAmount:
-        cartLogic.manualAmount !== "" ? manual : Number(total.toFixed(2)),
-
-      debtAmount: cartLogic.isDebt ? Number((total - manual).toFixed(2)) : 0,
-
+      totalAmount: dataF.totalReal,
+      discountAmount: dataF.totalReal - dataF.totalCobrado,
+      finalAmount: dataF.totalCobrado,
+      debtAmount: dataF.hayDeuda ? numDeb : 0,
       products: prodRef,
     };
     const promise = createSaleMutation.mutateAsync(datosE);
@@ -139,13 +120,10 @@ const Pos = () => {
 
         {/* Grid de Productos */}
         <ProductsPos addToCart={cartLogic.addToCart} {...productsLogic} />
-
-        {/* footer: close venta */}
-        <FooterPos {...cartLogic} openModal={() => setIsModalOpen(true)} />
       </main>
 
       {/* PANEL DERECHO: CARRITO */}
-      <AsidePos {...cartLogic} />
+      <AsidePos {...cartLogic} openModal={() => setIsModalOpen(true)} />
 
       {/* modal de Finalizar Venta */}
       <ModalPosE
@@ -154,7 +132,6 @@ const Pos = () => {
         carts={cartLogic.cart}
         totals={cartLogic.totals}
         executeSale={executeSale}
-        manualMount={cartLogic.manualAmount}
       />
     </div>
   );

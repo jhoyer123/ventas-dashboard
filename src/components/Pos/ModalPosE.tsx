@@ -9,24 +9,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
-import { useForm, Controller } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 //types para el pos y la venta
 import type { CartItem, Totals } from "@/types/salePos";
 import { saleFormSchema, type SaleFormValues } from "@/schemes/saleExecute";
-import { FormSelect } from "../common/Form/FormSelect";
+import { FormSecFinancial } from "./FormSecFinancial";
+import { FormSecStateSale } from "./FormSecStateSale";
 
 interface Props {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   carts: CartItem[];
   totals: Totals;
-  executeSale: (cart: CartItem[], totals: Totals, data: SaleFormValues) => void;
-  manualMount: number | "";
+  executeSale: (cart: CartItem[], data: SaleFormValues) => void;
 }
 
 export function ModalPosE({
@@ -35,16 +33,8 @@ export function ModalPosE({
   carts,
   totals,
   executeSale,
-  manualMount,
 }: Props) {
-  const {
-    control,
-    watch,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<SaleFormValues>({
+  const methods = useForm<SaleFormValues>({
     resolver: zodResolver(saleFormSchema),
     defaultValues: {
       name: "",
@@ -52,41 +42,53 @@ export function ModalPosE({
       paymentMethod: undefined,
       status: undefined,
       isGeneric: false,
+      totalReal: Number(totals.calculatedTotal.toFixed(2)),
+      totalCobrado: Number(totals.calculatedTotal.toFixed(2)),
+      hayDeuda: false,
     },
   });
 
-  const isGeneric = watch("isGeneric");
+  const isGeneric = methods.watch("isGeneric");
 
   // sincroniza venta rápida
   useEffect(() => {
     if (isGeneric) {
-      setValue("name", "S/N");
-      setValue("idNit", "0");
+      methods.setValue("name", "S/N");
+      methods.setValue("idNit", "0");
     } else {
-      setValue("name", "");
-      setValue("idNit", "");
+      methods.setValue("name", "");
+      methods.setValue("idNit", "");
     }
-  }, [isGeneric, setValue]);
+  }, [isGeneric, methods.setValue]);
+
+  //setea los totales cuando cambian
+  useEffect(() => {
+    methods.setValue("totalReal", Number(totals.calculatedTotal.toFixed(2)));
+    methods.setValue("totalCobrado", Number(totals.calculatedTotal.toFixed(2)));
+  }, [totals.calculatedTotal]);
+
+  useEffect(() => {
+    if (carts.length === 0) {
+      methods.reset();
+    }
+  }, [carts]);
 
   const onSubmit = (data: SaleFormValues) => {
-    executeSale(carts, totals, data);
+    console.log("Datos de la venta:", data);
+    executeSale(carts, data);
     setIsOpen(false);
-    reset();
-  };
-
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
-
-    if (!open) {
-      reset({ paymentMethod: undefined, status: undefined }); // ← LIMPIA TODO
-    }
+    methods.reset();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[520px] p-6">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogHeader className="mb-5">
+    <FormProvider {...methods}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent
+          className="px-1 bg-card text-card-foreground max-h-[90vh] flex flex-col overflow-hidden
+          sm:max-w-[520px] sm:px-4
+        md:max-w-[720px]"
+        >
+          <DialogHeader className="shrink-0">
             <DialogTitle className="text-2xl font-bold">
               Procesar Pago
             </DialogTitle>
@@ -94,122 +96,39 @@ export function ModalPosE({
               Confirma los datos para cerrar la venta.
             </DialogDescription>
           </DialogHeader>
-
-          {/* TOTAL */}
-          <div className="bg-slate-50 border rounded-lg p-6 mb-6 text-center">
-            <span className="text-sm font-semibold text-slate-500 uppercase">
-              Total Pagado
-            </span>
-            <div className="text-5xl font-extrabold mt-2">
-              {(manualMount === ""
-                ? totals.finalAmount
-                : Number(manualMount)
-              ).toFixed(2)}
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            className="flex flex-col flex-1"
+          >
+            <div className="max-h-[calc(90vh-200px)] overflow-y-auto flex flex-col gap-4">
+              {/* seccion financiera */}
+              <FormSecFinancial />
+              {/* seccion datos cliente */}
+              <FormSecStateSale isGeneric={isGeneric} />
             </div>
-          </div>
-
-          <div className="grid gap-6">
-            {/* VENTA RÁPIDA */}
-            <Controller
-              name="isGeneric"
-              control={control}
-              render={({ field }) => (
-                <div className="flex items-center gap-3 p-4 border rounded-md bg-slate-50">
-                  <input
-                    type="checkbox"
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                    className="h-5 w-5"
-                  />
-                  <Label className="cursor-pointer">
-                    Venta rápida / Sin datos
-                  </Label>
-                </div>
-              )}
-            />
-
-            {/* DATOS CLIENTE */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-1 grid gap-2">
-                <Label>NIT / CI</Label>
-                <Controller
-                  name="idNit"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      disabled={isGeneric}
-                      className="font-mono"
-                    />
-                  )}
-                />
-                {errors.idNit && (
-                  <p className="text-red-600 text-sm">{errors.idNit.message}</p>
-                )}
+            <DialogFooter className="mt-2 shrink-0">
+              <div
+                className="flex flex-col justify-between items-center w-full 
+              sm:flex-row gap-3"
+              >
+                <DialogClose asChild>
+                  <Button variant="ghost" type="button" className="bg-ring cursor-pointer w-full
+                  sm:w-auto">
+                    Cancelar
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  className="bg-chart-3 w-full hover:bg-blue-700 text-white cursor-pointer
+                  sm:w-auto"
+                >
+                  Confirmar y Cobrar
+                </Button>
               </div>
-
-              <div className="col-span-2 grid gap-2">
-                <Label>Nombre Cliente</Label>
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field }) => (
-                    <Input {...field} disabled={isGeneric} />
-                  )}
-                />
-                {errors.name && (
-                  <p className="text-red-600 text-sm">{errors.name.message}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-10">
-              {/* SELECTS */}
-              <FormSelect
-                control={control}
-                label="Metodo de pago"
-                name="paymentMethod"
-                errors={errors}
-                placeholder="Seleccione un metodo de pago"
-                options={[
-                  { value: "CASH", label: "Efectivo" },
-                  { value: "CARD", label: "Tarjeta" },
-                  { value: "TRANSFER", label: "Transferencia" },
-                  { value: "QR", label: "Código QR" },
-                ]}
-              />
-
-              {/* ESTADO */}
-              <FormSelect
-                control={control}
-                label="Estado de la Venta"
-                name="status"
-                errors={errors}
-                placeholder="Seleccione el estado"
-                options={[
-                  { value: "PENDING", label: "Pendiente" },
-                  { value: "COMPLETED", label: "Completada" },
-                ]}
-              />
-            </div>
-          </div>
-
-          <DialogFooter className="mt-8">
-            <DialogClose asChild>
-              <Button variant="ghost" type="button">
-                Cancelar
-              </Button>
-            </DialogClose>
-            <Button
-              type="submit"
-              size="lg"
-              className="px-8 bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Confirmar y Cobrar
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </FormProvider>
   );
 }

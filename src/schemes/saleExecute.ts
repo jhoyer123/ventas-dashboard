@@ -13,7 +13,27 @@ export const saleFormSchema = z
       message: "Estado de la venta requerido",
     }),
     isGeneric: z.boolean(),
+    //datos financieros
+    totalReal: z.number({ message: "Campo requerido" }).min(0),
+    totalCobrado: z.number({ message: "Campo requerido" }).min(0),
+    hayDeuda: z.boolean(),
+    montoRecibido: z.number({message: "Campo requerido"}).optional(),
   })
+  .refine(
+    (data) => {
+      if (data.hayDeuda) {
+        return (
+          data.montoRecibido !== undefined &&
+          data.montoRecibido < data.totalCobrado
+        );
+      }
+      return true;
+    },
+    {
+      message: "El monto recibido debe ser menor al total cobrado",
+      path: ["montoRecibido"],
+    }
+  )
   .superRefine((data) => {
     if (data.isGeneric) {
       data.name = "S/N";

@@ -79,3 +79,18 @@ export const payDebt = async (payload: DebtPayPayload) => {
 
   return data;
 };
+
+//Service para cancelar una venta
+export const cancelSale = async (saleId: string, userId: string) => {
+  const { data, error } = await supabase.rpc("cancel_sale", {
+    p_sale_id: saleId,
+    p_user_id: userId,
+  });
+
+  if (error) {
+    console.error("Error al cancelar la venta:", error.message);
+    throw new Error("No se pudo cancelar la venta");
+  }
+
+  return data;
+};

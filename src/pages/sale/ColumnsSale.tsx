@@ -10,8 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Eye, FilePlus, MoreHorizontal } from "lucide-react";
+import { CircleX, CreditCard, Eye, MoreHorizontal } from "lucide-react";
 import type { typeMS } from "@/hooks/sale/hookslogic/useModalsState";
+//import de funcion para badge
+import { getStatusBadge } from "@/components/sale/ModalDetSale";
 
 interface Props {
   openM: (type: typeMS) => void;
@@ -54,6 +56,12 @@ export const columnsSaleH = ({ openM }: Props): ColumnDef<SaleH>[] => [
     enableSorting: true,
   },
   {
+    accessorKey: "status",
+    header: "Estado",
+    enableSorting: true,
+    cell: ({ row }) => getStatusBadge(row.original.status),
+  },
+  {
     accessorKey: "created_at",
     header: "Fecha de Venta",
     enableSorting: true,
@@ -92,10 +100,6 @@ export const columnsSaleH = ({ openM }: Props): ColumnDef<SaleH>[] => [
             >
               <Eye className="w-4 h-4 mr-2" /> Ver Detalles
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <FilePlus />
-              generar recibo
-            </DropdownMenuItem>
             {sale.debtAmount !== 0 && (
               <DropdownMenuItem
                 onClick={() => openM({ typeModal: "debtPayment", sale })}
@@ -104,6 +108,11 @@ export const columnsSaleH = ({ openM }: Props): ColumnDef<SaleH>[] => [
                 Completar Pago
               </DropdownMenuItem>
             )}
+            <DropdownMenuItem
+              onClick={() => openM({ typeModal: "cancel", sale })}
+            >
+              <CircleX className="w-4 h-4 mr-2" /> Cancelar Venta
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

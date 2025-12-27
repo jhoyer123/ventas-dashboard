@@ -1,7 +1,7 @@
 import type { SaleH } from "@/types/saleh";
 import React from "react";
 
-type modal = "details" | "debtPayment" | null;
+type modal = "details" | "debtPayment" | "cancel" | null;
 
 export interface typeMS {
   typeModal: modal;

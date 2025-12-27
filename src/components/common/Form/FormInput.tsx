@@ -24,7 +24,7 @@ export function FormInput<T extends FieldValues>({
   inputProps,
 }: InputProps<T>) {
   return (
-    <div className="grid gap-2">
+    <div className="grid gap-2 w-full">
       <Label htmlFor={name}>{label}</Label>
 
       <ShadInput
@@ -33,7 +33,8 @@ export function FormInput<T extends FieldValues>({
           valueAsNumber: inputProps?.type === "number",
         })}
         {...inputProps}
-        className="bg-gray-50"
+        className="bg-gray-50 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
+        "
       />
 
       {errors?.[name] && (
