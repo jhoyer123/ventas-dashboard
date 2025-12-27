@@ -16,10 +16,10 @@ import Branch from "@/pages/branch/Branch";
 import CreateProduct from "@/pages/product/CreateProduct";
 import Category from "@/pages/categories/Category";
 import Product from "@/pages/product/Product";
-import Pos from "@/pages/pos/Pos";
 import Sale from "@/pages/sale/Sale";
 import Movements from "@/pages/movements/Movements";
 import Profile from "@/pages/profile/Profile";
+import Pos from "@/pages/pos/Pos";
 
 const AppRouter = () => {
   return (

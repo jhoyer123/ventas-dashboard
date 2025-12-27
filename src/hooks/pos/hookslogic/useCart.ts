@@ -1,4 +1,4 @@
-import type {EditingQtyMap} from "@/pages/pos/Pos";
+import type { EditingQtyMap } from "@/pages/pos/Pos";
 //types para el pos y la venta
 import type { ProductPos, CartItem } from "@/types/salePos";
 import { useMemo, useState } from "react";
