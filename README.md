@@ -1,73 +1,56 @@
-# React + TypeScript + Vite
+# Sistema de Inventario con Punto de Venta
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema web desarrollado con React orientado a pequeños y medianos negocios para la gestión de inventarios, control de stock y ventas en punto de venta (POS).
 
-Currently, two official plugins are available:
+## :sparkles: Características
+- Gestión de productos y categorías
+- Control de stock en tiempo real
+- Registro de ventas
+- Generación de recibos de venta
+- Dashboard con metricas
+- Interfaz intuitiva orientada a uso comercial
+- Integración con base de datos en la nube
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Tecnologías
+- React
+- TypeScript
+- HTML
+- CSS
+- Supabase
+- TanStack Query
+- TanStack Table
 
-## React Compiler
+## :gear: Instalación y ejecución
+1. Clonar el repositorio 
+2. Instalar dependencias:
+   ```bash
+   npm install
+3. Configurar variables de entorno en .env
+     - crear las siguientes variables en el archivo
+         - VITE_SUPABASE_URL=url_de_tu_db_en_supabase
+         - VITE_SUPABASE_PUBLISHABLE_KEY=tu_llave_publica   
+5. Ejecución
+   ```bash
+   npm run dev
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📂 Estructura del proyecto
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+/
+├── public/
+├── src/
+│   └── pages/
+│       └── index.astro
+└── package.json
 ```
+🧠 Aprendizajes
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Desarrollo de sistemas comerciales con React y TypeScript
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Integración de Supabase como backend
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Manejo de datos asíncronos con TanStack Query
+
+Implementación de tablas dinámicas con TanStack Table
+
+Organización y escalabilidad de proyectos frontend
