@@ -49,7 +49,7 @@ export const columnsProduct = ({
             loading="lazy"
             src={row.original.main_image || undefined}
             alt={row.original.nameProd}
-            className="w-10 h-10 object-cover rounded"
+            className="w-9.5 h-9.5 object-cover rounded"
           />
           <span className="font-medium text-gray-900">
             {row.original.nameProd}

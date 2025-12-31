@@ -34,7 +34,6 @@ export function ModalAddStock({ isOpen, setIsOpen, onAddStock }: Props) {
   });
 
   const onSubmit = (data: AddStockFormValues) => {
-    console.log("Datos del formulario:", data);
     onAddStock(data);
     setIsOpen();
   };

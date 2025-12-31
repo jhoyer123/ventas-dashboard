@@ -16,7 +16,10 @@ export const getBranchWP = async (productId: string) => {
 
   const assignedBranchIds = assigned.map((item) => item.branchId);
 
-  let query = supabase.from("branches").select("*");
+  let query = supabase
+    .from("branches")
+    .select("id, branchName")
+    .is("deleted_at", null);
 
   if (assignedBranchIds.length > 0) {
     query = query.not("id", "in", `(${assignedBranchIds.join(",")})`);
@@ -25,6 +28,10 @@ export const getBranchWP = async (productId: string) => {
   const { data, error } = await query;
 
   if (error) {
+    console.error(
+      "Error al obtener sucursales sin el producto:",
+      error.message
+    );
     throw new Error(error.message);
   }
 

@@ -152,7 +152,7 @@ export default function Product() {
 
   return (
     // calcular alture - 64px del header
-    <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-4 gap-4 px-4">
+    <div className="h-[calc(100vh-54px)] flex flex-col max-w-7xl mx-auto py-2 gap-2 px-4">
       {/* HEADER - Altura fija */}
       <div className="flex items-center justify-between shrink-0">
         <h1 className="text-2xl font-bold text-gray-900">Lista de Productos</h1>

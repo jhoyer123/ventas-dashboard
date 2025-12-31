@@ -84,9 +84,9 @@ export function ModalPosE({
     <FormProvider {...methods}>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
-          className="px-1 bg-card text-card-foreground max-h-[90vh] flex flex-col overflow-hidden
+          className="px-1 bg-card text-card-foreground max-h-[90vh] flex flex-col overflow-hidden gap-1
           sm:max-w-[520px] sm:px-4
-        md:max-w-[720px]"
+          md:max-w-[720px]"
         >
           <DialogHeader className="shrink-0">
             <DialogTitle className="text-2xl font-bold">
@@ -100,20 +100,24 @@ export function ModalPosE({
             onSubmit={methods.handleSubmit(onSubmit)}
             className="flex flex-col flex-1"
           >
-            <div className="max-h-[calc(90vh-200px)] overflow-y-auto flex flex-col gap-4">
+            <div className="max-h-[calc(90vh-200px)] overflow-y-auto flex flex-col gap-2 py-3">
               {/* seccion financiera */}
               <FormSecFinancial />
               {/* seccion datos cliente */}
               <FormSecStateSale isGeneric={isGeneric} />
             </div>
-            <DialogFooter className="mt-2 shrink-0">
+            <DialogFooter className="mt-3 shrink-0">
               <div
-                className="flex flex-col justify-between items-center w-full 
-              sm:flex-row gap-3"
+                className="flex flex-col justify-between items-center w-full gap-2
+              sm:flex-row "
               >
                 <DialogClose asChild>
-                  <Button variant="ghost" type="button" className="bg-ring cursor-pointer w-full
-                  sm:w-auto">
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    className="bg-ring cursor-pointer w-full
+                  sm:w-auto"
+                  >
                     Cancelar
                   </Button>
                 </DialogClose>

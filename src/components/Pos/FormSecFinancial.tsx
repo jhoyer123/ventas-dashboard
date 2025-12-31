@@ -28,7 +28,7 @@ export function FormSecFinancial() {
       <h3 className="font-semibold">Datos financieros</h3>
 
       <div
-        className="flex flex-col gap-5 w-full justify-between items-center
+        className="flex flex-col gap-3 w-full justify-between items-center
       md:flex-row "
       >
         {/* Total real */}

@@ -74,7 +74,7 @@ export const columnsPersonal = ({
   },
   {
     accessorKey: "Edad",
-    header: "Fecha de Nacimiento",
+    header: "Edad",
     enableSorting: true,
     cell: ({ row }) => {
       //calcular la edad a partir de la fecha de nacimiento

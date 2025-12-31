@@ -1,0 +1,118 @@
+/* ============================================
+   VARIABLES DE COLORES PARA DASHBOARD
+   Paleta: Slate (profesional y premium)
+   ============================================ */
+
+:root {
+  /* Colores principales */
+  --primary: #0f172a; /* slate-900 */
+  --primary-light: #1e293b; /* slate-800 */
+  --primary-dark: #020617; /* slate-950 */
+
+  /* Fondos */
+  --background: #ffffff;
+  --background-secondary: #f8fafc; /* slate-50 */
+  --card-background: #ffffff;
+
+  /* Bordes */
+  --border: #e2e8f0; /* slate-200 */
+  --border-light: #f1f5f9; /* slate-100 */
+
+  /* Textos */
+  --text-primary: #0f172a; /* slate-900 */
+  --text-secondary: #475569; /* slate-600 */
+  --text-muted: #94a3b8; /* slate-400 */
+
+  /* Colores para las métricas */
+  --success: #10b981; /* green-500 */
+  --success-light: #d1fae5; /* green-100 */
+  --info: #3b82f6; /* blue-500 */
+  --info-light: #dbeafe; /* blue-100 */
+  --warning: #f59e0b; /* amber-500 */
+  --warning-light: #fef3c7; /* amber-100 */
+  --danger: #ef4444; /* red-500 */
+  --danger-light: #fee2e2; /* red-100 */
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* Modo Oscuro */
+.dark {
+  /* Colores principales */
+  --primary: #e2e8f0; /* slate-200 */
+  --primary-light: #cbd5e1; /* slate-300 */
+  --primary-dark: #f8fafc; /* slate-50 */
+
+  /* Fondos */
+  --background: #020617; /* slate-950 */
+  --background-secondary: #0f172a; /* slate-900 */
+  --card-background: #1e293b; /* slate-800 */
+
+  /* Bordes */
+  --border: #334155; /* slate-700 */
+  --border-light: #475569; /* slate-600 */
+
+  /* Textos */
+  --text-primary: #f8fafc; /* slate-50 */
+  --text-secondary: #cbd5e1; /* slate-300 */
+  --text-muted: #64748b; /* slate-500 */
+
+  /* Colores para las métricas - ajustados para dark mode */
+  --success: #34d399; /* green-400 */
+  --success-light: #064e3b; /* green-900 */
+  --info: #60a5fa; /* blue-400 */
+  --info-light: #1e3a8a; /* blue-900 */
+  --warning: #fbbf24; /* amber-400 */
+  --warning-light: #78350f; /* amber-900 */
+  --danger: #f87171; /* red-400 */
+  --danger-light: #7f1d1d; /* red-900 */
+
+  /* Sombras para dark mode */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+}
+
+/* Aplicar colores globalmente */
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+/* Clases de utilidad para usar en componentes */
+.bg-card {
+  background-color: var(--card-background);
+}
+
+.border-default {
+  border-color: var(--border);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Clase para el recorte premium tipo la imagen */
+.clip-premium {
+  clip-path: polygon(0% 0%, 85% 0%, 100% 15%, 100% 100%, 0% 100%);
+}
+
+.clip-premium-inverse {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+}
+
+.card-debt {
+  background-color: #1b4079;
+  color: white;
+}

@@ -48,7 +48,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full h-full flex flex-col space-y-4">
+    <div className="w-full h-full flex flex-col space-y-2">
       {/* TABLA CON ESTILOS PROFESIONALES */}
       <div className="rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden flex-1 flex flex-col min-h-0">
         <div className="overflow-x-auto overflow-y-auto flex-1">
@@ -61,7 +61,7 @@ export function DataTable<TData, TValue>({
                     return (
                       <th
                         key={header.id}
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-2 py-5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         {header.isPlaceholder ? null : (
                           <div
@@ -168,7 +168,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* FOOTER CON CONTROLES - Estilos mejorados */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 px-4 py-3 bg-white border-t border-gray-200">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 px-4 py-2 bg-white border-t border-gray-200">
         {/* SELECT DE PÁGINA SIZE */}
         <div className="flex items-center gap-2 order-2 lg:order-1">
           <label className="text-sm text-gray-600 font-medium whitespace-nowrap">

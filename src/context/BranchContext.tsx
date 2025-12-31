@@ -5,6 +5,8 @@ import { useAuth } from "./AuthContext";
 
 interface BranchContextType {
   currentBranch: string | null;
+  nameCBranch: string | null;
+  setNameCBranch: React.Dispatch<React.SetStateAction<string | null>>;
   setBranchId: (branchId: string | null) => void;
 }
 
@@ -18,6 +20,7 @@ export const useBranch = () => {
 
 export const BranchProvider = ({ children }: { children: ReactNode }) => {
   const [branchIdC, setBranchIdC] = useState<string | null>(null);
+  const [nameCBranch, setNameCBranch] = useState<string | null>(null);
 
   const { user } = useAuth();
 
@@ -47,6 +50,8 @@ export const BranchProvider = ({ children }: { children: ReactNode }) => {
       value={{
         currentBranch: branchIdC,
         setBranchId,
+        setNameCBranch,
+        nameCBranch,
       }}
     >
       {children}

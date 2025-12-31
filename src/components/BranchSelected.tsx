@@ -26,7 +26,7 @@ export function BranchSelected() {
   const { isMobile } = useSidebar();
 
   //funcion para cambiar el id de la sucursal en el contexto
-  const { setBranchId, currentBranch } = useBranch();
+  const { setBranchId, currentBranch, setNameCBranch } = useBranch();
 
   //logica de obtención de sucursales
   const { data: branches } = useGetBranches();
@@ -38,11 +38,17 @@ export function BranchSelected() {
   //funcion para cambiar la sucursal activa y actualizar el contexto
   const handleSetBranch = (branchId: string | null) => {
     setBranchId(branchId);
+    setNameCBranch(
+      branchId
+        ? branches?.find((b) => b.id === branchId)?.branch_name || null
+        : null
+    );
   };
   //console.log("Sucursal activa:", brachActive);
   if (!branches) {
     return null;
   }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
