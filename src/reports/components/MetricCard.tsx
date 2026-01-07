@@ -6,7 +6,7 @@ interface Props {
   subtitle?: string;
   percentage: string;
   isPositive: boolean;
-  colorScheme: "blue" | "slate" | "emerald" | "amber";
+  colorScheme: "cardNormal" | "cardDebt";
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   smallValue?: string;
 }
@@ -22,23 +22,13 @@ export const MetricCard = ({
   smallValue,
 }: Props) => {
   const colorStyles = {
-    blue: {
-      bg: "text-primary bg-background shadow-md border ",
-      badge: "",
-      icon: "",
+    cardNormal: {
+      bg: "text-black bg-background shadow-md border ",
+      badge: "bg-green-100 text-green-800",
+      icon: "text-gray-800",
     },
-    slate: {
-      bg: "text-primary bg-background shadow-md border ",
-      badge: "",
-      icon: "",
-    },
-    emerald: {
-      bg: "text-primary bg-background shadow-md border ",
-      badge: "",
-      icon: "",
-    },
-    amber: {
-      bg: "card-debt",
+    cardDebt: {
+      bg: "bg-blue-900 text-white shadow-md",
       badge: "bg-red-500 text-white",
       icon: "text-white",
     },
@@ -72,7 +62,7 @@ export const MetricCard = ({
       {/* Título */}
       <h3
         className={`text-sm font-medium mb-2 ${
-          colorScheme !== "amber" ? "" : "text-white"
+          colorScheme === "cardNormal" ? "text-black" : "text-white"
         }`}
       >
         {title}
@@ -82,7 +72,7 @@ export const MetricCard = ({
       <div className="mb-1">
         <p
           className={`text-2xl font-bold ${
-            colorScheme !== "amber" ? "" : "text-white"
+            colorScheme === "cardNormal" ? "text-black" : "text-white"
           }`}
         >
           {value}
@@ -96,7 +86,9 @@ export const MetricCard = ({
       {smallValue && (
         <p
           className={`text-xs mt-2 ${
-            colorScheme !== "amber" ? "" : "text-slate-400 dark:text-slate-500"
+            colorScheme === "cardNormal"
+              ? ""
+              : "text-slate-400 dark:text-slate-500"
           }`}
         >
           {smallValue}

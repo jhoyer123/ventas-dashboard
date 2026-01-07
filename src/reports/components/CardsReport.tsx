@@ -31,45 +31,45 @@ export const CardsReport = ({ data }: { data: CardsType }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* monto total ventas del dia)*/}
           <MetricCard
-            title="Monto Total Recibido"
+            title="Monto Total Recibido hoy"
             value={formatCurrency(data.cash_received_amount)}
             subtitle=""
             percentage="+2.5%"
             isPositive={true}
-            colorScheme="blue"
+            colorScheme="cardNormal"
             icon={DollarSign}
           />
 
           {/* Monto total recibido del dia */}
           <MetricCard
-            title="Total decuentos aplicados"
+            title="Total descuentos aplicados hoy"
             value={formatCurrency(data.total_discounts)}
             subtitle=""
             percentage="+7.9%"
             isPositive={true}
-            colorScheme="emerald"
+            colorScheme="cardNormal"
             icon={Wallet}
           />
 
           {/* Total de ventas completadas */}
           <MetricCard
-            title="Total ventas realizadas"
+            title="Total ventas realizadas hoy"
             value={formatNumber(data.total_sales_count)}
             subtitle=""
             percentage="+15.6%"
             isPositive={true}
-            colorScheme="slate"
+            colorScheme="cardNormal"
             icon={ShoppingCart}
           />
 
           {/* Total de descuentos del dia */}
           <MetricCard
-            title="Deuda total pendiente"
+            title="Deuda total pendiente general  "
             value={formatCurrency(data.total_pending_debt)}
             subtitle=""
             percentage="-3.2%"
             isPositive={false}
-            colorScheme="amber"
+            colorScheme="cardDebt"
             icon={BanknoteX}
           />
         </div>

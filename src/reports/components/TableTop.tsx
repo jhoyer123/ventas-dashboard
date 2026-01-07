@@ -18,9 +18,6 @@ export const TableTop = ({ title, data, columns }: Props) => {
         <h3 className="text-lg font-bold text-primary tracking-tight">
           {title}
         </h3>
-        <button className="text-xs font-semibold text-info hover:underline">
-          Ver todo
-        </button>
       </div>
 
       <div className="overflow-x-auto">
@@ -30,7 +27,7 @@ export const TableTop = ({ title, data, columns }: Props) => {
               {columns.map((col, idx) => (
                 <th
                   key={idx}
-                  className="px-6 py-4 text-[11px] font-bold text-muted uppercase tracking-widest"
+                  className="px-6 py-4 text-[11px] font-bold text-gray-600 uppercase tracking-widest"
                 >
                   {col.header}
                 </th>
@@ -44,10 +41,10 @@ export const TableTop = ({ title, data, columns }: Props) => {
                 className="hover:bg-background-secondary/30 transition-colors group"
               >
                 {/* Primera Columna: Identidad del Producto */}
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 text-black">
                   <div className="flex items-center gap-4">
                     {item.image ? (
-                      <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden border border-light group-hover:scale-105 transition-transform">
+                      <div className="w-12 h-12 rounded-xl bg-slate-500 overflow-hidden border border-light group-hover:scale-105 transition-transform">
                         <img
                           src={item.image}
                           alt={item.title}
@@ -55,16 +52,16 @@ export const TableTop = ({ title, data, columns }: Props) => {
                         />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-primary-light/10 flex items-center justify-center text-primary font-bold text-xs border border-primary/5">
+                      <div className="w-10 h-10 rounded-full bg-primary-light/10 flex items-center justify-center text-black font-bold text-xs border border-primary/5">
                         {item.title.charAt(0)}
                       </div>
                     )}
                     <div>
-                      <p className="text-sm font-bold text-primary tracking-tight">
+                      <p className="text-sm font-bold tracking-tight">
                         {item.title}
                       </p>
                       {item.subtitle && (
-                        <p className="text-xs text-muted">{item.subtitle}</p>
+                        <p className="text-xs text-gray-600">{item.subtitle}</p>
                       )}
                     </div>
                   </div>
@@ -76,11 +73,10 @@ export const TableTop = ({ title, data, columns }: Props) => {
                     <span
                       className={`text-sm ${
                         col.accessor === "amount"
-                          ? "font-bold text-primary"
+                          ? "font-bold text-black"
                           : "text-secondary font-medium"
                       }`}
                     >
-                      {/* Solución al error de tipado 'any' */}
                       {(item as any)[col.accessor]}
                     </span>
                   </td>
