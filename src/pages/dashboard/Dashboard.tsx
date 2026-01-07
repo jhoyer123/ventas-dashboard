@@ -1,5 +1,4 @@
 //import styles from "./Dashboard.module.css";
-import "@/reports/dashboard.css";
 import { CardsReport } from "@/reports/components/CardsReport";
 import { SalesHistoryChart } from "@/reports/components/GraficDays";
 import { useInfoCards } from "@/reports/hooks/cards/useInfoCards";
