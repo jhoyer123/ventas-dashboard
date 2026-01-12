@@ -18,25 +18,8 @@ export const MetricCard = ({
   subtitle,
   percentage,
   isPositive,
-  colorScheme,
   icon: Icon,
-  smallValue,
 }: Props) => {
-  const colorStyles = {
-    cardNormal: {
-      bg: "text-black bg-background shadow-md border ",
-      badge: "bg-green-100 text-green-800",
-      icon: "text-gray-800",
-    },
-    cardDebt: {
-      bg: "bg-blue-900 text-white shadow-md",
-      badge: "bg-red-500 text-white",
-      icon: "text-white",
-    },
-  };
-
-  const styles = colorStyles[colorScheme];
-
   return (
     <div className="card-report-content">
       {/* Badge de porcentaje */}
@@ -63,7 +46,9 @@ export const MetricCard = ({
       <div className="mb-1 flex gap-2 items-center">
         <p className={`text-2xl font-bold text-foreground`}>{value}</p>
         {/* Subtítulo */}
-        {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+        {subtitle && (
+          <p className="text-xs text-muted-foreground">{subtitle}</p>
+        )}
       </div>
     </div>
   );
