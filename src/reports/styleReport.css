@@ -1,1 +1,33 @@
 @import "tailwindcss";
+@import "@/index.css";
+
+/*Estilos de las cards*/
+
+.card-report-content {
+  @apply bg-card text-foreground relative rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-ring/10;
+}
+
+.badge-card {
+  @apply flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-positive {
+  @apply bg-green-100 text-green-800;
+}
+
+.badge-negative {
+  @apply bg-red-100 text-red-800;
+}
+
+.header-card {
+  @apply flex items-center justify-between mb-4;
+}
+
+/*Estilos del grafico*/
+.buton-graph-active {
+  @apply bg-ring text-accent-foreground;
+}
+
+.button-graph-inactive {
+  @apply bg-muted text-muted-foreground hover:bg-ring hover:text-accent-foreground;
+}

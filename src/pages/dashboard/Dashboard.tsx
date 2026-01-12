@@ -30,57 +30,39 @@ const Dashboard = () => {
         >
           Resumen Operativo
         </h1>
-
+        {/* cards reports */}
         <CardsReport data={dataCards} />
-        {/* Cabecera con selector */}
-        <div>
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold">Tendencias</h2>
-            <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
-              <button
-                onClick={() => setRange("5days")}
-                className={`px-3 py-1 text-sm rounded-md transition-all ${
-                  range === "5days"
-                    ? "bg-white shadow text-black"
-                    : "text-gray-500"
-                }`}
-              >
-                5 Días
-              </button>
-              <button
-                onClick={() => setRange("5months")}
-                className={`px-3 py-1 text-sm rounded-md transition-all ${
-                  range === "5months"
-                    ? "bg-white shadow text-black"
-                    : "text-gray-500"
-                }`}
-              >
-                5 Meses
-              </button>
-            </div>
-          </div>
-          <SalesHistoryChart data={dataDM} day={range === "5days"} />
-        </div>
-        <div className="flex flex-col gap-5 ">
+        {/* grafic days or months */}
+        <SalesHistoryChart
+          data={dataDM}
+          day={range === "5days"}
+          setRange={setRange}
+          range={range}
+        />
+        {/* top tables */}
+        <div
+          className="grid grid-cols-1 gap-4
+        md:grid-cols-2"
+        >
           {/* top table products */}
-          <div className="w-full md:w-1/2">
+          <div className="w-full h-full">
             <TableTop
               title="Productos Más Vendidos"
               data={topProducts}
               columns={[
                 { header: "Producto", accessor: "title" },
-                { header: "Cant. Vendida", accessor: "amount" },
+                { header: "Cant", accessor: "amount" },
               ]}
             />
           </div>
           {/* top table branches */}
-          <div className="w-full md:w-1/2">
+          <div className="w-full h-full">
             <TableTop
               title="Sucursales que más venden"
               data={topBranches}
               columns={[
                 { header: "Sucursal", accessor: "title" },
-                { header: "Cant. Vendida", accessor: "amount" },
+                { header: "Total", accessor: "amount" },
               ]}
             />
           </div>

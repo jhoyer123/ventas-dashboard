@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
+import "@/reports/styleReport.css";
 
 interface Props {
   title: string;
@@ -37,17 +38,14 @@ export const MetricCard = ({
   const styles = colorStyles[colorScheme];
 
   return (
-    <div
-      className={`relative ${styles.bg} rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200/50 dark:border-slate-700/50`}
-    >
+    <div className="card-report-content">
       {/* Badge de porcentaje */}
-      <div
-        className={`flex items-center justify-between mb-4 ${
-          isPositive ? "text-green-500" : "text-red-500"
-        }`}
-      >
+      <div className="header-card">
+        {Icon && <Icon className={`w-5 h-5`} />}
         <div
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full ${styles.badge} text-xs font-semibold`}
+          className={`badge-card ${
+            isPositive ? "badge-positive" : "badge-negative"
+          }`}
         >
           {isPositive ? (
             <TrendingUp className="w-3 h-3" />
@@ -56,44 +54,17 @@ export const MetricCard = ({
           )}
           {percentage}
         </div>
-        {Icon && <Icon className={`w-5 h-5 ${styles.icon}`} />}
       </div>
 
       {/* Título */}
-      <h3
-        className={`text-sm font-medium mb-2 ${
-          colorScheme === "cardNormal" ? "text-black" : "text-white"
-        }`}
-      >
-        {title}
-      </h3>
+      <h3 className={`text-sm font-title mb-2 text-foreground`}>{title}</h3>
 
       {/* Valor principal */}
-      <div className="mb-1">
-        <p
-          className={`text-2xl font-bold ${
-            colorScheme === "cardNormal" ? "text-black" : "text-white"
-          }`}
-        >
-          {value}
-        </p>
+      <div className="mb-1 flex gap-2 items-center">
+        <p className={`text-2xl font-bold text-foreground`}>{value}</p>
+        {/* Subtítulo */}
+        {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
       </div>
-
-      {/* Subtítulo */}
-      {subtitle && <p className={`text-xs"}`}>{subtitle}</p>}
-
-      {/* Valor pequeño adicional */}
-      {smallValue && (
-        <p
-          className={`text-xs mt-2 ${
-            colorScheme === "cardNormal"
-              ? ""
-              : "text-slate-400 dark:text-slate-500"
-          }`}
-        >
-          {smallValue}
-        </p>
-      )}
     </div>
   );
 };

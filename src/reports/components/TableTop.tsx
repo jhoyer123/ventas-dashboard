@@ -13,9 +13,9 @@ interface Props {
 
 export const TableTop = ({ title, data, columns }: Props) => {
   return (
-    <div className="bg-card border-default rounded-2xl overflow-hidden shadow-sm border transition-all duration-300 hover:shadow-md">
-      <div className="p-6 border-b border-light flex justify-between items-center">
-        <h3 className="text-lg font-bold text-primary tracking-tight">
+    <div className="bg-card border border-xl rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+      <div className="p-3 border-b border-light flex items-center justify-center">
+        <h3 className="text-base font-title font-semibold text-card-foreground tracking-tight">
           {title}
         </h3>
       </div>
@@ -23,64 +23,54 @@ export const TableTop = ({ title, data, columns }: Props) => {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-background-secondary/50">
+            <tr className="bg-card border-b border-light">
               {columns.map((col, idx) => (
                 <th
                   key={idx}
-                  className="px-6 py-4 text-[11px] font-bold text-gray-600 uppercase tracking-widest"
+                  className="px-3 py-3 text-[11px] font-bold text-muted-foreground uppercase font-body tracking-wider"
                 >
                   {col.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-light">
+          <tbody className="divide-y divide-light divide-x divide-light">
             {data.map((item) => (
               <tr
                 key={item.id}
-                className="hover:bg-background-secondary/30 transition-colors group"
+                className="hover:bg-background-secondary/30 transition-colors group "
               >
-                {/* Primera Columna: Identidad del Producto */}
-                <td className="px-6 py-4 text-black">
-                  <div className="flex items-center gap-4">
-                    {item.image ? (
-                      <div className="w-12 h-12 rounded-xl bg-slate-500 overflow-hidden border border-light group-hover:scale-105 transition-transform">
+                {/* Producto */}
+                <td className="p-2 py-2 w-auto">
+                  <div className="flex items-center justify-between gap-2 w-full">
+                    {item.image && (
+                      <div className="w-20 h-15 rounded-xl overflow-hidden border border-light group-hover:scale-105 transition-transform">
                         <img
                           src={item.image}
                           alt={item.title}
-                          className="w-full h-full object-cover"
+                          className="w-20 h-15 object-cover"
                         />
                       </div>
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-primary-light/10 flex items-center justify-center text-black font-bold text-xs border border-primary/5">
-                        {item.title.charAt(0)}
-                      </div>
                     )}
-                    <div>
-                      <p className="text-sm font-bold tracking-tight">
+                    <div className="w-full pr-2">
+                      <p className="text-sm font-bold tracking-tight w-full text-card-foreground/80 font-title">
                         {item.title}
                       </p>
                       {item.subtitle && (
-                        <p className="text-xs text-gray-600">{item.subtitle}</p>
+                        <p className="text-xs text-card-foreground/60 font-body">
+                          {item.subtitle}
+                        </p>
                       )}
                     </div>
                   </div>
                 </td>
 
                 {/* Mapeo dinámico de las columnas restantes */}
-                {columns.slice(1).map((col, idx) => (
-                  <td key={idx} className="px-6 py-4">
-                    <span
-                      className={`text-sm ${
-                        col.accessor === "amount"
-                          ? "font-bold text-black"
-                          : "text-secondary font-medium"
-                      }`}
-                    >
-                      {(item as any)[col.accessor]}
-                    </span>
-                  </td>
-                ))}
+                <td className="py-8 p-2 text-center border-l border-light w-auto">
+                  <span className="text-card-foreground text-sm font-semibold font-body">
+                    {item.amount}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
