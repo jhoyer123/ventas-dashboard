@@ -12,12 +12,12 @@ const LoginCard = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen max-h-screen">
+    <div className="flex items-center justify-center min-h-screen h-dvh relative overflow-hidden">
       {/* fondo */}
       <img
         src="/fondoLogin.jpg"
         alt="imagen de fondo"
-        className="absolute w-full h-full object-cover z-0"
+        className="absolute h-full w-full inset-0 object-cover z-0"
       />
       <div className="absolute w-full h-full object-cover z-0 bg-black/20"></div>
       {/* Card principal */}
