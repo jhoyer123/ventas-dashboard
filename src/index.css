@@ -1,5 +1,6 @@
-/* 1. Todos los @import van al inicio */
-/* TIPOGRAFÍA */
+/* ============================================
+   1. IMPORTS (Siempre al inicio)
+   ============================================ */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap");
 @import "tailwindcss";
 @layer theme, base, components, utilities;
@@ -10,60 +11,73 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*2. El resto de declaraciones van después 
- SISTEMA DE COLORES BASE Y TIPOGRAFÍA*/
+/* ============================================
+   2. TOKENS DE DISEÑO (Design Tokens)
+   ============================================ */
 :root {
-  /* CAMBIO 1: El background ahora es un gris muy sutil (Slate 50 aprox), no blanco puro */
-  --background-view: oklch(0.985 0.002 247.858);
-
-  /* La card se queda en blanco puro para resaltar sobre el fondo gris */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-
-  /* ... (tus otras variables existentes primary, popover, etc) ... */
-
-  /* NUEVOS COLORES PERSONALES (Ejemplo: Un tono "Marca" o "Brand") */
-  /* Un violeta vibrante para destacar sobre tu azul primary */
-  --brand: oklch(0.623 0.214 263.99);
-  --brand-foreground: oklch(1 0 0); /* Texto blanco */
-
-  /* Para cards especiales (ej. "Plan Premium" o "Destacado") */
-  /* Un azul muy clarito, casi blanco */
-  --card-highlight: oklch(0.97 0.01 265.75);
-  --card-highlight-foreground: oklch(0.208 0.042 265.755);
-  /*LO DE ARRIBA SON COLORES PERSONALES */
-
-  /* --bg: #0b1020; */
-  --card: oklch(1 0 0);
-  --primary: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --border: oklch(0.929 0.013 255.508);
-  /* --text: #e5e7eb; */
-
-  /* Variables de fuente */
+  /* === TIPOGRAFÍA === */
   --font-title: "Poppins", sans-serif;
   --font-body: "Inter", sans-serif;
+
+  /* === ESPACIADO & RADIOS === */
   --radius: 0.625rem;
 
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  /* === COLORES SEMÁNTICOS (shadcn/ui) === */
+  /* Backgrounds */
+  --background: oklch(1 0 0); /* Blanco puro */
+  --background-view: oklch(97% 0 0); /* Gris muy sutil para el body */
+  --foreground: oklch(0.129 0.042 264.695); /* Texto principal body */
+
+  /* Cards & Surfaces */
+  --card: oklch(1 0 0); /* Cards en blanco puro */
   --card-foreground: oklch(0.129 0.042 264.695);
+
+  /* Popover */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
+
+  /* Primary (Tu color de marca principal - Azul) */
+  --primary: oklch(0.208 0.042 265.755);
   --primary-foreground: oklch(0.984 0.003 247.858);
+
+  /* Secondary */
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
+
+  /* Muted (Elementos secundarios) */
+  --muted: oklch(0.968 0.007 247.896);
   --muted-foreground: oklch(0.554 0.046 257.417);
+
+  /* Accent (Llamadas de atención) */
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
+
+  /* Destructive (Errores, eliminaciones) */
   --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+
+  /* Borders & Inputs */
+  --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --ring: oklch(0.704 0.04 256.788); /* Focus rings */
+
+  /* === COLORES PERSONALIZADOS === */
+  /* Brand (Tu violeta corporativo) */
+  --brand: oklch(0.623 0.214 263.99);
+  --brand-foreground: oklch(1 0 0);
+
+  /* Card Highlight (Cards especiales/premium) */
+  --card-highlight: oklch(0.97 0.01 265.75);
+  --card-highlight-foreground: oklch(0.208 0.042 265.755);
+
+  /* === COLORES DE GRÁFICAS (Recharts) === */
+  --chart-1: oklch(0.646 0.222 41.116); /* Naranja */
+  --chart-2: oklch(0.6 0.118 184.704); /* Cyan */
+  --chart-3: oklch(0.398 0.07 227.392); /* Azul oscuro */
+  --chart-4: oklch(0.828 0.189 84.429); /* Verde lima */
+  --chart-5: oklch(0.769 0.188 70.08); /* Amarillo */
+
+  /* === SIDEBAR === */
   --sidebar: oklch(0.984 0.003 247.858);
   --sidebar-foreground: oklch(0.129 0.042 264.695);
   --sidebar-primary: oklch(0.208 0.042 265.755);
@@ -74,110 +88,63 @@
   --sidebar-ring: oklch(0.704 0.04 256.788);
 }
 
-/* @theme DEBE IR DESPUÉS DE LA REGLA QUE DEFINE LAS VARIABLES */
-@theme {
-  --color-bg: var(--bg);
-  --color-card: var(--card);
-  --color-primary: var(--primary);
-  --color-text: var(--text);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
-
-  --font-title: var(--font-title);
-  --font-body: var(--font-body);
-}
-
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  /* ... tus variables anteriores ... */
-
-  /* AGREGA ESTAS LÍNEAS AL FINAL DE @theme inline */
-  --color-background-view: var(--background-view);
-  --color-brand: var(--brand);
-  --color-brand-foreground: var(--brand-foreground);
-
-  --color-card-highlight: var(--card-highlight);
-  --color-card-highlight-foreground: var(--card-highlight-foreground);
-}
-
+/* ============================================
+   3. DARK MODE
+   ============================================ */
 .dark {
-  /* En dark mode, el background es muy oscuro */
-  --background: oklch(0.129 0.042 264.695);
+  /* === BACKGROUNDS === */
+  --background: oklch(0.129 0.042 264.695); /* Azul muy oscuro */
+  --background-view: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858); /* Texto claro */
 
-  /* CAMBIO 2: La card debe ser un poco más clara que el fondo para que "flote" */
-  /* He subido un poco la luminosidad respecto a tu background */
-  --card: oklch(0.18 0.042 264.695);
-  --card-foreground: oklch(0.985 0.002 247.858);
-
-  /* ... (tus otras variables dark existentes) ... */
-
-  /* CONTRARIOS DE LOS NUEVOS COLORES */
-  /* El mismo violeta pero un poco más claro o igual, asegurando contraste */
-  --brand: oklch(0.623 0.214 263.99);
-  --brand-foreground: oklch(1 0 0);
-
-  /* La card destacada en dark mode será un azul oscuro pero distinto al fondo */
-  --card-highlight: oklch(0.25 0.042 265.75);
-  --card-highlight-foreground: oklch(0.985 0.002 247.858);
-  /*LO DE ARRIBA SON COLORES PERSONALES */
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
+  /* === CARDS === */
+  --card: oklch(0.18 0.042 264.695); /* Un poco más claro que el fondo */
   --card-foreground: oklch(0.984 0.003 247.858);
+
+  /* === POPOVER === */
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
+
+  /* === PRIMARY === */
+  --primary: oklch(0.929 0.013 255.508); /* Invertido en dark */
   --primary-foreground: oklch(0.208 0.042 265.755);
+
+  /* === SECONDARY === */
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
+
+  /* === MUTED === */
   --muted: oklch(0.279 0.041 260.031);
   --muted-foreground: oklch(0.704 0.04 256.788);
+
+  /* === ACCENT === */
   --accent: oklch(0.279 0.041 260.031);
   --accent-foreground: oklch(0.984 0.003 247.858);
+
+  /* === DESTRUCTIVE === */
   --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+
+  /* === BORDERS & INPUTS === */
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.551 0.027 264.364);
+
+  /* === COLORES PERSONALIZADOS === */
+  --brand: oklch(0.623 0.214 263.99); /* Mismo violeta */
+  --brand-foreground: oklch(1 0 0);
+
+  --card-highlight: oklch(0.25 0.042 265.75);
+  --card-highlight-foreground: oklch(0.985 0.002 247.858);
+
+  /* === GRÁFICAS === */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+
+  /* === SIDEBAR === */
   --sidebar: oklch(0.208 0.042 265.755);
   --sidebar-foreground: oklch(0.984 0.003 247.858);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -188,11 +155,98 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+/* ============================================
+   4. THEME CONFIGURATION (Tailwind v4)
+   ============================================ */
+@theme inline {
+  /* === RADIOS === */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* === MAPEO DE COLORES === */
+  /* Backgrounds */
+  --color-background: var(--background);
+  --color-background-view: var(--background-view);
+  --color-foreground: var(--foreground);
+
+  /* Cards */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-highlight: var(--card-highlight);
+  --color-card-highlight-foreground: var(--card-highlight-foreground);
+
+  /* Popover */
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* Primary */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  /* Secondary */
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  /* Muted */
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* Accent */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* Destructive */
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Brand (Custom) */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+
+  /* Borders & Inputs */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* ============================================
+   5. BASE LAYER (Estilos globales)
+   ============================================ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background-view text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-title);
   }
 }

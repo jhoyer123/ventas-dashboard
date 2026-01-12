@@ -24,7 +24,7 @@ export const useInfoCards = ({
     branch_id: currentBranch,
   });
   //usamos el hook para traer las deudas pendientes
-  const { data: debtData } = useGetDebt(currentBranch);
+  const { data: debtData, isError, isLoading } = useGetDebt(currentBranch);
 
   //data que se pasa a las cards
   const data = useMemo(() => {
@@ -37,5 +37,5 @@ export const useInfoCards = ({
     };
   }, [summaryData, debtData]);
 
-  return data;
+  return { data, isError, isLoading };
 };

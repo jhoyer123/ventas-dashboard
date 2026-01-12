@@ -1,11 +1,17 @@
 import { Navigate } from "react-router-dom";
 import { useCheckAuth } from "../hooks/auth/useCheckAuth";
 import { type JSX } from "react";
+import { SkeletonCard } from "@/components/common/SkeletonCard";
 
 export default function PrivateRoute({ children }: { children: JSX.Element }) {
   const { data: user, isLoading } = useCheckAuth(); // aquí data es el usuario
 
-  if (isLoading) return <p>Cargando sesión...</p>;
+  if (isLoading)
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        <SkeletonCard />
+      </div>
+    );
 
   if (!user) return <Navigate to="/" replace />; // si no hay usuario logueado
 

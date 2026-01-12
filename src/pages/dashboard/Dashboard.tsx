@@ -8,21 +8,29 @@ import { useTopB } from "@/reports/hooks/top/useTopB";
 //context de la sucursal
 import { useBranch } from "@/context/BranchContext";
 import { TableTop } from "@/reports/components/TableTop";
+import { SkeletonCard } from "@/components/common/SkeletonCard";
 
 const Dashboard = () => {
   const { currentBranch } = useBranch();
   //hook de las cards
-  const dataCards = useInfoCards({ currentBranch });
+  const { data: dataCards, isLoading } = useInfoCards({ currentBranch });
   //hooks para la info por dias y por meses
   const { data: dataDM, setRange, range } = useInfoDM({ currentBranch });
   //hook de top products
   const { topProducts } = useTop({ currentBranch });
   //hook de top branches
   const { topBranches } = useTopB();
-  console.log("Top Branches:", topBranches);
+
   return (
     <div className="min-h-full p-4 w-full bg-background-view">
       <div className="max-w-7xl mx-auto flex flex-col gap-4">
+        <h1
+          className="font-title text-xl text-foreground
+        lg:text-2xl"
+        >
+          Resumen Operativo
+        </h1>
+
         <CardsReport data={dataCards} />
         {/* Cabecera con selector */}
         <div>
@@ -53,9 +61,9 @@ const Dashboard = () => {
           </div>
           <SalesHistoryChart data={dataDM} day={range === "5days"} />
         </div>
-        <div className="flex gap-5">
+        <div className="flex flex-col gap-5 ">
           {/* top table products */}
-          <div className="w-1/2">
+          <div className="w-full md:w-1/2">
             <TableTop
               title="Productos Más Vendidos"
               data={topProducts}
@@ -66,7 +74,7 @@ const Dashboard = () => {
             />
           </div>
           {/* top table branches */}
-          <div className="w-1/2">
+          <div className="w-full md:w-1/2">
             <TableTop
               title="Sucursales que más venden"
               data={topBranches}
@@ -78,6 +86,9 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* loading data */}
+      {isLoading && <SkeletonCard />}
     </div>
   );
 };

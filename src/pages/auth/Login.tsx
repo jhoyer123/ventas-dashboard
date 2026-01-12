@@ -2,6 +2,7 @@ import FormLogin from "../../components/loginComp/FormLogin";
 //hook de login tanstack-react-query
 import { useLogin } from "../../hooks/auth/useLogin";
 import type { loginCredentials } from "@/schemes/auth";
+import { VerifyCredencials } from "../../components/loginComp/VerifyCredencials";
 
 const LoginCard = () => {
   const { mutate, isPending, isError } = useLogin();
@@ -11,31 +12,34 @@ const LoginCard = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen max-h-screen">
       {/* fondo */}
       <img
-        src="https://i.pinimg.com/736x/43/9e/07/439e0745fd00e29a1f6a4d10b41d425e.jpg"
+        src="/fondoLogin.jpg"
         alt="imagen de fondo"
-        className="absolute w-full h-full object-cover z-0 opacity-95"
+        className="absolute w-full h-full object-cover z-0"
       />
+      <div className="absolute w-full h-full object-cover z-0 bg-black/20"></div>
       {/* Card principal */}
-      <div className="relative w-full max-w-md p-8 space-y-6">
-        {/* Icono y título */}
-        <div className="flex flex-col items-center space-y-3 text-center text-white">
-          <div className="relative w-12 h-12">
-            <img
-              src="https://i.pinimg.com/736x/b2/d5/78/b2d57807e5e2c025b93f59e2ef574287.jpg"
-              alt="icono"
-              className="rounded-full"
-            />
-          </div>
-
-          <h1 className="text-4xl font-semibold tracking-wide font-title">
-            ¡Bienvenido de nuevo!
+      <div
+        className="relative w-full max-w-md p-8 space-y-7
+      sm:space-y-9"
+      >
+        {/* título y descripción */}
+        <div className="flex flex-col items-center gap-7 text-center text-white">
+          <h1
+            className="font-title text-xl
+          sm:text-2xl
+          lg:text-3xl"
+          >
+            ¡Panel de Gestión POS!
           </h1>
-          <p className="text-[16px] text-gray-300 leading-relaxed px-4">
-            Inicia sesión para acceder a tu panel administrativo, reportes
-            diarios, y tu recorrido personal.
+          <p
+            className="text-sm font-body text-gray-300
+          sm:text-base"
+          >
+            Ingresa tus credenciales para gestionar tus ventas, inventarios y
+            reportes.
           </p>
         </div>
 
@@ -43,16 +47,14 @@ const LoginCard = () => {
         <FormLogin submitParent={handleSubmit} />
 
         {/* ESTADOS DE TANSTACK */}
-        {isPending && (
-          <p className="text-white text-center mt-2">
-            Verificando credenciales...
-          </p>
-        )}
+        {isPending && <VerifyCredencials />}
 
         {isError && (
-          <p className="text-red-400 text-center mt-2">
-            Credenciales incorrectas
-          </p>
+          <div className="mt-4 bg-red-900/30 border border-red-500/50 rounded-lg p-3 backdrop-blur-sm">
+            <p className="text-red-200 text-sm text-center font-medium">
+              Credenciales incorrectas. Por favor, inténtalo de nuevo.
+            </p>
+          </div>
         )}
       </div>
     </div>

@@ -26,7 +26,7 @@ import {
 //importar el contexto de auth para obtener el user
 import { useAuth } from "@/context/AuthContext";
 
-import SidebarBanner from "./layout/HeadSidebar";
+import SidebarBanner from "./layout/HeaderSidebar";
 import { NavButton } from "./nav-button";
 import { BranchSelected } from "./BranchSelected";
 

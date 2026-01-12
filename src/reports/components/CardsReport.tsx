@@ -19,13 +19,6 @@ export const CardsReport = ({ data }: { data: CardsType }) => {
     <div className="h-auto dark:bg-slate-950 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mb-1">
-              Reporte de Ventas Diarias y Resumenes mensuales
-            </h1>
-          </div>
-        </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

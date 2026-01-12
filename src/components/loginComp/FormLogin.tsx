@@ -36,15 +36,18 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
         <div className="space-y-5">
           {/* Email */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
-              Correo
+            <label
+              className="block text-sm font-body text-gray-300
+            sm:text-base"
+            >
+              Correo electrónico
             </label>
             <div>
               <input
                 type="email"
                 placeholder="Ingresa tu email"
                 {...register("email", { required: true })}
-                className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-indigo-900/30 border border-indigo-700/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition"
+                className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-[#271d3c]"
               />
               {errors.email && (
                 <div className="text-red-400 text-sm mt-1">
@@ -56,7 +59,10 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
 
           {/* Password */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label
+              className="block text-sm font-body text-gray-300
+            sm:text-base"
+            >
               Contraseña
             </label>
             <div className="relative">
@@ -64,7 +70,7 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••"
                 {...register("password", { required: true })}
-                className="w-full px-4 py-3 pr-12 text-sm text-white placeholder-gray-400 bg-indigo-900/30 border border-indigo-700/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition"
+                className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-[#271d3c]"
               />
               {errors.password && (
                 <div className="text-red-400 text-sm mt-1">
@@ -74,7 +80,7 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition cursor-pointer"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white transition cursor-pointer"
               >
                 {showPassword ? <LuEye size={18} /> : <LuEyeClosed size={18} />}
               </button>
@@ -84,7 +90,8 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
           {/* Botón de inicio de sesión */}
           <button
             type="submit"
-            className="w-full py-3.5 text-base font-medium text-gray-800 bg-white rounded-2xl hover:bg-gray-100 transition duration-200 shadow-lg cursor-pointer"
+            className="w-full mt-5 py-3 text-base font-title font-medium text-black bg-white rounded-2xl hover:bg-gray-200 transition duration-200 shadow-lg 
+            cursor-pointer"
           >
             Iniciar Sesión
           </button>

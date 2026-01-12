@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 //import de las paginas
 import Login from "../pages/auth/Login";
-import LayoutDashboard from "../layouts/LayoutDashboard";
+import Layout from "../layouts/Layout";
 import PrivateRoute from "./PrivateRoute";
 //importar el contexto del user
 import { AuthProvider } from "../context/AuthContext";
@@ -35,7 +35,7 @@ const AppRouter = () => {
             <AuthProvider>
               <BranchProvider>
                 <PrivateRoute>
-                  <LayoutDashboard />
+                  <Layout />
                 </PrivateRoute>
               </BranchProvider>
             </AuthProvider>
