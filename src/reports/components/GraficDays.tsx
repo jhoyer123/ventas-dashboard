@@ -106,7 +106,12 @@ export function SalesHistoryChart({ data, day, setRange, range }: Props) {
       </div>
 
       <div className="w-full h-[300px]">
-        <ResponsiveContainer width="100%" height="100%" className="relative">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 320, height: 320 }}
+          aspect={undefined}  
+        >
           <LineChart
             data={data}
             margin={{ top: 10, right: 5, left: 0, bottom: 10 }} // Cambia estos márgenes

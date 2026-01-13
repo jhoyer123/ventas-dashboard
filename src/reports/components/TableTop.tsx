@@ -53,11 +53,13 @@ export const TableTop = ({ title, data, columns }: Props) => {
                       </div>
                     )}
                     <div className="w-full pr-2">
-                      <p className="text-sm font-bold tracking-tight w-full text-card-foreground/80 font-title">
+                      <p className="text-sm font-bold tracking-tight w-full text-card-foreground/80 font-title
+                      md:text-base">
                         {item.title}
                       </p>
                       {item.subtitle && (
-                        <p className="text-xs text-card-foreground/60 font-body">
+                        <p className="text-xs text-card-foreground/60 font-body
+                        md:text-sm">
                           {item.subtitle}
                         </p>
                       )}

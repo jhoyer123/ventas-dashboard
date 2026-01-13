@@ -101,7 +101,7 @@ const Branch = () => {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           {/* titulo mas descripcion */}
-          <div className="space-y-1">
+          <div className="space-y-2">
             <h1
               className="tracking-wide font-title text-xl text-foreground
             lg:text-2xl"
@@ -122,7 +122,7 @@ const Branch = () => {
               setBranchS(undefined);
               handleOpenModal();
             }}
-            className={`flex items-center gap-2`}
+            className={`flex items-center gap-2 mb-2 sm:mb-0`}
           >
             <Plus size={18} />
             <span>Nueva Sucursal</span>

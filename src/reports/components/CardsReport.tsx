@@ -16,12 +16,12 @@ const formatNumber = (value: number) => {
 
 export const CardsReport = ({ data }: { data: CardsType }) => {
   return (
-    <div className="h-auto dark:bg-slate-950 transition-colors duration-300">
+    <div className="h-auto transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="cards-grid">
           {/* monto total recibido del dia)*/}
           <MetricCard
             title="Monto Total Recibido hoy"

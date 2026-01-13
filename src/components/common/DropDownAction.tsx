@@ -7,10 +7,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontalIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 
 interface itemDropDown {
   label: string;
   action: () => void;
+  icon: LucideIcon;
 }
 
 interface DropDownActionProps {
@@ -28,6 +30,7 @@ export const DropDownAction = ({ items }: DropDownActionProps) => {
         <DropdownMenuSeparator />
         {items?.map((item, index) => (
           <DropdownMenuItem key={index} onClick={item.action}>
+            <item.icon className="mr-2 h-4 w-4" />
             {item.label}
           </DropdownMenuItem>
         ))}

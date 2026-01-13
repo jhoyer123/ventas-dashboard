@@ -1,6 +1,8 @@
 import { MapPin, Users, Building2, Calendar, Box, Hash } from "lucide-react";
 import { DropDownAction } from "@/components/common/DropDownAction";
 import type { BranchOutput } from "@/types/branch";
+/* icons */
+import { Pencil, Trash2 } from "lucide-react";
 
 interface Props {
   branches: BranchOutput[] | undefined;
@@ -17,13 +19,13 @@ export const Branches = ({
 }: Props) => {
   return (
     <div
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4
         lg:gap-4"
     >
       {branches?.map((sucursal) => (
         <div
           key={sucursal.id}
-          className={`rounded-xl border border-border bg-card shadow-sm hover:shadow-md transition text-card-foreground space-y-2 flex flex-col justify-between`}
+          className={`rounded-xl border border-border bg-card shadow-sm hover:shadow-md transition text-card-foreground space-y-4 flex flex-col justify-between`}
         >
           {/* Card header */}
           <div
@@ -47,6 +49,7 @@ export const Branches = ({
                     setBranchS(sucursal);
                     handleOpenModal();
                   },
+                  icon: Pencil,
                 },
                 {
                   label: "Eliminar",
@@ -54,6 +57,7 @@ export const Branches = ({
                     setBranchS(sucursal);
                     handleOpenAlertDelete();
                   },
+                  icon: Trash2,
                 },
               ]}
             />

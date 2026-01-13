@@ -1,10 +1,27 @@
-@import "tailwindcss";
 @import "@/index.css";
 
 /*Estilos de las cards*/
+.cards-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+}
+
+/* Limita a máximo 4 columnas */
+@media (min-width: 769px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1225px) {
+  .cards-grid {
+    grid-template-columns: repeat(4, 4fr);
+  }
+}
 
 .card-report-content {
-  @apply bg-card text-foreground relative rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-ring/10;
+  @apply bg-card text-foreground relative rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300;
 }
 
 .badge-card {
@@ -23,11 +40,31 @@
   @apply flex items-center justify-between mb-4;
 }
 
-/*Estilos del grafico*/
+/*Estilos del grafico de dias y meses*/
 .buton-graph-active {
   @apply bg-ring text-accent-foreground;
 }
 
 .button-graph-inactive {
   @apply bg-muted text-muted-foreground hover:bg-ring hover:text-accent-foreground;
+}
+
+/* Estilos del las top tables */
+
+/* El PADRE es el contenedor observable */
+.dashboard-tables {
+  container-type: inline-size;
+  container-name: ctable;
+}
+
+/* El HIJO se modifica según el tamaño del padre */
+.table-content {
+  @apply grid gap-4;
+  grid-template-columns: 1fr;
+}
+
+@container ctable (min-width: 800px) {
+  .table-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

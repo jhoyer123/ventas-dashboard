@@ -9,6 +9,7 @@ import { useTopB } from "@/reports/hooks/top/useTopB";
 import { useBranch } from "@/context/BranchContext";
 import { TableTop } from "@/reports/components/TableTop";
 import { SkeletonCard } from "@/components/common/SkeletonCard";
+import "@/reports/styleReport.css";
 
 const Dashboard = () => {
   const { currentBranch } = useBranch();
@@ -40,31 +41,28 @@ const Dashboard = () => {
           range={range}
         />
         {/* top tables */}
-        <div
-          className="grid grid-cols-1 gap-4
-        md:grid-cols-2"
-        >
-          {/* top table products */}
-          <div className="w-full h-full">
-            <TableTop
-              title="Productos Más Vendidos"
-              data={topProducts}
-              columns={[
-                { header: "Producto", accessor: "title" },
-                { header: "Cant", accessor: "amount" },
-              ]}
-            />
-          </div>
-          {/* top table branches */}
-          <div className="w-full h-full">
-            <TableTop
-              title="Sucursales que más venden"
-              data={topBranches}
-              columns={[
-                { header: "Sucursal", accessor: "title" },
-                { header: "Total", accessor: "amount" },
-              ]}
-            />
+        <div className="dashboard-tables">
+          <div className="table-content">
+            <div className="w-full h-full">
+              <TableTop
+                title="Productos Más Vendidos"
+                data={topProducts}
+                columns={[
+                  { header: "Producto", accessor: "title" },
+                  { header: "Cant", accessor: "amount" },
+                ]}
+              />
+            </div>
+            <div className="w-full h-full">
+              <TableTop
+                title="Sucursales que más venden"
+                data={topBranches}
+                columns={[
+                  { header: "Sucursal", accessor: "title" },
+                  { header: "Total", accessor: "amount" },
+                ]}
+              />
+            </div>
           </div>
         </div>
       </div>
