@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* boton de crear */
+.btn-create {
+  @apply flex py-5 items-center gap-2 mb-2 sm:mb-0 bg-primary text-primary-foreground;
+}
+/* boton de cancelar */
+.btn-cancel {
+  @apply bg-secondary text-secondary-foreground;
+}
+

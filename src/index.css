@@ -6,6 +6,10 @@
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
+/* import de styles globales componentes personalozados */
+@import "@/styles/buttons.css";
+@import "@/styles/modal.css";
+
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================

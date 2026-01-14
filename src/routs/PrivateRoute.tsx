@@ -26,7 +26,7 @@ export default function PrivateRoute({ children }: { children: JSX.Element }) {
   created_at: string,
   confirmed_at: string | null,
   last_sign_in_at: string | null,
-  role: string | null, // si agregaste metadata personalizada
+  role: string | null, 
   // ...otros campos que tengas en auth.user_metadata
 }
 */

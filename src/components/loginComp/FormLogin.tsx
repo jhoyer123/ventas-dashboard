@@ -47,7 +47,7 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
                 type="email"
                 placeholder="Ingresa tu email"
                 {...register("email", { required: true })}
-                className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-[#271d3c]"
+                className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-gray-900"
               />
               {errors.email && (
                 <div className="text-red-400 text-sm mt-1">
@@ -70,7 +70,7 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••"
                 {...register("password", { required: true })}
-                className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-[#271d3c]"
+                className="w-full px-4 py-3 text-sm text-white placeholder-gray-400 bg-gray-900"
               />
               {errors.password && (
                 <div className="text-red-400 text-sm mt-1">

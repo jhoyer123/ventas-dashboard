@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* modales */
+.card-modal {
+  @apply max-h-[90vh] overflow-y-auto;
+}
+
+.container-buttons-modal {
+  @apply flex flex-col justify-end gap-2 sm:flex-row;
+}

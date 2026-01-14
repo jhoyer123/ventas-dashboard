@@ -93,7 +93,7 @@ const Branch = () => {
   };
 
   return (
-    <div className="p-4 bg-background-view">
+    <div className="p-4 bg-background-view h-full">
       <div
         className="max-w-7xl mx-auto space-y-3
       lg:space-y-5"
@@ -122,7 +122,7 @@ const Branch = () => {
               setBranchS(undefined);
               handleOpenModal();
             }}
-            className={`flex items-center gap-2 mb-2 sm:mb-0`}
+            className="btn-create"
           >
             <Plus size={18} />
             <span>Nueva Sucursal</span>

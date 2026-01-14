@@ -1,2 +1,23 @@
+@import "@/index.css";
 
+.container-branches {
+  @apply min-h-full w-full;
+  container-type: inline-size;
+  container-name: cbranches;
+}
 
+.branches-content {
+  @apply grid grid-cols-1 gap-5 max-w-7xl;
+}
+
+@container cbranches (min-width: 600px) {
+  .branches-content {
+    @apply grid-cols-2;
+  }
+}
+
+@container cbranches (min-width: 1000px) {
+  .branches-content {
+    @apply grid-cols-3;
+  }
+}

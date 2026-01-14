@@ -3,6 +3,7 @@ import { DropDownAction } from "@/components/common/DropDownAction";
 import type { BranchOutput } from "@/types/branch";
 /* icons */
 import { Pencil, Trash2 } from "lucide-react";
+import "@/components/branch/stylesBranches.css";
 
 interface Props {
   branches: BranchOutput[] | undefined;
@@ -18,87 +19,87 @@ export const Branches = ({
   handleOpenAlertDelete,
 }: Props) => {
   return (
-    <div
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4
-        lg:gap-4"
-    >
-      {branches?.map((sucursal) => (
-        <div
-          key={sucursal.id}
-          className={`rounded-xl border border-border bg-card shadow-sm hover:shadow-md transition text-card-foreground space-y-4 flex flex-col justify-between`}
-        >
-          {/* Card header */}
+    <div className="container-branches">
+      {/* grid de sucursales */}
+      <div className="branches-content">
+        {branches?.map((sucursal) => (
           <div
-            className={`flex items-center justify-between gap-3 p-2 border-0`}
+            key={sucursal.id}
+            className={`rounded-xl border border-border bg-card shadow-sm hover:shadow-md transition text-card-foreground space-y-4 flex flex-col justify-between`}
           >
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="p-2 rounded-lg text-popover shrink-0 bg-primary/70">
-                <Building2 size={18} />
+            {/* Card header */}
+            <div
+              className={`flex items-center justify-between gap-3 p-2 border-0`}
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="p-2 rounded-lg text-popover shrink-0 bg-primary/70">
+                  <Building2 size={18} />
+                </div>
+
+                <h3 className="font-title text-sm truncate">
+                  {sucursal.branch_name}
+                </h3>
               </div>
 
-              <h3 className="font-title text-sm truncate">
-                {sucursal.branch_name}
-              </h3>
-            </div>
-
-            <DropDownAction
-              items={[
-                {
-                  label: "Actualizar información",
-                  action: () => {
-                    setBranchS(sucursal);
-                    handleOpenModal();
+              <DropDownAction
+                items={[
+                  {
+                    label: "Actualizar información",
+                    action: () => {
+                      setBranchS(sucursal);
+                      handleOpenModal();
+                    },
+                    icon: Pencil,
                   },
-                  icon: Pencil,
-                },
-                {
-                  label: "Eliminar",
-                  action: () => {
-                    setBranchS(sucursal);
-                    handleOpenAlertDelete();
+                  {
+                    label: "Eliminar",
+                    action: () => {
+                      setBranchS(sucursal);
+                      handleOpenAlertDelete();
+                    },
+                    icon: Trash2,
                   },
-                  icon: Trash2,
-                },
-              ]}
-            />
-          </div>
+                ]}
+              />
+            </div>
 
-          {/* Card body */}
-          <div className="py-2 px-3">
-            {/* Address */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin size={16} className="mt-0.5 shrink-0" />
-              <span className="line-clamp-2">{sucursal.address}</span>
+            {/* Card body */}
+            <div className="py-2 px-3">
+              {/* Address */}
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin size={16} className="mt-0.5 shrink-0" />
+                <span className="line-clamp-2">{sucursal.address}</span>
+              </div>
             </div>
-          </div>
 
-          {/* Footer info */}
-          <div className="flex flex-col gap-3 items-center justify-between text-sm p-2 bg-chart-3 rounded-b-lg text-brand-foreground">
-            <div className="flex justify-between w-full">
-              <div className="flex items-center gap-1.5">
-                <Users size={14} />
-                <span>{sucursal.total_employees || 0} empleados</span>
+            {/* Footer info */}
+            <div className="flex flex-col gap-3 items-center justify-between text-sm p-2 bg-chart-3 rounded-b-lg text-brand-foreground">
+              <div className="flex justify-between w-full">
+                <div className="flex items-center gap-1.5">
+                  <Users size={14} />
+                  <span>{sucursal.total_employees || 0} empleados</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Box size={14} />
+                  <span>{sucursal.total_products || 0} productos</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Box size={14} />
-                <span>{sucursal.total_products || 0} productos</span>
-              </div>
-            </div>
-            <div className="flex justify-between w-full">
-              <div className="flex items-center gap-1.5">
-                <Calendar size={14} />
-                <span>
-                  {new Date(sucursal.created_at).toLocaleDateString()}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Hash size={14} />
-                <span>Cod. {sucursal.code}</span>
+              <div className="flex justify-between w-full">
+                <div className="flex items-center gap-1.5">
+                  <Calendar size={14} />
+                  <span>
+                    {new Date(sucursal.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Hash size={14} />
+                  <span>Cod. {sucursal.code}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

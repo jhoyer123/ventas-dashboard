@@ -4,6 +4,7 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   //DialogTrigger,
@@ -27,7 +28,7 @@ export function ModalAddBranch({
 }: ModalAddBranchProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[450px]">
+      <DialogContent className="sm:max-w-[500px] card-modal">
         <DialogHeader>
           <DialogTitle className="font-title text-start pt-3  md:pt-0">
             {!initialValues ? "Crea una nueva sucursal" : "Actualizar sucursal"}
@@ -40,16 +41,15 @@ export function ModalAddBranch({
         </DialogHeader>
         {/* Renderizamos el formulario de sucursal */}
         <FormBranch funParent={onSubmit} initialValues={initialValues} />
-        <div className="flex justify-between mt-2">
+
+        <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline" className="cursor-pointer bg-chart-4">
-              Cancelar
-            </Button>
+            <Button variant="outline">Cancelar</Button>
           </DialogClose>
-          <Button type="submit" form="branch-form" className="cursor-pointer">
+          <Button type="submit" form="branch-form">
             {!initialValues ? "Crear Sucursal" : "Guardar Cambios"}
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
