@@ -107,7 +107,9 @@ export const Content = ({ sale }: Props) => {
             <Building2 className="w-3 h-3" />
             Sucursal
           </p>
-          <p className="text-sm font-medium text-gray-900">{sale.branchName}</p>
+          <p className="text-sm font-medium text-gray-900">
+            {sale.branch_name}
+          </p>
         </div>
       </div>
 
@@ -125,7 +127,9 @@ export const Content = ({ sale }: Props) => {
           </div>
           <div>
             <p className="mb-1">Vendedor</p>
-            <p className="text-sm font-medium text-gray-900">{sale.userName}</p>
+            <p className="text-sm font-medium text-gray-900">
+              {sale.employee_name}
+            </p>
           </div>
         </div>
       </div>
