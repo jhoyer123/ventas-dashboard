@@ -8,18 +8,13 @@ export const getSalesH = async (params: queryParams) => {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  let query = supabase.from("sales").select(
-    `*,users(
-    employees(name)
-  ),branches(branchName)`,
-    {
-      count: "exact",
-    }
-  );
+  let query = supabase
+    .from("sales_details_view")
+    .select("*", { count: "exact" });
 
   if (search) {
     query = query.or(
-      `clientName.ilike.%${search}%,paymentMethod.ilike.%${search}%`
+      `clientName.ilike.%${search}%,employee_name.ilike.%${search}%`
     );
   }
 
@@ -37,7 +32,10 @@ export const getSalesH = async (params: queryParams) => {
 
   const { data, error, count } = await query;
 
-  if (error) throw error;
+  if (error) {
+    console.error("Error fetching sales:", error);
+    throw new Error(error.message);
+  }
 
   const dataRefined = data?.map((item) => ({
     ...item,

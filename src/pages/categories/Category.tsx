@@ -18,6 +18,7 @@ import { useServerTableState } from "@/components/common/tabla/useServerTableSta
 import { AlertDelete } from "@/components/common/AlertDelet";
 import { useDeleteCategory } from "@/hooks/category/useDeleteCategory";
 import { DebouncedInput } from "@/components/common/tabla/DebouncedInput";
+import { Plus } from "lucide-react";
 
 const Category = () => {
   //logica del hook de creacion
@@ -83,62 +84,67 @@ const Category = () => {
   const { data, isLoading } = useGetCategoryT(tableState, null);
 
   return (
-    <div className="max-w-7xl flex flex-col items-center justify-center mx-auto p-4">
-      <div className="flex justify-between items-center w-full mb-4">
-        <h1 className="text-2xl font-semibold">Lista de categorías</h1>
-        <div className="flex items-center gap-6">
-          <Button
-            className="cursor-pointer"
-            onClick={() => {
-              setCategoryUV(null);
-              setOpen(true);
-            }}
-          >
-            Crear categoria
-          </Button>
-          {/* el buscador */}
-          <DebouncedInput
-            valueDafault={tableState.globalFilter ?? ""}
-            onChange={tableState.onGlobalFilterChange}
-            placeholder="Buscar empleados..."
+    <div className="bg-background-view h-full w-full">
+      <div className="h-[calc(100vh-54px)] flex flex-col max-w-7xl mx-auto py-2 gap-2 px-4">
+        <div
+          className="flex flex-col gap-3 justify-between md:items-center shrink-0
+      md:flex-row relative"
+        >
+          <h1 className="text-2xl font-semibold">Lista de categorías</h1>
+          <div className="flex items-center gap-6">
+            <Button
+              className="btn-create w-full"
+              onClick={() => {
+                setCategoryUV(null);
+                setOpen(true);
+              }}
+            >
+               <Plus size={18} />
+              Agregar categoria
+            </Button>
+          </div>
+        </div>
+        {/* el buscador */}
+        <DebouncedInput
+          valueDafault={tableState.globalFilter ?? ""}
+          onChange={tableState.onGlobalFilterChange}
+          placeholder="Buscar empleados..."
+        />
+        {/* TABLA - Crece para ocupar espacio restante */}
+        <div className="flex-1 min-h-0 w-full">
+          <DataTable
+            columns={columnsCategory({
+              setOpenEdit: handleOpenUpdate,
+              setOpenView: () => {},
+              setOpenDelete: handleOpenDelete,
+            })}
+            data={data?.data || []}
+            rowCount={data?.meta.total ?? 0}
+            pagination={tableState.pagination}
+            setPagination={tableState.setPagination}
+            sorting={tableState.sorting}
+            setSorting={tableState.setSorting}
+            isLoading={isLoading}
           />
         </div>
-      </div>
 
-      {/* TABLA - Crece para ocupar espacio restante */}
-      <div className="flex-1 min-h-0 w-full">
-        <DataTable
-          columns={columnsCategory({
-            setOpenEdit: handleOpenUpdate,
-            setOpenView: () => {},
-            setOpenDelete: handleOpenDelete,
-          })}
-          data={data?.data || []}
-          rowCount={data?.meta.total ?? 0}
-          pagination={tableState.pagination}
-          setPagination={tableState.setPagination}
-          sorting={tableState.sorting}
-          setSorting={tableState.setSorting}
-          isLoading={isLoading}
+        {/* modal de categori */}
+        <ModalCategory
+          isOpen={open}
+          setIsOpen={() => setOpen(!open)}
+          funSubParent={handleSubmit}
+          initialData={categoryUV || undefined}
+        />
+
+        {/* alert de eliminacion */}
+        <AlertDelete
+          title="Eliminar Categoria"
+          description="¿Estás seguro de que deseas eliminar esta categoría? Esta acción no se puede deshacer."
+          isOpen={openDelete}
+          setOpenAlert={() => setOpenDelete(!openDelete)}
+          funDelete={handleDelete}
         />
       </div>
-
-      {/* modal de categori */}
-      <ModalCategory
-        isOpen={open}
-        setIsOpen={() => setOpen(!open)}
-        funSubParent={handleSubmit}
-        initialData={categoryUV || undefined}
-      />
-
-      {/* alert de eliminacion */}
-      <AlertDelete
-        title="Eliminar Categoria"
-        description="¿Estás seguro de que deseas eliminar esta categoría? Esta acción no se puede deshacer."
-        isOpen={openDelete}
-        setOpenAlert={() => setOpenDelete(!openDelete)}
-        funDelete={handleDelete}
-      />
     </div>
   );
 };

@@ -23,6 +23,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { ResetCredentialsForm } from "@/schemes/credecials";
+import { Plus } from "lucide-react";
 
 export default function Employee() {
   //logica de la tabla
@@ -135,18 +136,15 @@ export default function Employee() {
   const { user } = useAuth();
   const role = user?.role || "SINROLE";
   return (
-    // calcular alture - 64px del header
-    <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-4 gap-4 px-4">
-      {/* HEADER - Altura fija */}
-      <div className="flex items-center justify-between shrink-0">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Lista de Empleados
-          <span className="text-sm font-normal text-gray-500 block">
-            Sin acceso al sistema
-          </span>
-        </h1>
-
-        <div className="flex items-center gap-2">
+    <div className="bg-background-view h-full">
+      <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-2 gap-2 px-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
+          <h1
+            className="tracking-wide font-title text-xl text-foreground
+            lg:text-2xl"
+          >
+            Lista de Empleados
+          </h1>
           {role === "SUPERADMIN" && (
             <Button
               onClick={() => {
@@ -154,64 +152,64 @@ export default function Employee() {
                 setDesableMod(false);
                 handleOpen();
               }}
-              className="cursor-pointer"
+              className="btn-create w-full"
             >
+              <Plus size={18} />
               Agregar Empleado
             </Button>
           )}
-          <DebouncedInput
-            valueDafault={tableState.globalFilter ?? ""}
-            onChange={tableState.onGlobalFilterChange}
-            placeholder="Buscar empleados..."
+        </div>
+        <DebouncedInput
+          valueDafault={tableState.globalFilter ?? ""}
+          onChange={tableState.onGlobalFilterChange}
+          placeholder="Buscar empleados..."
+        />
+        {/* TABLA - Crece para ocupar espacio restante */}
+        <div className="flex-1 min-h-0">
+          <DataTable
+            columns={columnsPersonal({
+              setOpenEdit: openEditModal,
+              setOpenView: openViewModal,
+              setOpenDelete: openDeleteAlert,
+              setOpenCM: openCModal,
+            })}
+            data={data?.data || []}
+            rowCount={data?.meta.total ?? 0}
+            pagination={tableState.pagination}
+            setPagination={tableState.setPagination}
+            sorting={tableState.sorting}
+            setSorting={tableState.setSorting}
+            isLoading={isLoading}
           />
         </div>
-      </div>
 
-      {/* TABLA - Crece para ocupar espacio restante */}
-      <div className="flex-1 min-h-0">
-        <DataTable
-          columns={columnsPersonal({
-            setOpenEdit: openEditModal,
-            setOpenView: openViewModal,
-            setOpenDelete: openDeleteAlert,
-            setOpenCM: openCModal,
-          })}
-          data={data?.data || []}
-          rowCount={data?.meta.total ?? 0}
-          pagination={tableState.pagination}
-          setPagination={tableState.setPagination}
-          sorting={tableState.sorting}
-          setSorting={tableState.setSorting}
-          isLoading={isLoading}
+        {/* Renderizar Modal de acciones */}
+        <ModalEmployee
+          isOpen={isOpen}
+          setOpen={handleOpen}
+          onSubmit={handleSubmit}
+          initialValues={empSelected}
+          branchIdC={currentBranch || undefined}
+          isViewMode={disableMod}
+        />
+
+        {/* modal de eliminacion */}
+        <AlertDelete
+          title="Eliminar empleado"
+          description="El empleado se eliminará permanentemente. ¿Estás seguro de que deseas continuar?"
+          isOpen={isOpenDelete}
+          setOpenAlert={handleOpenDelete}
+          funDelete={handleDeleteEmployee}
+        />
+
+        {/* Modal Para Las Credenciales */}
+        <ModalCredencials
+          funParent={handleResetCredentials}
+          isOpen={openCM}
+          setOpen={() => setOpenCM(!openCM)}
+          emailC={empSelected?.email}
         />
       </div>
-
-      {/* Renderizar Modal de acciones */}
-      <ModalEmployee
-        isOpen={isOpen}
-        setOpen={handleOpen}
-        onSubmit={handleSubmit}
-        initialValues={empSelected}
-        branchIdC={currentBranch || undefined}
-        isViewMode={disableMod}
-      />
-
-      {/* modal de eliminacion */}
-      <AlertDelete
-        title="Eliminar empleado"
-        description="El empleado se eliminará permanentemente. ¿Estás seguro de que deseas continuar?"
-        isOpen={isOpenDelete}
-        setOpenAlert={handleOpenDelete}
-        funDelete={handleDeleteEmployee}
-      />
-
-      {/* Modal Para Las Credenciales */}
-      <ModalCredencials
-        funParent={handleResetCredentials}
-        isOpen={openCM}
-        setOpen={() => setOpenCM(!openCM)}
-        emailC={empSelected?.email}
-      />
     </div>
   );
 }

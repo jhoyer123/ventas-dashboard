@@ -31,37 +31,43 @@ const Movements = () => {
   };
 
   return (
-    // calcular alture - 64px del header
-    <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-4 gap-4 px-4">
-      <div className="flex items-center justify-between shrink-0">
-        <h1 className="text-2xl font-bold">Lista de Movimientos</h1>
-        {/* buscador */}
-        <DebouncedInput
-          valueDafault={tableState.globalFilter ?? ""}
-          onChange={tableState.onGlobalFilterChange}
-          placeholder="Buscar movimientos..."
-        />
-      </div>
-      {/* tabla */}
-      <div className="flex-1 min-h-0">
-        <DataTable
-          columns={columnsMovement({ openModal })}
-          data={data?.data || []}
-          rowCount={data?.meta.total ?? 0}
-          pagination={tableState.pagination}
-          setPagination={tableState.setPagination}
-          sorting={tableState.sorting}
-          setSorting={tableState.setSorting}
-          isLoading={isLoading}
-        />
-      </div>
+    <div className="bg-background-view h-full">
+      <div className="h-[calc(100vh-54px)] flex flex-col max-w-7xl mx-auto py-2 gap-2 px-4 itmes-between">
+        <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0">
+          <h1
+            className="tracking-wide font-title text-xl text-foreground
+            lg:text-2xl"
+          >
+            Lista de Movimientos
+          </h1>
+          {/* buscador */}
+          <DebouncedInput
+            valueDafault={tableState.globalFilter ?? ""}
+            onChange={tableState.onGlobalFilterChange}
+            placeholder="Buscar movimientos..."
+          />
+        </div>
+        {/* tabla */}
+        <div className="flex-1 min-h-0">
+          <DataTable
+            columns={columnsMovement({ openModal })}
+            data={data?.data || []}
+            rowCount={data?.meta.total ?? 0}
+            pagination={tableState.pagination}
+            setPagination={tableState.setPagination}
+            sorting={tableState.sorting}
+            setSorting={tableState.setSorting}
+            isLoading={isLoading}
+          />
+        </div>
 
-      {/* modal de detalles */}
-      <ModalDetMovement
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        movement={selectedMovement!}
-      />
+        {/* modal de detalles */}
+        <ModalDetMovement
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          movement={selectedMovement!}
+        />
+      </div>
     </div>
   );
 };

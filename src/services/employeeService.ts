@@ -14,7 +14,6 @@ export const getEmployees = async (
   const to = from + params.pageSize - 1;
 
   // UNA SOLA QUERY con count incluido
-  //let query = supabase.from("employees").select("*", { count: "exact" });
   let query = supabase
     .from("employees")
     .select(

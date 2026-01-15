@@ -11,7 +11,7 @@ interface DebouncedInputProps {
 // Input que espera X tiempo antes de notificar el cambio
 export function DebouncedInput({
   onChange,
-  debounce = 600,
+  debounce = 300,
   valueDafault,
   placeholder = "Buscar...",
 }: DebouncedInputProps) {
@@ -26,9 +26,9 @@ export function DebouncedInput({
   }, [value]);
 
   return (
-    <div className="relative w-full max-w-sm">
+    <div className="relative w-full max-w-[425px]">
       {/* Ícono de búsqueda a la izquierda */}
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground-card pointer-events-none" />
 
       {/* Input con padding para el ícono */}
       <Input
@@ -36,14 +36,14 @@ export function DebouncedInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="pl-10 pr-10 h-10 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+        className="pl-10 pr-10 h-10 border-border bg-card text-card-foreground focus:ring-ring transition-all"
       />
 
       {/* Botón para limpiar (solo visible cuando hay texto) */}
       {value && (
         <button
           onClick={() => setValue("")}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-card hover:text-foreground-card/80 transition-colors"
           type="button"
         >
           <X className="h-4 w-4" />

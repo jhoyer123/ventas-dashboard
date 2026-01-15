@@ -68,7 +68,7 @@ export const getCategoriesT = async (params: TableParams) => {
   if (params.globalFilter) {
     const search = params.globalFilter;
     query = query.or(
-      `nameCat.ilike.%${search}%,description.ilike.%${search}%,total_products.ilike.%${search}%`
+      `nameCat.ilike.%${search}%,description.ilike.%${search}%`
     );
   }
 
@@ -84,8 +84,8 @@ export const getCategoriesT = async (params: TableParams) => {
 
   // Ejecutamos la query
   const { data, error, count } = await query;
-
   if (error) {
+    console.error("Error fetching categories:", error);
     throw new Error(error.message);
   }
 

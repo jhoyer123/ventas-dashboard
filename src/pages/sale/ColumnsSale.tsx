@@ -36,7 +36,7 @@ export const columnsSaleH = ({ openM }: Props): ColumnDef<SaleH>[] => [
     enableSorting: true,
     cell: ({ row }) => (
       <span className="text-gray-600 font-mono text-sm">
-        {row.original.userName}
+        {row.original.employee_name}
       </span>
     ),
   },

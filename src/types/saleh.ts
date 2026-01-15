@@ -13,11 +13,9 @@ export interface SaleH {
   debtAmount: number;
   created_at: Date;
   updated_at: Date;
+  user_cancel: string | null;
   receiptNumber: string;
   //datos adicionales
-  userName?: string;
-  branchName?: string;
+  employee_name?: string;
+  branch_name?: string;
 }
-
-
-

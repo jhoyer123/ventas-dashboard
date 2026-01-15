@@ -39,11 +39,11 @@ export function AlertDelete({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <div className="flex w-full justify-between">
-            <AlertDialogCancel className="cursor-pointer bg-chart-4">
+            <AlertDialogCancel className="">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              className="cursor-pointer bg-destructive"
+              className="btn-delete"
               onClick={funDelete}
             >
               Eliminar

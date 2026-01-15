@@ -44,14 +44,15 @@ export const columnsProduct = ({
     enableSorting: true,
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 relative z-0 min-w-40">
           <img
             loading="lazy"
             src={row.original.main_image || undefined}
             alt={row.original.nameProd}
-            className="w-9.5 h-9.5 object-cover rounded"
+            className="w-9.5 h-9.5 object-cover rounded block min-w-9.5 min-h-9.5"
+            style={{ backfaceVisibility: "hidden" }}
           />
-          <span className="font-medium text-gray-900">
+          <span className="font-medium text-card-foreground">
             {row.original.nameProd}
           </span>
         </div>

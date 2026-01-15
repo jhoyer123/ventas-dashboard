@@ -49,7 +49,7 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
           </Label>
           <Input
             {...register("branch_name")}
-            placeholder="Ingresa el nombre de la Sucursal"
+            placeholder="Ejl: Sucursal Central"
           />
           {errors.branch_name && (
             <p className="text-sm text-destructive">
@@ -64,7 +64,7 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
           </Label>
           <Input
             {...register("address")}
-            placeholder="Ingresa la dirección de la Sucursal"
+            placeholder="Ejl: Av. Siempre Viva 123"
           />
           {errors.address && (
             <p className="text-sm text-destructive">{errors.address.message}</p>
@@ -77,7 +77,7 @@ const FormBranch = ({ funParent, initialValues }: BranchProps) => {
           </Label>
           <Input
             {...register("code")}
-            placeholder="Ingresa el codigo de la Sucursal"
+            placeholder="Ejl: SC001"
           />
           {errors.code && (
             <p className="text-sm text-destructive">{errors.code.message}</p>

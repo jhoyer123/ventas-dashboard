@@ -41,26 +41,28 @@ export const Branches = ({
                 </h3>
               </div>
 
-              <DropDownAction
-                items={[
-                  {
-                    label: "Actualizar información",
-                    action: () => {
-                      setBranchS(sucursal);
-                      handleOpenModal();
+              <div className="bg-ring/30 relative rounded-md flex items-center p-1">
+                <DropDownAction
+                  items={[
+                    {
+                      label: "Actualizar información",
+                      action: () => {
+                        setBranchS(sucursal);
+                        handleOpenModal();
+                      },
+                      icon: Pencil,
                     },
-                    icon: Pencil,
-                  },
-                  {
-                    label: "Eliminar",
-                    action: () => {
-                      setBranchS(sucursal);
-                      handleOpenAlertDelete();
+                    {
+                      label: "Eliminar",
+                      action: () => {
+                        setBranchS(sucursal);
+                        handleOpenAlertDelete();
+                      },
+                      icon: Trash2,
                     },
-                    icon: Trash2,
-                  },
-                ]}
-              />
+                  ]}
+                />
+              </div>
             </div>
 
             {/* Card body */}

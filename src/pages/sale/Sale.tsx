@@ -72,34 +72,41 @@ const Sale = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-4 gap-4 px-4">
-      <div className="flex justify-between items-center py-2">
-        <h1 className="text-2xl font-bold ">Historial de Ventas</h1>
-        <DebouncedInput
-          valueDafault={tableState.globalFilter ?? ""}
-          onChange={tableState.onGlobalFilterChange}
-          placeholder="Buscar ventas..."
+    <div className="bg-background-view h-full">
+      <div className="h-[calc(100vh-64px)] flex flex-col max-w-7xl mx-auto py-2 gap-2 px-4">
+        <div className="flex flex-col md:flex-row justify-between md:items-center mb-2">
+          <h1
+            className="tracking-wide font-title text-xl text-foreground
+            lg:text-2xl"
+          >
+            Historial de Ventas
+          </h1>
+          <DebouncedInput
+            valueDafault={tableState.globalFilter ?? ""}
+            onChange={tableState.onGlobalFilterChange}
+            placeholder="Buscar ventas..."
+          />
+        </div>
+        <DataTable
+          columns={columnsSaleH({ openM: modals.handleModal })}
+          data={data?.data || []}
+          rowCount={data?.meta.total ?? 0}
+          pagination={tableState.pagination}
+          setPagination={tableState.setPagination}
+          sorting={tableState.sorting}
+          setSorting={tableState.setSorting}
+          isLoading={isLoading}
+        />
+
+        {/* Modales */}
+        <SalesModals
+          type={modals.typeModal?.typeModal || null}
+          sale={modals.typeModal?.sale || null}
+          closeModal={modals.closeModal}
+          handlePayDebt={handlePayDebt}
+          funCancel={handleCancel}
         />
       </div>
-      <DataTable
-        columns={columnsSaleH({ openM: modals.handleModal })}
-        data={data?.data || []}
-        rowCount={data?.meta.total ?? 0}
-        pagination={tableState.pagination}
-        setPagination={tableState.setPagination}
-        sorting={tableState.sorting}
-        setSorting={tableState.setSorting}
-        isLoading={isLoading}
-      />
-
-      {/* Modales */}
-      <SalesModals
-        type={modals.typeModal?.typeModal || null}
-        sale={modals.typeModal?.sale || null}
-        closeModal={modals.closeModal}
-        handlePayDebt={handlePayDebt}
-        funCancel={handleCancel}
-      />
     </div>
   );
 };

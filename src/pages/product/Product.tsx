@@ -35,6 +35,7 @@ import type {
   RemoveStockValues,
   TransferStockValues,
 } from "@/schemes/branchProd";
+import { Plus } from "lucide-react";
 
 export default function Product() {
   //logica de la tabla
@@ -151,59 +152,64 @@ export default function Product() {
   };
 
   return (
-    // calcular alture - 64px del header
-    <div className="h-[calc(100vh-54px)] flex flex-col max-w-7xl mx-auto py-2 gap-2 px-4">
-      {/* HEADER - Altura fija */}
-      <div className="flex items-center justify-between shrink-0">
-        <h1 className="text-2xl font-bold text-gray-900">Lista de Productos</h1>
-        <div className="flex items-center gap-2">
+    <div className="bg-background-view h-full">
+      <div className="h-[calc(100vh-54px)] flex flex-col max-w-7xl mx-auto py-2 gap-2 px-4">
+        <div
+          className="flex flex-col gap-3 justify-between md:items-center shrink-0
+      md:flex-row relative"
+        >
+          <h1
+            className="tracking-wide font-title text-xl text-foreground
+            lg:text-2xl"
+          >
+            Lista de Productos
+          </h1>
           {!currentBranch && (
-            <Button asChild className="cursor-pointer relative">
-              <Link to="../createp" className="absolute inset-0">
-                Agregar producto
+            <Button asChild className="btn-create w-full">
+              <Link to="../createp">
+                <Plus size={18} />
+                <span>Agregar Producto</span>
               </Link>
             </Button>
           )}
-          <DebouncedInput
-            valueDafault={tableState.globalFilter ?? ""}
-            onChange={tableState.onGlobalFilterChange}
-            placeholder="Buscar productos..."
+        </div>
+        <DebouncedInput
+          valueDafault={tableState.globalFilter ?? ""}
+          onChange={tableState.onGlobalFilterChange}
+          placeholder="Buscar productos..."
+        />
+        <div className="flex-1 min-h-0">
+          <DataTable
+            columns={columnsProduct({
+              setOpenDelete: (id) => openModal("delete", id),
+              setOpenPAB: (id) => openModal("addBranch", id),
+              setOpenAdd: (id) => openModal("addBranchStock", id),
+              setOpenTransfer: (id, stockCurrent) =>
+                openModal("transfer", id, stockCurrent),
+              setOpenRemove: (id, stockCurrent) =>
+                openModal("remove", id, stockCurrent),
+            })}
+            data={data?.data || []}
+            rowCount={data?.meta.total ?? 0}
+            pagination={tableState.pagination}
+            setPagination={tableState.setPagination}
+            sorting={tableState.sorting}
+            setSorting={tableState.setSorting}
+            isLoading={isLoading}
           />
         </div>
-      </div>
 
-      {/* TABLA - Crece para ocupar espacio restante */}
-      <div className="flex-1 min-h-0">
-        <DataTable
-          columns={columnsProduct({
-            setOpenDelete: (id) => openModal("delete", id),
-            setOpenPAB: (id) => openModal("addBranch", id),
-            setOpenAdd: (id) => openModal("addBranchStock", id),
-            setOpenTransfer: (id, stockCurrent) =>
-              openModal("transfer", id, stockCurrent),
-            setOpenRemove: (id, stockCurrent) =>
-              openModal("remove", id, stockCurrent),
-          })}
-          data={data?.data || []}
-          rowCount={data?.meta.total ?? 0}
-          pagination={tableState.pagination}
-          setPagination={tableState.setPagination}
-          sorting={tableState.sorting}
-          setSorting={tableState.setSorting}
-          isLoading={isLoading}
+        {/* MODALES */}
+        <ProductModals
+          modal={modal}
+          closeModal={closeModal}
+          onDelete={handleDelete}
+          onAddBranch={handleAddProdBranch}
+          onAddStock={handleAddStock}
+          onRemoveStock={handleRemoveStock}
+          onTransferStock={handleTransferStock}
         />
       </div>
-
-      {/* MODALES */}
-      <ProductModals
-        modal={modal}
-        closeModal={closeModal}
-        onDelete={handleDelete}
-        onAddBranch={handleAddProdBranch}
-        onAddStock={handleAddStock}
-        onRemoveStock={handleRemoveStock}
-        onTransferStock={handleTransferStock}
-      />
     </div>
   );
 }
