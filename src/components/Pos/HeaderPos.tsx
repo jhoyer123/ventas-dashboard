@@ -1,5 +1,5 @@
 import { DebouncedInput } from "../common/tabla/DebouncedInput";
-import { ButtonShopping } from "./buttonShopping";
+import { ButtonShopping } from "@/components/Pos/ButtonShopping";
 
 interface Props {
   setSearch: (value: string) => void;
