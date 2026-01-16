@@ -28,7 +28,7 @@ export function DebouncedInput({
   return (
     <div className="relative w-full max-w-[425px]">
       {/* Ícono de búsqueda a la izquierda */}
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground-card pointer-events-none" />
+      <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
 
       {/* Input con padding para el ícono */}
       <Input
@@ -36,7 +36,7 @@ export function DebouncedInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="pl-10 pr-10 h-10 border-border bg-card text-card-foreground focus:ring-ring transition-all"
+        className="pl-8 pr-10 h-10 border-border bg-card text-card-foreground focus:ring-ring transition-all font-body text-sm"
       />
 
       {/* Botón para limpiar (solo visible cuando hay texto) */}

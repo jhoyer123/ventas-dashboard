@@ -1,0 +1,47 @@
+@import "@/index.css";
+
+/* resposive del grid de produtos */
+.container {
+  @apply h-full w-full;
+  container-type: inline-size;
+  container-name: cproducts;
+}
+
+.productsContent {
+  @apply grid grid-cols-2 overflow-y-auto;
+}
+
+@container cproducts (min-width: 513px) {
+  .productsContent {
+    @apply grid-cols-3;
+  }
+}
+
+@container cproducts (min-width: 768px) {
+  .productsContent {
+    @apply grid-cols-4;
+  }
+}
+
+@container cproducts (min-width: 1000px) {
+  .productsContent {
+    @apply grid-cols-5;
+  }
+}
+
+/* sección de del carrito de venta */
+.btnOpenCartMobile {
+  @apply w-full h-auto fixed z-10 bottom-0 left-0 max-w-full overflow-x-hidden bg-primary text-primary-foreground border border-border py-2 flex justify-center items-center font-medium
+  md:relative md:w-auto md:px-3 md:rounded-md
+  /* Forzamos que la altura sea solo la del contenido (el padding) */
+  lg:hidden;
+}
+
+.saleCartContent {
+  @apply border-t border-ring
+  fixed bottom-0 left-0 right-0 w-full bg-card shadow-xl
+  flex-col justify-between
+  h-[70vh] overflow-hidden
+  md:relative md:bottom-0 md:w-full md:shadow-none md:h-[70vh]
+  lg:w-[420px] lg:border-l lg:border-border lg:shadow-xl lg:static lg:z-10 lg:h-full;
+}

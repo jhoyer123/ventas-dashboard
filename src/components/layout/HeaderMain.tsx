@@ -12,8 +12,7 @@ export const HeaderMain = () => {
 
   return (
     <header
-      className="flex h-auto shrink-0 px-4 py-2 items-center gap-2 border-b bg-background
-         md:h-12"
+      className="flex h-auto shrink-0 px-4 py-2 items-center gap-2 border-b bg-background"
     >
       <div className="flex items-center gap-1 h-full w-full">
         <SidebarTrigger className="-ml-1" />

@@ -48,7 +48,8 @@ const Pos = () => {
 
   //estado del modal de finalizar venta
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  //estado para el carrito de ventas
+  const [isOpenShopping, setIsOpenShopping] = useState(false);
   //hook para crear la venta
   const createSaleMutation = useCreateSale();
   //FUNCION PARA EJECUTAR VENTA
@@ -106,9 +107,9 @@ const Pos = () => {
   }
 
   return (
-    <div className="flex h-full bg-background-view overflow-hidden">
+    <div className="flex h-full w-full bg-background-view overflow-hidden">
       {/* PANEL IZQUIERDO: CATÁLOGO */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <section className="flex-1 flex flex-col min-w-0 relative overflow-y-auto w-full">
         {/* buscador + categorias */}
         <HeaderPos
           setSearch={setSearch}
@@ -116,14 +117,21 @@ const Pos = () => {
           categories={categories || []}
           category={category}
           setCategory={setCategory}
+          isOpenShopping={isOpenShopping}
+          setIsOpenShopping={setIsOpenShopping}
         />
 
         {/* Grid de Productos */}
         <ProductsPos addToCart={cartLogic.addToCart} {...productsLogic} />
-      </main>
+      </section>
 
       {/* PANEL DERECHO: CARRITO */}
-      <AsidePos {...cartLogic} openModal={() => setIsModalOpen(true)} />
+      <AsidePos
+        {...cartLogic}
+        openModal={() => setIsModalOpen(true)}
+        isOpenShopping={isOpenShopping}
+        setIsOpenShopping={setIsOpenShopping}
+      />
 
       {/* modal de Finalizar Venta */}
       <ModalPosE

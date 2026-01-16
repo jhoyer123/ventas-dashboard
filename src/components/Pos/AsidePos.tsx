@@ -1,6 +1,14 @@
-import { Minus, Package, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import {
+  CircleX,
+  Minus,
+  Package,
+  Plus,
+  ShoppingCart,
+  Trash2,
+} from "lucide-react";
 //types para el pos y la venta
 import type { CartItem } from "@/types/salePos";
+import styles from "./styles.module.css";
 
 interface Props {
   cart: CartItem[];
@@ -23,6 +31,8 @@ interface Props {
   setIsDebt: React.Dispatch<React.SetStateAction<boolean>>;
   handleManualAmount: (valueI: number | "") => void;
   openModal: () => void;
+  isOpenShopping: boolean;
+  setIsOpenShopping: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AsidePos = ({
@@ -36,19 +46,27 @@ export const AsidePos = ({
   setIsDebt,
   setManualAmount,
   openModal,
+  isOpenShopping,
+  setIsOpenShopping,
 }: Props) => {
   return (
-    <>
-      {/* vista mobile button*/}
-      <div className="absolute bottom-0 bg-primary text-primary-foreground w-full lg:hidden p-2 flex justify-center">
-        <button>Abrir carrito</button>
-      </div>
-
-      {/* vista desktop */}
-      <aside className="hidden relative lg:flex w-[420px] bg-card border-l border-slate-200 flex-col shadow-xl">
-        <div className="px-2 py-2.5 border-b border-slate-100 flex justify-between items-center">
+    <aside
+      className={`
+    ${styles.saleCartContent} 
+    ${isOpenShopping ? "flex" : "hidden"} lg:flex 
+  `}
+    >
+      <div>
+        <div className="px-2 py-2.5 border-b border-border flex justify-between items-center">
+          <button
+            onClick={() => setIsOpenShopping(!isOpenShopping)}
+            className="lg:hidden"
+          >
+            <CircleX className="text-card-foreground" size={24} />
+          </button>
           <h2 className="text-xl font-black flex items-center gap-2">
-            <ShoppingCart className="text-indigo-600" size={24} /> Venta
+            <ShoppingCart className="text-brand" size={24} />
+            <span>Venta</span>
           </h2>
           <button
             onClick={() => {
@@ -56,7 +74,7 @@ export const AsidePos = ({
               setManualAmount("");
               setIsDebt(false);
             }}
-            className="text-slate-400 hover:text-red-500 transition-colors"
+            className="text-destructive hover:text-destructive transition-colors"
           >
             <Trash2 size={20} />
           </button>
@@ -142,21 +160,22 @@ export const AsidePos = ({
             ))
           )}
         </div>
-        {/* Botón Finalizar */}
-        <button
-          onClick={openModal}
-          disabled={cart.length === 0}
-          className={`w-[90%] py-2 bg-black text-white my-2 mx-auto rounded-lg  ${
-            cart.length === 0
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:scale-102 cursor-pointer"
-          } duration-300 transition-all text-2xl font-title`}
-        >
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            Finalizar Venta
-          </span>
-        </button>
-      </aside>
-    </>
+      </div>
+
+      {/* Botón Finalizar */}
+      <button
+        onClick={openModal}
+        disabled={cart.length === 0}
+        className={`w-full py-2 bg-black text-white mt-2 mx-auto rounded-lg  ${
+          cart.length === 0
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:scale-102 cursor-pointer"
+        } duration-300 transition-all text-2xl font-title`}
+      >
+        <span className="relative z-10 flex items-center justify-center gap-2">
+          Finalizar Venta
+        </span>
+      </button>
+    </aside>
   );
 };
