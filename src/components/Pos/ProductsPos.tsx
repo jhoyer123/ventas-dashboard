@@ -18,7 +18,9 @@ export const ProductsPos = ({
   getAvailableStock,
 }: Props) => {
   return (
-    <div className="flex-1 max-h-full w-full pt-3 px-2 pb-13 md:pb-3">
+    <div className="flex-1 max-h-full h-full w-full pt-3 px-2 mb-13
+    md:mb-3 overflow-y-auto
+    xl:px-10">
       {isPending && products.length === 0 ? (
         <div className="flex justify-center items-center h-64 text-muted-foreground">
           <Loader2 className="animate-spin mr-2" /> Cargando catálogo...

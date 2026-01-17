@@ -3,7 +3,9 @@
   @apply p-5 cursor-pointer md:max-w-fit;
 }
 /* boton de cancelar */
-
+.btn-cancel {
+  @apply cursor-pointer md:max-w-fit;
+}
 .btn-delete {
   @apply bg-destructive text-destructive-foreground cursor-pointer;
 }

@@ -88,12 +88,10 @@ export function ModalRemoveStock({
           </div>
 
           <DialogFooter className="flex justify-between">
-            <div className="flex justify-between w-full">
-              <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
-              </DialogClose>
-              <Button type="submit">Guardar</Button>
-            </div>
+            <DialogClose asChild>
+              <Button variant="outline">Cancelar</Button>
+            </DialogClose>
+            <Button type="submit">Guardar</Button>
           </DialogFooter>
         </form>
       </DialogContent>

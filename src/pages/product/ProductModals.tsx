@@ -50,8 +50,8 @@ export function ProductModals({
           }
           description={
             !currentBranch
-              ? "¿Estás seguro de eliminar el producto globalmente?"
-              : "¿Eliminar el producto solo de esta sucursal?"
+              ? "¿Estás seguro de eliminar el producto globalmente?, esta acción no se puede deshacer"
+              : "¿Estas seguro de eliminar el producto solo de esta sucursal?, esta acción no se puede deshacer"
           }
           setOpenAlert={closeModal}
           funDelete={() => {

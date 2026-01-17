@@ -67,7 +67,7 @@ export function ModalTransferStock({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="card-modal sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Transferir stock</DialogTitle>
           <DialogDescription>

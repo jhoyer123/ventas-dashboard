@@ -110,42 +110,60 @@ const CreateProduct = (mode: Props) => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 w-full flex flex-col items-center justify-center my-auto">
-      <div className="flex w-full justify-between mb-6">
-        <h1 className="text-2xl font-bold text-center my-auto">
-          {mode?.mode === "view"
-            ? "Información del Producto"
-            : isEditing
-            ? "Editar Producto"
-            : "Crear Nuevo Producto"}
-        </h1>
-        {/*botones */}
-        <div className="flex gap-4 items-center justify-center">
-          {mode?.mode === "view" ? (
+    <div className="max-w-7xl mx-auto p-4 w-full h-full overflow-y-auto">
+      <div className="flex flex-col gap-2 w-full justify-between mb-6 lg:flex-row">
+        <div className="flex flex-col gap-2"> 
+          {mode?.mode === "view" && (
             <div>
-              <Button asChild className="cursor-pointer" variant="secondary">
+              <Button
+                asChild
+                className="cursor-pointer w-full"
+                variant="secondary"
+              >
                 <Link to="/dashboard/products">Volver</Link>
               </Button>
             </div>
-          ) : (
-            <>
+          )}
+          <h1
+            className="text-xl font-bold text-center my-auto
+        md:text-2xl"
+          >
+            {mode?.mode === "view"
+              ? "Información del Producto"
+              : isEditing
+                ? "Editar Producto"
+                : "Crear Nuevo Producto"}
+          </h1>
+        </div>
+
+        {/*botones */}
+        {mode?.mode !== "view" && (
+          <div className="flex flex-col gap-4 items-center justify-center w-full lg:w-auto">
+            <div
+              className="flex flex-col gap-2 items-center justify-center w-full
+            md:flex-row md:gap-4 lg:w-auto"
+            >
               {/* boton de cancelar y volver */}
-              <Button asChild className="cursor-pointer" variant="secondary">
+              <Button
+                asChild
+                className="cursor-pointer w-full md:flex-1 lg:w-auto"
+                variant="secondary"
+              >
                 <Link to="/dashboard/products">Cancelar y volver</Link>
               </Button>
 
               {/* Botón de enviar */}
               <Button
                 type="submit"
-                className="cursor-pointer hover:bg-gray-800"
+                className="cursor-pointer w-full md:flex-1 lg:w-auto"
                 form="product-form"
                 variant="default"
               >
                 {id ? "Actualizar Producto" : "Crear Producto"}
               </Button>
-            </>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
       {/* Formulario del producto */}
       <FormProduct

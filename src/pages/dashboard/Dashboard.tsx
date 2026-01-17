@@ -23,7 +23,7 @@ const Dashboard = () => {
   const { topBranches } = useTopB();
 
   return (
-    <div className="min-h-full p-4 w-full bg-background-view">
+    <div className="min-h-full h-full p-4 w-full bg-background-view overflow-y-auto">
       <div className="max-w-7xl mx-auto flex flex-col gap-4">
         <h1
           className="font-title text-xl text-foreground

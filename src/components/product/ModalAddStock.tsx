@@ -58,12 +58,10 @@ export function ModalAddStock({ isOpen, setIsOpen, onAddStock }: Props) {
             />
           </div>
           <DialogFooter>
-            <div className="flex justify-between w-full">
-              <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
-              </DialogClose>
-              <Button type="submit">Guardar cambios</Button>
-            </div>
+            <DialogClose asChild>
+              <Button variant="outline">Cancelar</Button>
+            </DialogClose>
+            <Button type="submit">Guardar</Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -22,9 +22,9 @@ export const HeaderPos = (props: Props) => {
     setIsOpenShopping,
   } = props;
   return (
-    <header className="px-4 py-1 bg-card border-b border-border shadow-sm max-h-scren">
-      <div className="w-full mx-auto flex flex-col gap-2 md:gap-2 items-start justify-center">
-        <div className="w-full flex justify-between gap-4">
+    <header className="py-1 bg-card border-b border-border shadow-sm max-h-screen overflow-x-hidden">
+      <div className="mx-auto flex flex-col gap-2 md:gap-2 items-start justify-center">
+        <div className="w-full flex justify-between items-center gap-4 px-4">
           <DebouncedInput
             onChange={(value) => setSearch(String(value))}
             debounce={300}
@@ -36,7 +36,7 @@ export const HeaderPos = (props: Props) => {
             setIsOpenShopping={setIsOpenShopping}
           />
         </div>
-        <div className="flex flex-1 gap-2 overflow-x-auto w-full md:w-auto pb-2 scrollbar-hide">
+        <div className="flex w-full gap-2 overflow-x-auto py-2 px-4 scroll-smooth bg-ring/10">
           <button
             onClick={() => setCategory(null)}
             className={`px-3 py-1 rounded-full text-sm font-body whitespace-nowrap transition-all cursor-pointer ${
@@ -54,7 +54,7 @@ export const HeaderPos = (props: Props) => {
               className={`px-3 py-1 rounded-full text-sm font-body whitespace-nowrap transition-all cursor-pointer ${
                 category === cat.id || (cat.nameCat === "Todos" && !category)
                   ? "bg-brand text-brand-foreground"
-                  : "bg-accent border border-border text-accent-foreground hover:bg-accent/80"
+                  : "bg-background border border-border text-accent-foreground hover:bg-accent"
               }`}
             >
               {cat.nameCat}

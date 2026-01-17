@@ -42,6 +42,6 @@
   fixed bottom-0 left-0 right-0 w-full bg-card shadow-xl
   flex-col justify-between
   h-[70vh] overflow-hidden
-  md:relative md:bottom-0 md:w-full md:shadow-none md:h-[70vh]
-  lg:w-[420px] lg:border-l lg:border-border lg:shadow-xl lg:static lg:z-10 lg:h-full;
+  md:w-[320px] md:border-l md:border-border md:shadow-xl md:right-0 md:left-auto md:z-10 md:h-full
+  lg:w-[400px] lg:border-l lg:border-border lg:shadow-xl lg:static lg:z-10 lg:h-full;
 }

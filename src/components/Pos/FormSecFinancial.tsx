@@ -32,7 +32,7 @@ export function FormSecFinancial() {
       md:flex-row "
       >
         {/* Total real */}
-        <div className="text-center w-full flex gap-2 items-center justify-center bg-slate-300 rounded-2xl p-2
+        <div className="text-center w-full flex gap-2 items-center justify-center bg-input rounded-xl p-2
         sm:w-1/2">
           <span className="font-title text-xl">Total:</span>
           <span className="font-title text-xl">Bs. {totalReal}</span>

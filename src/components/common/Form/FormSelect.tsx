@@ -21,7 +21,7 @@ interface FormSelectProps<T extends FieldValues> {
   options: SelectOption[];
   placeholder?: string;
   errors?: FieldErrors<T>;
-  disabled?: boolean; 
+  disabled?: boolean;
 }
 
 export function FormSelect<T extends FieldValues>({
@@ -41,14 +41,24 @@ export function FormSelect<T extends FieldValues>({
         name={name}
         control={control}
         render={({ field }) => (
-          <Select value={field.value || ""} onValueChange={field.onChange} disabled={disabled}>
-            <SelectTrigger className="w-full bg-gray-50">
-              <SelectValue placeholder={placeholder} />
+          <Select
+            value={field.value || ""}
+            onValueChange={field.onChange}
+            disabled={disabled}
+          >
+            <SelectTrigger className="w-full overflow-hidden">
+              <div className="flex-1 text-left truncate">
+                <SelectValue placeholder={placeholder} />
+              </div>
             </SelectTrigger>
 
-            <SelectContent>
+            <SelectContent className="w-(--radix-select-trigger-width)">
               {options.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
+                <SelectItem
+                  key={opt.value}
+                  value={opt.value}
+                  className="whitespace-normal wrap-break-word"
+                >
                   {opt.label}
                 </SelectItem>
               ))}

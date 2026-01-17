@@ -31,7 +31,7 @@ export function AlertDelete({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="font-title">
-            {title} : <span className="ml-1.5 text-chart-3">{nameDelete}</span>
+            {title} <span className="ml-1.5 text-chart-3">{nameDelete}</span>
           </AlertDialogTitle>
           <AlertDialogDescription className="font-body">
             {description}

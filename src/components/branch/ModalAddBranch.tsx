@@ -44,9 +44,9 @@ export function ModalAddBranch({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancelar</Button>
+            <Button variant="secondary" className="btn-cancel">Cancelar</Button>
           </DialogClose>
-          <Button type="submit" form="branch-form">
+          <Button type="submit" form="branch-form" className="cursor-pointer">
             {!initialValues ? "Crear Sucursal" : "Guardar Cambios"}
           </Button>
         </DialogFooter>

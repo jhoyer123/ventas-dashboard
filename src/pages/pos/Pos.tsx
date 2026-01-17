@@ -98,8 +98,8 @@ const Pos = () => {
   if (!currentBranch) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] gap-6 p-10">
-        <CircleAlert className="size-20 text-red-400 animate-pulse" />
-        <h2 className="text-center text-3xl font-bold text-slate-700 max-w-2xl">
+        <CircleAlert className="size-20 text-destructive" />
+        <h2 className="text-center text-3xl font-bold text-foreground max-w-2xl">
           Seleccione una sucursal para comenzar la venta.
         </h2>
       </div>
@@ -107,9 +107,9 @@ const Pos = () => {
   }
 
   return (
-    <div className="flex h-full w-full bg-background-view overflow-hidden">
+    <div className="flex h-full w-full bg-background-view">
       {/* PANEL IZQUIERDO: CATÁLOGO */}
-      <section className="flex-1 flex flex-col min-w-0 relative overflow-y-auto w-full">
+      <section className="flex-1 h-full flex flex-col min-w-0 relative overflow-y-auto w-full">
         {/* buscador + categorias */}
         <HeaderPos
           setSearch={setSearch}

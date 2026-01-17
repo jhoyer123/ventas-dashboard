@@ -74,7 +74,6 @@ export function ModalPosE({
   }, [carts]);
 
   const onSubmit = (data: SaleFormValues) => {
-    console.log("Datos de la venta:", data);
     executeSale(carts, data);
     setIsOpen(false);
     methods.reset();
@@ -84,12 +83,12 @@ export function ModalPosE({
     <FormProvider {...methods}>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
-          className="px-1 bg-card text-card-foreground max-h-[90vh] flex flex-col overflow-hidden gap-1
+          className="card-modal px-1 pb-3
           sm:max-w-[520px] sm:px-4
           md:max-w-[720px]"
         >
           <DialogHeader className="shrink-0">
-            <DialogTitle className="text-2xl font-bold">
+            <DialogTitle className="text-xl font-bold">
               Procesar Pago
             </DialogTitle>
             <DialogDescription>
@@ -100,35 +99,21 @@ export function ModalPosE({
             onSubmit={methods.handleSubmit(onSubmit)}
             className="flex flex-col flex-1"
           >
-            <div className="max-h-[calc(90vh-200px)] overflow-y-auto flex flex-col gap-2 py-3">
+            <div className="flex flex-col gap-2 py-2 w-full">
               {/* seccion financiera */}
               <FormSecFinancial />
               {/* seccion datos cliente */}
               <FormSecStateSale isGeneric={isGeneric} />
             </div>
-            <DialogFooter className="mt-3 shrink-0">
-              <div
-                className="flex flex-col justify-between items-center w-full gap-2
-              sm:flex-row "
-              >
-                <DialogClose asChild>
-                  <Button
-                    variant="ghost"
-                    type="button"
-                    className="bg-ring cursor-pointer w-full
-                  sm:w-auto"
-                  >
-                    Cancelar
-                  </Button>
-                </DialogClose>
-                <Button
-                  type="submit"
-                  className="bg-chart-3 w-full hover:bg-blue-700 text-white cursor-pointer
-                  sm:w-auto"
-                >
-                  Confirmar y Cobrar
+            <DialogFooter className="mt-3">
+              <DialogClose asChild>
+                <Button variant="secondary" type="button">
+                  Cancelar
                 </Button>
-              </div>
+              </DialogClose>
+              <Button type="submit" className="btn-create">
+                Confirmar y Cobrar
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

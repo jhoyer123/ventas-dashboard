@@ -60,7 +60,7 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
           branchName: b.branchName,
           selected: false,
           stock: 0,
-        }))
+        })),
       );
     }
   }, [branches, replace, open]);
@@ -82,7 +82,6 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
       .filter((b) => b.selected)
       .map(({ branchId, stock }) => ({ branchId, stock }));
 
-    console.log("Enviar a base de datos:", selectedBranches);
     form.reset();
     funParent(selectedBranches);
     setOpen();
@@ -90,19 +89,21 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[350px] sm:max-w-xl md:max-w-2xl">
+      <DialogContent className="card-modal px-1 pb-3 md:px-3">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Asignar a Sucursales</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-center">
+              Asignar a Sucursales
+            </DialogTitle>
+            <DialogDescription className="text-center">
               Selecciona las sucursales y asigna el stock inicial.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-4 space-y-4 max-h-[400px] overflow-y-auto px-1">
+          <div className="py-4 space-y-2">
             {/* si no hay sucursales mostramos mensage claro */}
             {branches && branches.length === 0 && (
-              <p className="text-sm text-gray-600 mx-auto my-auto text-center p-5">
+              <p className="text-sm text-muted-foreground text-center">
                 Este producto ya esta agregado en todas las sucursales
                 existentes.
               </p>
@@ -110,7 +111,7 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className="flex items-center justify-between gap-4 p-3 border rounded-lg hover:bg-accent/50 transition-colors"
+                className="flex items-center justify-between gap-2 p-3 border rounded-lg hover:bg-accent/50 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   {/* Nota: Usamos un input nativo para simplicidad con RHF o el Checkbox de Shadcn */}
@@ -118,16 +119,18 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
                     type="checkbox"
                     {...register(`branches.${index}.selected`)}
                     onChange={(e) => toggleBranch(index, e.target.checked)}
-                    className="size-4"
+                    className="min-w-4 size-4"
                   />
-                  <Label className="font-medium">{field.branchName}</Label>
+                  <Label className="font-medium text-wrap max-w-[350px]">
+                    {field.branchName}
+                  </Label>
                 </div>
 
                 <div className="flex flex-col items-end gap-1">
                   <Input
                     type="number"
                     placeholder="Stock"
-                    className="w-24 md:w-26"
+                    className="w-18 md:w-26"
                     disabled={!watch(`branches.${index}.selected`)}
                     {...register(`branches.${index}.stock`, {
                       valueAsNumber: true,
@@ -150,19 +153,15 @@ export function ModalBranches({ open, setOpen, funParent, productId }: Props) {
             )}
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
-            <div className="flex sm:flex-row sm:justify-between sm:w-full">
-              <DialogClose asChild>
-                <Button
-                  variant="ghost"
-                  type="button"
-                  className="bg-red-400 text-white hover:bg-red-500 hover:text-white"
-                >
-                  Cancelar todo y cerrar
-                </Button>
-              </DialogClose>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" type="button" className="btn-cancel">
+                {fields.length > 0 ? "Cancelar" : "Cerrar"}
+              </Button>
+            </DialogClose>
+            {fields.length > 0 && (
               <Button type="submit">Agregar y guardar</Button>
-            </div>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>
