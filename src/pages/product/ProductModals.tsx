@@ -2,7 +2,7 @@ import { AlertDelete } from "@/components/common/AlertDelet";
 import { ModalBranches } from "@/components/product/ModalBranches";
 import { ModalAddStock } from "@/components/product/ModalAddStock";
 import { useBranch } from "@/context/BranchContext";
-import type { ProductModalType } from "@/hooks/product/hooksLogic/useProductModals";
+import type { ProductModalState } from "@/hooks/product/hooksLogic/useProductModals";
 import type {
   AddStockFormValues,
   RemoveStockValues,
@@ -10,19 +10,18 @@ import type {
 } from "@/schemes/branchProd";
 import { ModalRemoveStock } from "@/components/product/ModalRemoveStock";
 import { ModalTransferStock } from "@/components/product/ModalTransferStock";
+import { ModalManageOffer } from "@/components/product/ModalManageOffer";
+import type { OfferFormValues } from "@/schemes/product";
 
 interface Props {
-  modal: {
-    type: ProductModalType;
-    productId?: string;
-    stockCurrent?: number;
-  };
+  modal: ProductModalState;
   closeModal: () => void;
   onDelete: (id: string) => void;
   onAddBranch: (data: any[], productId: string) => void;
   onAddStock: (quantity: AddStockFormValues) => void;
   onRemoveStock: (data: RemoveStockValues) => void;
   onTransferStock: (data: TransferStockValues) => void;
+  onActiveOffer: (dataOffer: OfferFormValues) => void;
 }
 
 export function ProductModals({
@@ -33,6 +32,7 @@ export function ProductModals({
   onAddStock,
   onRemoveStock,
   onTransferStock,
+  onActiveOffer,
 }: Props) {
   const { currentBranch } = useBranch();
 
@@ -82,7 +82,7 @@ export function ProductModals({
         <ModalRemoveStock
           isOpen={true}
           setIsOpen={closeModal}
-          stockCurrent={modal.stockCurrent!}
+          stockCurrent={modal.stockCurrent}
           onRemoveStock={(data: RemoveStockValues) => onRemoveStock(data)}
         />
       )}
@@ -93,6 +93,15 @@ export function ProductModals({
           setIsOpen={closeModal}
           stockCurrent={modal.stockCurrent}
           onTransferStock={(data: TransferStockValues) => onTransferStock(data)}
+        />
+      )}
+
+      {modal.type === "manageOffer" && (
+        <ModalManageOffer
+          isOpen={true}
+          setIsOpen={closeModal}
+          product={{ ...modal }}
+          onActiveOffer={onActiveOffer}
         />
       )}
     </>

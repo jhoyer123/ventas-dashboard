@@ -36,6 +36,9 @@ import type {
   TransferStockValues,
 } from "@/schemes/branchProd";
 import { Plus } from "lucide-react";
+import { useEffect } from "react";
+import { useActiveOffer } from "@/hooks/product/useActiveOffer";
+import type { OfferFormValues } from "@/schemes/product";
 
 export default function Product() {
   //logica de la tabla
@@ -43,6 +46,13 @@ export default function Product() {
 
   //usamos el contexto de sucursal
   const { currentBranch } = useBranch();
+  useEffect(() => {
+    tableState.setPagination({
+      pageIndex: 0,
+      pageSize: tableState.pagination.pageSize,
+    });
+  }, [currentBranch]);
+
   //usamos el contexto de usuario
   const { user } = useAuth();
 
@@ -77,7 +87,7 @@ export default function Product() {
   //funcion para agregar producto a sucursal/es
   const handleAddProdBranch = (
     dataStock: StockBranchI[],
-    productId: string
+    productId: string,
   ) => {
     const promise = addprod.mutateAsync({
       dataStock,
@@ -98,6 +108,7 @@ export default function Product() {
   const addStock = useAddStockBranch();
   //funcion para agregar stock
   const handleAddStock = (dataI: AddStockFormValues) => {
+    if (modal.type !== "addBranchStock") return;
     const promise = addStock.mutateAsync({
       branchId: currentBranch!,
       productId: modal.productId!,
@@ -117,6 +128,7 @@ export default function Product() {
   const removeStock = useRemoveStockFromBranch();
   //funcion para quitar stock
   const handleRemoveStock = (dataI: RemoveStockValues) => {
+    if (modal.type !== "remove") return;
     const promise = removeStock.mutateAsync({
       branchId: currentBranch!,
       productId: modal.productId!,
@@ -136,6 +148,7 @@ export default function Product() {
   const transferStock = useTransferStock();
   //funcion para transferir stock
   const handleTransferStock = (dataI: TransferStockValues) => {
+    if (modal.type !== "transfer") return;
     const promise = transferStock.mutateAsync({
       dataI,
       branchFrom: currentBranch!,
@@ -146,6 +159,23 @@ export default function Product() {
       loading: "Transfiriendo stock...",
       success: "Stock transferido correctamente",
       error: (err) => err.message || "Error al transferir stock",
+      position: "top-right",
+      duration: 4000,
+    });
+  };
+
+  //logica para activar una oferta en un producto
+  const activeOffer = useActiveOffer();
+  const handleActiveOffer = (dataOffer: OfferFormValues) => {
+    if (modal.type !== "manageOffer") return;
+    const promise = activeOffer.mutateAsync({
+      offerData: dataOffer,
+      prodId: modal.productId!,
+    });
+    toast.promise(promise, {
+      loading: "Activando oferta...",
+      success: "Oferta activada correctamente",
+      error: (err) => err.message || "Error al activar oferta",
       position: "top-right",
       duration: 4000,
     });
@@ -180,15 +210,7 @@ export default function Product() {
         />
         <div className="flex-1 min-h-0">
           <DataTable
-            columns={columnsProduct({
-              setOpenDelete: (id) => openModal("delete", id),
-              setOpenPAB: (id) => openModal("addBranch", id),
-              setOpenAdd: (id) => openModal("addBranchStock", id),
-              setOpenTransfer: (id, stockCurrent) =>
-                openModal("transfer", id, stockCurrent),
-              setOpenRemove: (id, stockCurrent) =>
-                openModal("remove", id, stockCurrent),
-            })}
+            columns={columnsProduct({ openModal })}
             data={data?.data || []}
             rowCount={data?.meta.total ?? 0}
             pagination={tableState.pagination}
@@ -208,6 +230,7 @@ export default function Product() {
           onAddStock={handleAddStock}
           onRemoveStock={handleRemoveStock}
           onTransferStock={handleTransferStock}
+          onActiveOffer={handleActiveOffer}
         />
       </div>
     </div>

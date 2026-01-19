@@ -16,6 +16,7 @@ interface propsModalCategory {
   setIsOpen: () => void;
   funSubParent: (data: categoryInput) => void;
   initialData?: CategoryType;
+  mode?: "create" | "update" | "view";
 }
 
 export function ModalCategory({
@@ -23,18 +24,33 @@ export function ModalCategory({
   setIsOpen,
   funSubParent,
   initialData,
+  mode,
 }: propsModalCategory) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Crear categoria</DialogTitle>
+          <DialogTitle>
+            {mode === "create"
+              ? "Crear categoria"
+              : mode === "update"
+                ? "Actualizar categoria"
+                : "Detalle de la categoria"}
+          </DialogTitle>
           <DialogDescription>
-            Complete el formulario para crear una nueva categoria.
+            {mode === "view"
+              ? "Visualiza la información de la categoria."
+              : initialData
+                ? "Actualiza la información de la categoria."
+                : "Complete el formulario para crear una nueva categoria."}
           </DialogDescription>
         </DialogHeader>
         {/* formulario category */}
-        <FormCategory funSubParent={funSubParent} initialData={initialData} />
+        <FormCategory
+          funSubParent={funSubParent}
+          initialData={initialData}
+          mode={mode}
+        />
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancelar</Button>

@@ -28,7 +28,7 @@ export const getStatusBadge = (status: string) => {
   const statusConfig: Record<string, { label: string; color: string }> = {
     COMPLETED: { label: "COMPLETADO", color: "bg-green-100 text-green-800" },
     PENDING: { label: "PENDIENTE", color: "bg-yellow-100 text-yellow-800" },
-    CANCELLED: { label: "CANCELADO", color: "bg-red-100 text-red-800" },
+    CANCELED: { label: "CANCELADO", color: "bg-red-100 text-red-800" },
   };
 
   const config = statusConfig[status] || {
@@ -74,7 +74,7 @@ export const ModalDetSale = ({
     try {
       // A. Generar el PDF como Blob
       const blob = await pdf(
-        <FormatReceipt data={{ ...sale, items: productsSale }} />
+        <FormatReceipt data={{ ...sale, items: productsSale }} />,
       ).toBlob();
 
       // C. Crear URL y abrir en nueva pestaña
@@ -104,14 +104,16 @@ export const ModalDetSale = ({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cerrar</Button>
+            <Button variant="outline" className="cursor-pointer">
+              Cerrar
+            </Button>
           </DialogClose>
 
           <Button
             onClick={handleGeneratePDF}
             // Deshabilitamos si está cargando productos O generando el PDF
             disabled={isLoading || isGenerating || !productsSale}
-            className="bg-blue-600 hover:bg-blue-700 min-w-40" // Ancho mínimo para que no baile el texto
+            className="bg-brand text-brand-foreground hover:bg-brand-hover-dark cursor-pointer"
           >
             {isGenerating ? (
               <>

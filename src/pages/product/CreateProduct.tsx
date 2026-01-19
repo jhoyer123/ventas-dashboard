@@ -17,6 +17,7 @@ import type { ProductSupT, ProductType, ProductImage } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { useUpdateProduct } from "@/hooks/product/useUpdateProduct";
 import { useNavigate } from "react-router-dom";
+import { SkeletonCreateProduct } from "@/components/product/SkeletonCreateProduct";
 
 interface Props {
   mode?: "create" | "update" | "view";
@@ -72,7 +73,7 @@ const CreateProduct = (mode: Props) => {
     toast.promise(promise, {
       loading: id ? "Actualizando producto..." : "Creando producto...",
       success: () => {
-        navigate("/dashboard/products"); // Solo redirige si es update
+        navigate("/dashboard/products");
         return id
           ? "Producto actualizado con éxito"
           : "Producto creado con éxito";
@@ -91,12 +92,7 @@ const CreateProduct = (mode: Props) => {
 
   //MANEJO DE CARGA
   if (isEditing && isLoading) {
-    return (
-      <div className="max-w-7xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Cargando Producto...</h1>
-        {/* Spinner o indicador de carga */}
-      </div>
-    );
+    return <SkeletonCreateProduct />;
   }
 
   //MANEJO DE ERRORES
@@ -104,7 +100,6 @@ const CreateProduct = (mode: Props) => {
     return (
       <div className="max-w-7xl mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Error al cargar el producto</h1>
-        {/* Mostrar mensaje de error o componente de error */}
       </div>
     );
   }
@@ -112,7 +107,7 @@ const CreateProduct = (mode: Props) => {
   return (
     <div className="max-w-7xl mx-auto p-4 w-full h-full overflow-y-auto">
       <div className="flex flex-col gap-2 w-full justify-between mb-6 lg:flex-row">
-        <div className="flex flex-col gap-2"> 
+        <div className="flex flex-col gap-2 md:flex-row-reverse md:justify-between w-full">
           {mode?.mode === "view" && (
             <div>
               <Button
@@ -125,11 +120,11 @@ const CreateProduct = (mode: Props) => {
             </div>
           )}
           <h1
-            className="text-xl font-bold text-center my-auto
+            className="text-xl font-bold my-auto w-full text-center lg:text-start
         md:text-2xl"
           >
             {mode?.mode === "view"
-              ? "Información del Producto"
+              ? "Detalles  del Producto"
               : isEditing
                 ? "Editar Producto"
                 : "Crear Nuevo Producto"}

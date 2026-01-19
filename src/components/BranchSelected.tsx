@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Building2, ChevronsUpDown } from "lucide-react";
+import { Building2, ChevronsUpDown, Loader2 } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -22,50 +22,51 @@ import { useGetBranches } from "@/hooks/branch/useGetBranches";
 import { useBranch } from "@/context/BranchContext";
 
 export function BranchSelected() {
-  //logica del sidebar responsive
+  const [isPending, startTransition] = React.useTransition();
+  const [open, setOpen] = React.useState(false);
   const { isMobile } = useSidebar();
-
-  //funcion para cambiar el id de la sucursal en el contexto
   const { setBranchId, currentBranch, setNameCBranch } = useBranch();
-
-  //logica de obtención de sucursales
   const { data: branches } = useGetBranches();
-  //branch activa
+
   const branchActive = React.useMemo(() => {
     return branches?.find((b) => b.id === currentBranch);
   }, [branches, currentBranch]);
 
-  //funcion para cambiar la sucursal activa y actualizar el contexto
-  const handleSetBranch = (branchId: string | null) => {
-    setBranchId(branchId);
-    setNameCBranch(
-      branchId
-        ? branches?.find((b) => b.id === branchId)?.branch_name || null
-        : null
-    );
+  const handleSetBranch = (branch: any | null, e: Event) => {
+    const selectedId = branch?.id ?? null;
+    if (selectedId === currentBranch) {
+      setOpen(false);
+      return;
+    }
+    e.preventDefault();
+    setOpen(false);
+    startTransition(() => {
+      setBranchId(selectedId);
+      setNameCBranch(branch?.branch_name ?? null);
+    });
   };
-  //console.log("Sucursal activa:", brachActive);
-  if (!branches) {
-    return null;
-  }
+
+  if (!branches) return null;
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mt-2"
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <Building2 className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">
-                  {!branchActive ? "Vista Global" : branchActive.branch_name}
-                </span>
-              </div>
+              {isPending ? (
+                <Loader2 className="animate-spin size-4" />
+              ) : (
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Building2 className="size-4" />
+                </div>
+              )}
+              <span className="truncate block w-full">
+                {!branchActive ? "Vista Global" : branchActive.branch_name}
+              </span>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -78,24 +79,29 @@ export function BranchSelected() {
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Sucursales Existentes
             </DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => handleSetBranch(null)}>
+
+            <DropdownMenuItem onSelect={(e) => handleSetBranch(null, e)}>
               Vista Global
               <DropdownMenuShortcut>⌘</DropdownMenuShortcut>
             </DropdownMenuItem>
-            {branches?.map((branch /* index */) => (
+
+            {branches?.map((branch) => (
               <DropdownMenuItem
-                key={branch.branch_name}
-                onClick={() => handleSetBranch(branch.id)}
+                key={branch.id}
+                onSelect={(e) => handleSetBranch(branch, e)}
                 className="gap-2 p-2 overflow-hidden text-ellipsis"
               >
                 {branch.branch_name}
                 <DropdownMenuShortcut>⌘</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="text-muted-foreground font-medium">
-                Se vera la Información de la opcion seleccionada
+            <DropdownMenuItem className="gap-2 p-2" disabled>
+              <div className="text-muted-foreground font-medium text-xs">
+                {isPending
+                  ? "Actualizando..."
+                  : "Información de la sucursal seleccionada"}
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>

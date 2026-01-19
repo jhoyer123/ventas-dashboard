@@ -33,8 +33,7 @@ export function FormInput<T extends FieldValues>({
           valueAsNumber: inputProps?.type === "number",
         })}
         {...inputProps}
-        className="bg-gray-50 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
-        "
+        className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
 
       {errors?.[name] && (

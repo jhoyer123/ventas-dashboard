@@ -32,7 +32,7 @@ export function useServerTableState({
   // Handler para el DebouncedInput, que también resetea la página a 0
   const onGlobalFilterChange = (value: string | number) => {
     setGlobalFilter(String(value));
-    // CRUCIAL: Resetea a la primera página CADA VEZ que se aplica un filtro.
+    //Resetea a la primera página CADA VEZ que se aplica un filtro.
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   };
 
@@ -48,7 +48,6 @@ export function useServerTableState({
       sortOrder: sortItem?.desc ? "desc" : "asc",
     };
   }, [pagination, sorting, globalFilter]);
-  //console.log("API Params HHOOKK:", apiParams);
   return {
     // Para pasar a DataTable
     pagination,

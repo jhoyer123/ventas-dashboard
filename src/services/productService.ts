@@ -3,6 +3,7 @@ import { supabase } from "@/api/supabaseClient";
 import type { TableParams } from "@/components/common/tabla/api";
 import type { ProductInputService } from "@/schemes/product";
 import type { ProductSupT } from "@/types/product";
+import type { OfferFormValues } from "@/schemes/product";
 
 //create product
 export const createProduct = async (dataProducto: ProductInputService) => {
@@ -56,108 +57,57 @@ export const createProduct = async (dataProducto: ProductInputService) => {
   return data;
 };
 
-//traer los productos
+//get products with server side params
 export const getProducts = async (
   params: TableParams,
-  branchId: string | null
+  branchId: string | null,
 ) => {
-  // Calculamos la paginación
   const from = (params.pageIndex - 1) * params.pageSize;
   const to = from + params.pageSize - 1;
-  let query: any;
-  //ahora verificar si traer solo los productos de una sucursal o de todas
-  if (!branchId) {
-    query = supabase.from("v_global_inventory").select("*", { count: "exact" });
-  } else {
-    query = supabase
-      .from("branchStocks")
-      .select(
-        `
-    stock,
-    product:products!inner (
-      id,
-      nameProd,
-      price,
-      sku,
-      cost,
-      brand,
-      isOfferActive,
-      created_at,
-      deleted_at,
-      category:categories (
-        nameCat
-      ),
-      product_images (
-        image_url
-      ),
-      tstocks:branchStocks (stock)
-    )
-  `,
-        { count: "exact" }
-      )
-      .eq("branchId", branchId)
-      .is("product.deleted_at", null)
-      .limit(1, { foreignTable: "product.product_images" });
+
+  //Elegimos la fuente de datos
+  const tableSource = !branchId
+    ? "v_global_inventory"
+    : "v_inventory_by_branch";
+
+  let query = supabase.from(tableSource).select("*", { count: "exact" });
+
+  //Filtro por Sucursal (solo si aplica)
+  if (branchId) {
+    query = query.eq("branchId", branchId);
   }
 
-  // Búsqueda global corregida
+  //Búsqueda Global
   if (params.globalFilter) {
     const search = `%${params.globalFilter}%`;
-
-    if (!branchId) {
-      // Caso Vista Global: Las columnas existen directamente en la raíz
-      query = query.or(
-        `nameProd.ilike.${search},sku.ilike.${search},brand.ilike.${search}`
-      );
-    } else {
-      // Caso Sucursal: Las columnas están en la tabla relacionada 'products'
-      query = query.or(
-        `nameProd.ilike.${search},sku.ilike.${search},brand.ilike.${search}`,
-        { foreignTable: "products" }
-      );
-    }
+    query = query.or(
+      `nameProd.ilike.${search},sku.ilike.${search},brand.ilike.${search}`,
+    );
   }
 
-  // Aplicamos ordenamiento corregido
+  //Ordenamiento
   if (params.sorting.length > 0) {
     params.sorting.forEach((sort) => {
-      if (!branchId) {
-        // Vista global: la columna está ahí
-        query = query.order(sort.id, { ascending: !sort.desc });
-      } else {
-        // Por sucursal: hay que indicarle que ordene por la columna del producto
-        query = query.order(sort.id, {
-          foreignTable: "products",
-          ascending: !sort.desc,
-        });
-      }
+      query = query.order(sort.id, { ascending: !sort.desc });
     });
+  } else {
+    // Orden por defecto para evitar saltos en paginación
+    query = query.order("created_at", { ascending: false });
   }
 
-  // Aplicamos el range DIRECTAMENTE (Supabase maneja automáticamente si hay menos datos)
+  //Paginación
   query = query.range(from, to);
 
-  // Ejecutamos la query
   const { data, error, count } = await query;
 
   if (error) {
-    console.log(error);
+    console.error("Error fetching products:", error);
     throw new Error(error.message);
   }
 
-  //refinamos los datos si es que es por sucursal
-  let dataRefined;
-  if (!!branchId) {
-    dataRefined = data.map((pr: any) => ({
-      ...pr.product,
-      total_stock: pr.stock,
-      category_name: pr.product.category.nameCat,
-      main_image: pr.product.product_images[0]?.image_url || null,
-    }));
-  }
+  //Retorno de datos
   return {
-    //data: !branchId ? data : data.map((item: any) => item.product),
-    data: !branchId ? data : dataRefined || [],
+    data: data || [],
     meta: {
       total: count || 0,
       page: params.pageIndex,
@@ -268,7 +218,7 @@ export const deleteProductG = async (id: string) => {
   if (error) {
     if (error.message.includes("PRODUCT_HAS_STOCK_IN_BRANCHES")) {
       throw new Error(
-        "El producto no se puede eliminar porque tiene stock en una o más sucursales."
+        "El producto no se puede eliminar porque tiene stock en una o más sucursales.",
       );
     }
 
@@ -288,13 +238,37 @@ export const deleteProductByBranch = async (id: string, branchId: string) => {
   if (error) {
     if (error.message.includes("BRANCH_PRODUCT_HAS_STOCK")) {
       throw new Error(
-        "El producto no se puede eliminar de la sucursal porque tiene stock disponible."
+        "El producto no se puede eliminar de la sucursal porque tiene stock disponible.",
       );
     }
 
     throw new Error(
-      "Error al eliminar el producto de la sucursal: " + error.message
+      "Error al eliminar el producto de la sucursal: " + error.message,
     );
+  }
+
+  return data;
+};
+
+//Activar oferta en producto
+export const activateOfferProduct = async (
+  offerData: OfferFormValues,
+  prodId: string,
+) => {
+  const { data, error } = await supabase
+    .from("products")
+    .update({
+      isOfferActive: offerData.isOfferActive,
+      priceOffer: offerData.priceOffer,
+      startDate: offerData.startDate,
+      endDate: offerData.endDate,
+    })
+    .eq("id", prodId)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error("Error al activar la oferta: " + error.message);
   }
 
   return data;

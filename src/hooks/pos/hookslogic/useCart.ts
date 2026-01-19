@@ -84,14 +84,14 @@ export const useCart = () => {
   const totals = useMemo(() => {
     const subtotal = cart.reduce((acc, item) => acc + item.subtotal, 0);
     const tax = subtotal * 0.13;
-    const calculatedTotal = subtotal; // El "1000" de tu ejemplo
+    const calculatedTotal = subtotal;
 
     // Si el vendedor puso un monto manual (ej. 980), ese es el finalAmount.
     // Si no puso nada, el finalAmount es el calculado.
     const finalAmount =
       manualAmount !== "" ? Number(manualAmount) : calculatedTotal;
 
-    // La diferencia (ej. 20)
+    // La diferencia
     const difference = Math.max(0, calculatedTotal - finalAmount);
 
     return {

@@ -83,6 +83,9 @@ const Category = () => {
   const tableState = useServerTableState({});
   const { data, isLoading } = useGetCategoryT(tableState, null);
 
+  //modo vista o update
+  const [mode, setMode] = useState<"view" | "update" | "create">("create");
+
   return (
     <div className="bg-background-view h-full w-full">
       <div className="h-[calc(100vh-54px)] flex flex-col max-w-7xl mx-auto py-2 gap-2 px-4">
@@ -99,7 +102,7 @@ const Category = () => {
                 setOpen(true);
               }}
             >
-               <Plus size={18} />
+              <Plus size={18} />
               Agregar categoria
             </Button>
           </div>
@@ -115,8 +118,9 @@ const Category = () => {
           <DataTable
             columns={columnsCategory({
               setOpenEdit: handleOpenUpdate,
-              setOpenView: () => {},
+              setOpenView: handleOpenUpdate,
               setOpenDelete: handleOpenDelete,
+              setMode: setMode,
             })}
             data={data?.data || []}
             rowCount={data?.meta.total ?? 0}
@@ -134,6 +138,7 @@ const Category = () => {
           setIsOpen={() => setOpen(!open)}
           funSubParent={handleSubmit}
           initialData={categoryUV || undefined}
+          mode={mode}
         />
 
         {/* alert de eliminacion */}

@@ -24,31 +24,19 @@ export const columnsSaleH = ({ openM }: Props): ColumnDef<SaleH>[] => [
     accessorKey: "clientName",
     header: "Cliente",
     enableSorting: true,
-    cell: ({ row }) => (
-      <span className="text-gray-600 font-mono text-sm">
-        {row.original.clientName}
-      </span>
-    ),
+    cell: ({ row }) => <span>{row.original.clientName}</span>,
   },
   {
-    accessorKey: "userName",
+    accessorKey: "employee_name",
     header: "Vendedor",
     enableSorting: true,
-    cell: ({ row }) => (
-      <span className="text-gray-600 font-mono text-sm">
-        {row.original.employee_name}
-      </span>
-    ),
+    cell: ({ row }) => <span>{row.original.employee_name}</span>,
   },
   {
     accessorKey: "finalAmount",
     header: "Monto Cobrado",
     enableSorting: true,
-    cell: ({ row }) => (
-      <span className="text-gray-600 font-mono text-sm">
-        {row.original.finalAmount}
-      </span>
-    ),
+    cell: ({ row }) => <span>{row.original.finalAmount}</span>,
   },
   {
     accessorKey: "debtAmount",
@@ -67,7 +55,7 @@ export const columnsSaleH = ({ openM }: Props): ColumnDef<SaleH>[] => [
     enableSorting: true,
     //aqui deberiamos convertir la fecha a un formato mas legible
     cell: ({ row }) => (
-      <span className="text-gray-600 font-mono text-sm">
+      <span>
         {new Date(row.original.created_at).toLocaleDateString("es-BO", {
           year: "numeric",
           month: "2-digit",
@@ -108,11 +96,13 @@ export const columnsSaleH = ({ openM }: Props): ColumnDef<SaleH>[] => [
                 Completar Pago
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem
-              onClick={() => openM({ typeModal: "cancel", sale })}
-            >
-              <CircleX className="w-4 h-4 mr-2" /> Cancelar Venta
-            </DropdownMenuItem>
+            {sale.status !== "CANCELED" && (
+              <DropdownMenuItem
+                onClick={() => openM({ typeModal: "cancel", sale })}
+              >
+                <CircleX className="w-4 h-4 mr-2" /> Cancelar Venta
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );

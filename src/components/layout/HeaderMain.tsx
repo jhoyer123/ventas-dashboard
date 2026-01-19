@@ -1,6 +1,7 @@
 import { useBranch } from "@/context/BranchContext";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+//import { ThemeToggle } from "./ThemeToggle";
 
 export const HeaderMain = () => {
   const { nameCBranch } = useBranch();
@@ -11,9 +12,7 @@ export const HeaderMain = () => {
     : "Global";
 
   return (
-    <header
-      className="flex h-auto shrink-0 px-4 py-2 items-center gap-2 border-b bg-background"
-    >
+    <header className="flex h-auto shrink-0 px-4 py-2 items-center gap-2 border-b bg-background">
       <div className="flex items-center gap-1 h-full w-full">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -33,6 +32,7 @@ export const HeaderMain = () => {
             "Estado operativo gloval"
           )}
         </span>
+        {/* <ThemeToggle /> */}
       </div>
     </header>
   );

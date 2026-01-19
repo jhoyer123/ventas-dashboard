@@ -4,6 +4,7 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -18,7 +19,7 @@ interface ModalEmployeeProps {
   onSubmit: (data: FormEmployeeInput) => void;
   initialValues?: Employee;
   branchIdC?: string;
-  isViewMode?: boolean;
+  isViewMode: boolean;
 }
 
 export function ModalEmployee({
@@ -31,15 +32,21 @@ export function ModalEmployee({
 }: ModalEmployeeProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[600px] bg-gray-300">
+      <DialogContent className="sm:max-w-[600px] card-modal">
         <DialogHeader>
           <DialogTitle>
-            {!initialValues ? "Crear un nuevo empleado" : "Actualizar empleado"}
+            {isViewMode
+              ? "Detalles del empleado"
+              : !initialValues
+                ? "Crear un nuevo empleado"
+                : "Actualizar empleado"}
           </DialogTitle>
           <DialogDescription>
-            {!initialValues
-              ? "Rellena el formulario para agregar un nuevo empleado."
-              : "Modifica los campos necesarios para actualizar el empleado."}
+            {isViewMode
+              ? "Visualiza los detalles del empleado."
+              : !initialValues
+                ? "Rellena el formulario para agregar un nuevo empleado."
+                : "Modifica los campos necesarios para actualizar el empleado."}
           </DialogDescription>
         </DialogHeader>
         {/* Renderizamos el formulario de empleado */}
@@ -49,18 +56,15 @@ export function ModalEmployee({
           branchIdC={branchIdC}
           isViewMode={isViewMode}
         />
-        <div className="flex justify-between mt-2">
+
+        <DialogFooter>
           {!isViewMode && (
             <>
               <DialogClose asChild>
-                <Button
-                  variant="outline"
-                  className="cursor-pointer bg-gray-200"
-                >
+                <Button variant="outline" className="cursor-pointer">
                   Cancelar
                 </Button>
               </DialogClose>
-
               <Button
                 type="submit"
                 form="form-employee"
@@ -72,12 +76,12 @@ export function ModalEmployee({
           )}
           {isViewMode && (
             <DialogClose asChild>
-              <Button variant="outline" className="cursor-pointer bg-gray-200">
+              <Button variant="outline" className="cursor-pointer">
                 Cerrar
               </Button>
             </DialogClose>
           )}
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

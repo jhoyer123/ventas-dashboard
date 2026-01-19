@@ -1,28 +1,28 @@
 import { useState } from "react";
 
-export type ProductModalType =
-  | "delete"
-  | "addBranch"
-  | "transfer"
-  | "remove"
-  | "addBranchStock"
-  | null;
-
-interface ModalState {
-  type: ProductModalType;
-  productId?: string;
-  stockCurrent?: number;
-}
+export type ProductModalState =
+  | { type: null }
+  | { type: "delete"; productId: string }
+  | { type: "addBranch"; productId: string }
+  | { type: "addBranchStock"; productId: string }
+  | { type: "transfer"; productId: string; stockCurrent: number }
+  | { type: "remove"; productId: string; stockCurrent: number }
+  | {
+      type: "manageOffer";
+      productId: string;
+      nameProd: string;
+      price: number;
+      priceOffer?: number;
+      isOfferActive: boolean;
+      startDate?: string;
+      endDate?: string;
+    };
 
 export const useProductModals = () => {
-  const [modal, setModal] = useState<ModalState>({ type: null });
+  const [modal, setModal] = useState<ProductModalState>({ type: null });
 
-  const openModal = (
-    type: ProductModalType,
-    productId: string,
-    stockCurrent?: number
-  ) => {
-    setModal({ type, productId, stockCurrent });
+  const openModal = (modal: ProductModalState) => {
+    setModal(modal);
   };
 
   const closeModal = () => {

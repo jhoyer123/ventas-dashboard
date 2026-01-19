@@ -4,7 +4,7 @@ export interface SaleH {
   totalAmount: number;
   discountAmount: number;
   finalAmount: number;
-  status: "COMPLETED" | "PENDING" | "CANCELLED";
+  status: "COMPLETED" | "PENDING" | "CANCELED";
   clientName: string;
   clientNit: string;
   paymentMethod: string;

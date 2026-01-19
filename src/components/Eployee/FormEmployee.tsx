@@ -87,7 +87,7 @@ const FormEmployee = ({
               </label>
             </div>
           )}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <FormInput
               label="Nombre"
               name="name"

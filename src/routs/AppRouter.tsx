@@ -25,9 +25,7 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        //rutas publicas
         <Route path="/" element={<Login />} />
-        //rutas privadas
         {/* RUTAS DEL DASHBOARD */}
         <Route
           path="/dashboard"

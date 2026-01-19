@@ -1,7 +1,7 @@
 //lo validacion de campos del formulario
 import { z } from "zod";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB en bytes
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB en bytes
 const MAX_FILES = 10;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -43,11 +43,11 @@ export const productFormSchema = z
       .refine(
         (files) =>
           Array.from(files).every((file) =>
-            ACCEPTED_IMAGE_TYPES.includes(file.type)
+            ACCEPTED_IMAGE_TYPES.includes(file.type),
           ),
         {
           message: "Solo se permiten imágenes (JPG, PNG, WebP)",
-        }
+        },
       )
       //Validar que NINGÚN archivo exceda el tamaño máximo
       .refine(
@@ -57,12 +57,12 @@ export const productFormSchema = z
           message: `Cada imagen debe pesar menos de ${
             MAX_FILE_SIZE / (1024 * 1024)
           }MB`,
-        }
+        },
       ),
   })
   .refine((data) => data.cost <= data.price, {
     message: "El costo no puede ser mayor al precio de venta",
-    path: ["cost"], // 👈 Esto asegura que el error se asocie al campo 'cost'
+    path: ["cost"], //Esto asegura que el error se asocie al campo 'cost'
   });
 
 //type para el formulario en modo creacion
@@ -70,7 +70,7 @@ export type ProductFormInput = z.infer<typeof productFormSchema>;
 
 // Este es el tipo que usaremos para pasar los datos YA LIMPIOS al servicio.
 export type ProductInputService = Omit<ProductFormInput, "images"> & {
-  images: File[]; // <--- Sobreescribimos FileList a File[]
+  images: File[]; //Sobreescribimos FileList a File[]
 };
 
 //schemma de actualizacion
@@ -110,9 +110,9 @@ export const productFormSchemaUpdate = z
         (files) =>
           !files ||
           Array.from(files).every((file) =>
-            ACCEPTED_IMAGE_TYPES.includes(file.type)
+            ACCEPTED_IMAGE_TYPES.includes(file.type),
           ),
-        { message: "Solo se permiten imágenes (JPG, PNG, WebP)" }
+        { message: "Solo se permiten imágenes (JPG, PNG, WebP)" },
       )
       .refine(
         (files) =>
@@ -122,7 +122,7 @@ export const productFormSchemaUpdate = z
           message: `Cada imagen debe pesar menos de ${
             MAX_FILE_SIZE / (1024 * 1024)
           }MB`,
-        }
+        },
       ),
 
     // imágenes existentes (URLs)
@@ -133,7 +133,7 @@ export const productFormSchemaUpdate = z
   //validar que el costo no sea mayor al precio
   .refine((data) => data.cost <= data.price, {
     message: "El costo no puede ser mayor al precio de venta",
-    path: ["cost"], // 👈 Esto asegura que el error se asocie al campo 'cost'
+    path: ["cost"], //Esto asegura que el error se asocie al campo 'cost'
   })
   //VALIDACIÓN GLOBAL (AQUÍ ESTÁ LA CLAVE)
   .superRefine((data, ctx) => {
@@ -159,3 +159,86 @@ export const productFormSchemaUpdate = z
       });
     }
   });
+
+/**
+ * Tipo para activar ofertas en productos
+ */
+export const offerSchema = z
+  .object({
+    isOfferActive: z.boolean(),
+    priceOffer: z.coerce.number().min(0, "El precio no puede ser negativo"),
+    startDate: z.string().min(1, "Fecha de inicio requerida"),
+    endDate: z.string().min(1, "Fecha de fin requerida"),
+    currentPrice: z.number().optional(), // Agregamos el precio actual para validar
+  })
+  .refine(
+    (data) => {
+      // Solo validamos si la oferta está activa
+      if (!data.isOfferActive) return true;
+
+      // 1. El precio de oferta debe ser menor al precio actual
+      if (data.currentPrice && data.priceOffer >= data.currentPrice) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "El precio de oferta debe ser menor al precio actual",
+      path: ["priceOffer"],
+    },
+  )
+  .refine(
+    (data) => {
+      // Solo validamos fechas si la oferta está activa
+      if (!data.isOfferActive) return true;
+
+      // 2. La fecha de fin debe ser posterior a la de inicio
+      const start = new Date(data.startDate);
+      const end = new Date(data.endDate);
+      return start < end;
+    },
+    {
+      message: "La fecha de fin debe ser posterior a la de inicio",
+      path: ["endDate"],
+    },
+  )
+  .refine(
+    (data) => {
+      // Solo validamos si la oferta está activa
+      if (!data.isOfferActive) return true;
+
+      // 3. Las fechas no pueden ser del pasado
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Resetear horas para comparar solo fecha
+
+      const start = new Date(data.startDate);
+      start.setHours(0, 0, 0, 0);
+
+      return start >= today;
+    },
+    {
+      message: "La fecha de inicio no puede ser anterior a hoy",
+      path: ["startDate"],
+    },
+  )
+  .refine(
+    (data) => {
+      // Solo validamos si la oferta está activa
+      if (!data.isOfferActive) return true;
+
+      // 4. La fecha de fin tampoco puede ser del pasado
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const end = new Date(data.endDate);
+      end.setHours(0, 0, 0, 0);
+
+      return end >= today;
+    },
+    {
+      message: "La fecha de fin no puede ser anterior a hoy",
+      path: ["endDate"],
+    },
+  );
+
+export type OfferFormValues = z.infer<typeof offerSchema>;

@@ -18,7 +18,7 @@ export type ReceiptData = {
   clientNit?: string;
 
   paymentMethod: string;
-  status: "COMPLETED" | "PENDING" | "CANCELLED";
+  status: "COMPLETED" | "PENDING" | "CANCELED";
 
   totalAmount: number;
   discountAmount?: number;

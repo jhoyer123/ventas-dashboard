@@ -111,16 +111,18 @@ export const ModalCredencials = ({
           </div>
 
           <DialogFooter>
-            <div className="flex justify-between w-full">
-              <DialogClose asChild>
-                <Button variant="outline" type="button">
-                  Cancelar
-                </Button>
-              </DialogClose>
-              <Button type="submit" className="cursor-pointer">
-                Guardar cambios
+            <DialogClose asChild>
+              <Button
+                variant="outline"
+                type="button"
+                className="cursor-pointer"
+              >
+                Cancelar
               </Button>
-            </div>
+            </DialogClose>
+            <Button type="submit" className="cursor-pointer">
+              Guardar cambios
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

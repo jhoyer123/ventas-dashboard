@@ -12,9 +12,10 @@ import { FormInput } from "../common/Form/FormInput";
 interface props {
   funSubParent: (data: categoryInput) => void;
   initialData?: CategoryType;
+  mode?: "create" | "update" | "view";
 }
 
-export const FormCategory = ({ funSubParent, initialData }: props) => {
+export const FormCategory = ({ funSubParent, initialData, mode }: props) => {
   const {
     register,
     handleSubmit,
@@ -44,7 +45,8 @@ export const FormCategory = ({ funSubParent, initialData }: props) => {
           errors={errors}
           inputProps={{
             type: "text",
-            placeholder: "ejemplo laptops",
+            placeholder: "Ejl: laptops",
+            disabled: mode === "view",
           }}
         />
         {/* descripción */}
@@ -56,6 +58,7 @@ export const FormCategory = ({ funSubParent, initialData }: props) => {
             placeholder="Descripción de la categoría"
             className="file:text-foreground resize-none placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             rows={4}
+            disabled={mode === "view"}
           ></textarea>
           {errors.description && (
             <p className="text-red-500 text-sm mt-1">

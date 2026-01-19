@@ -1,31 +1,25 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { type CategoryType } from "@/types/category";
-import {
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-  Eye /* Calendar */,
-} from "lucide-react";
+import { Pencil, Trash2, Eye /* Calendar */ } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 
 interface props {
   setOpenEdit: (empleado: CategoryType) => void;
   setOpenView: (empleado: CategoryType, disable: boolean) => void;
   setOpenDelete: (empleado: CategoryType) => void;
+  setMode: (mode: "create" | "update" | "view") => void;
 }
 
 export const columnsCategory = ({
   setOpenEdit,
-  //npmsetOpenView,
   setOpenDelete,
+  setMode,
 }: props): ColumnDef<CategoryType>[] => [
   {
     accessorKey: "nameCat",
@@ -58,25 +52,24 @@ export const columnsCategory = ({
 
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-gray-100">
-              <span className="sr-only">Abrir menú</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuSeparator />
-
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem
+              onClick={() => {
+                setMode("view");
+                setOpenEdit(category);
+              }}
+              className="cursor-pointer"
+            >
               <Eye className="mr-2 h-4 w-4" />
               <span>Ver detalles</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
               onClick={() => {
+                setMode("update");
                 setOpenEdit(category);
-                console.log("Editar empleado:", category);
               }}
               className="cursor-pointer"
             >

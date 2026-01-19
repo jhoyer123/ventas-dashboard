@@ -39,7 +39,7 @@ export const columnsPersonal = ({
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-3">
-          <span className="font-medium text-gray-900">{row.original.name}</span>
+          <span className="text-card-foreground">{row.original.name}</span>
         </div>
       );
     },
@@ -49,9 +49,7 @@ export const columnsPersonal = ({
     header: "Cédula",
     enableSorting: true,
     cell: ({ row }) => (
-      <span className="text-gray-600 font-mono text-sm">
-        {row.original.cedula}
-      </span>
+      <span className="text-card-foreground">{row.original.cedula}</span>
     ),
   },
   {
@@ -69,7 +67,7 @@ export const columnsPersonal = ({
     header: "Teléfono",
     enableSorting: true,
     cell: ({ row }) => (
-      <span className="text-gray-600">{row.original.phone}</span>
+      <span className="text-card-foreground">{row.original.phone}</span>
     ),
   },
   {
@@ -164,7 +162,7 @@ export const columnsPersonal = ({
               onClick={() => {
                 setOpenDelete(employee);
               }}
-              className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+              className="cursor-pointer text-destructive hover:text-destructive"
             >
               <Trash2 className="mr-2 h-4 w-4" />
               <span>Eliminar</span>

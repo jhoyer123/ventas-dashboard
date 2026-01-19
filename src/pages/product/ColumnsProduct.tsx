@@ -8,6 +8,7 @@ import {
   PackagePlus,
   Plus,
   Repeat,
+  Tag,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -21,21 +22,14 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 //context de la sucursal
 import { useBranch } from "../../context/BranchContext";
+import type { ProductModalState } from "@/hooks/product/hooksLogic/useProductModals";
 
 interface ColumnProps {
-  setOpenDelete: (idProd: string) => void;
-  setOpenPAB: (idProd: string) => void;
-  setOpenAdd: (idProd: string) => void;
-  setOpenTransfer: (idProd: string, stockCurrent: number) => void;
-  setOpenRemove: (idProd: string, stockCurrent: number) => void;
+  openModal: (modal: ProductModalState) => void;
 }
 
 export const columnsProduct = ({
-  setOpenDelete,
-  setOpenPAB,
-  setOpenAdd,
-  setOpenTransfer,
-  setOpenRemove,
+  openModal,
 }: ColumnProps): ColumnDef<Product>[] => [
   //mostrar nombre y la primera imgane del array de imagenes
   {
@@ -64,9 +58,7 @@ export const columnsProduct = ({
     header: "Cod. unico",
     enableSorting: true,
     cell: ({ row }) => (
-      <span className="text-gray-600 font-mono text-sm">
-        {row.original.sku}
-      </span>
+      <span className="text-card-foreground">{row.original.sku}</span>
     ),
   },
   {
@@ -79,7 +71,7 @@ export const columnsProduct = ({
     header: "Marca",
     enableSorting: true,
     cell: ({ row }) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full">
         {row.original.brand || "N/A"}
       </span>
     ),
@@ -89,7 +81,7 @@ export const columnsProduct = ({
     header: "Precio",
     enableSorting: true,
     cell: ({ row }) => (
-      <span className="text-gray-600">{row.original.price}</span>
+      <span className="text-card-foreground">{row.original.price}</span>
     ),
   },
   {
@@ -137,7 +129,23 @@ export const columnsProduct = ({
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => setOpenPAB(product.id)}
+                  className="cursor-pointer"
+                  onClick={() =>
+                    openModal({
+                      type: "manageOffer",
+                      productId: product.id,
+                      ...product,
+                    })
+                  }
+                >
+                  <Tag className="mr-2 h-4 w-4" />
+                  <span>Gestionar oferta</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  //onClick={() => setOpenPAB(product.id)}
+                  onClick={() =>
+                    openModal({ type: "addBranch", productId: product.id })
+                  }
                   className="cursor-pointer"
                 >
                   <PackagePlus className="mr-2 h-4 w-4" />
@@ -148,13 +156,25 @@ export const columnsProduct = ({
             {/* ESTO SE CON LA VISTA ESPECIFICA DE SUCURSAL */}
             {!!currentBranch && (
               <>
-                <DropdownMenuItem onClick={() => setOpenAdd(product.id)}>
+                <DropdownMenuItem
+                  //onClick={() => setOpenAdd(product.id)}
+                  onClick={() =>
+                    openModal({ type: "addBranchStock", productId: product.id })
+                  }
+                >
                   <Plus className="mr-2 h-4 w-4" />
                   <span>Aumentar Strock</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() =>
+                  /* onClick={() =>
                     setOpenRemove(product.id, product.total_stock as number)
+                  } */
+                  onClick={() =>
+                    openModal({
+                      type: "remove",
+                      productId: product.id,
+                      stockCurrent: product.total_stock as number,
+                    })
                   }
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -162,7 +182,12 @@ export const columnsProduct = ({
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() =>
-                    setOpenTransfer(product.id, product.total_stock as number)
+                    //setOpenTransfer(product.id, product.total_stock as number)
+                    openModal({
+                      type: "transfer",
+                      productId: product.id,
+                      stockCurrent: product.total_stock as number,
+                    })
                   }
                 >
                   <Repeat className="mr-2 h-4 w-4" />
@@ -174,7 +199,10 @@ export const columnsProduct = ({
             <DropdownMenuSeparator />
 
             <DropdownMenuItem
-              onClick={() => setOpenDelete(product.id)}
+              //onClick={() => setOpenDelete(product.id)}
+              onClick={() =>
+                openModal({ type: "delete", productId: product.id })
+              }
               className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
             >
               <Trash2 className="mr-2 h-4 w-4" />

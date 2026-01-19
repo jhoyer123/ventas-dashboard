@@ -1,6 +1,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
+//import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEffect, useState } from "react";
 
@@ -20,7 +20,7 @@ export default function RichTextEditor({ value, onChange, disabled }: Props) {
           levels: [1, 2, 3],
         },
       }),
-      Underline,
+      //Underline,
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),

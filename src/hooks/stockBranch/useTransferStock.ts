@@ -8,8 +8,13 @@ export const useTransferStock = () => {
   return useMutation({
     mutationFn: transferStockBetweenBranches,
     onSuccess: () => {
-      // Invalidar y refetch
-      queryClient.invalidateQueries({ queryKey: ["productStockBranches"] });
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["productStockBranches"],
+      });
     },
     onError: (error: Error) => {
       throw new Error(error.message);

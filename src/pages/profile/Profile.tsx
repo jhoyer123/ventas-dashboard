@@ -75,28 +75,32 @@ const Profile = () => {
 
   return (
     // min-h-screen asegura que el fondo cubra todo aunque el contenido sea poco
-    <div className="min-h-full bg-slate-50 p-4 md:px-8 md:py-2 flex flex-col items-center">
+    <div className="bg-background-view p-4 md:px-8 md:py-2 flex flex-col items-center h-full overflow-y-auto">
       {/* CONTENEDOR PRINCIPAL: Max-width para que no se estire infinito en monitores 4K */}
-      <div className="w-full max-w-4xl bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+      <div className="w-full max-w-4xl bg-card rounded-xl shadow-sm border border-border ">
         {/* GRID RESPONSIVE: 1 columna en móvil, 2 columnas en escritorio (lg) */}
         <div className="grid grid-cols-1 lg:grid-cols-2">
           {/* ================= SECCIÓN AVATAR (Izquierda/Arriba) ================= */}
-          <div className="p-8 md:p-12 flex flex-col items-center justify-center bg-slate-50/50 border-b lg:border-b-0 lg:border-r border-slate-100">
+          <div className="p-8 md:p-12 flex flex-col items-center justify-center bg-ring/10 lg:border-b-0 lg:border-r border-border">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-card-foreground">
+                Perfil de usuario
+              </h2>
+            </div>
             <div className="relative group">
-              {/* Usamos tamaños en rem o px fijos pero controlados (w-40 h-40) */}
-              <div className="w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white bg-gray-400 shadow-2xl">
+              <div className="w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-ring shadow-2xl">
                 <img
                   src={
                     !preview
                       ? "https://i.pinimg.com/736x/56/fa/35/56fa35ecb5b0417a563b2dbe0fdbef7b.jpg"
                       : preview
                   }
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                  className="w-full h-full object-cover"
                   alt="Profile"
                 />
               </div>
-              <label className="absolute bottom-2 right-2 bg-slate-900 p-3 rounded-full cursor-pointer hover:scale-110 transition-transform shadow-lg">
-                <Camera className="w-5 h-5 text-white" />
+              <label className="absolute bottom-2 right-2 bg-primary p-3 rounded-full cursor-pointer hover:scale-110 transition-transform shadow-lg border-2 border-card">
+                <Camera className="w-5 h-5 text-primary-foreground" />
                 <input
                   type="file"
                   accept="image/*"
@@ -106,16 +110,11 @@ const Profile = () => {
               </label>
             </div>
 
-            <div className="text-center mt-6">
-              <h2 className="text-2xl font-bold text-slate-800">Mi perfil</h2>
-              <p className="text-slate-400 text-sm">Cambiar foto de perfil</p>
-            </div>
-
             {file && (
               <Button
                 onClick={handleAvatarSubmit}
                 size="sm"
-                className="mt-4 w-full max-w-[150px] bg-black rounded-full cursor-pointer"
+                className="mt-4 w-full max-w-[150px] bg-primary rounded-full cursor-pointer"
               >
                 Guardar foto
               </Button>
@@ -127,49 +126,52 @@ const Profile = () => {
             <div className="space-y-7">
               {/* Input Nombre */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-slate-500">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <User size={16} />
-                  <Label className="font-bold text-slate-700">Nombre</Label>
+                  <Label className="font-bold text-card-foreground">
+                    Nombre
+                  </Label>
                 </div>
-                <span className="bg-slate-50 border-none focus-visible:ring-0 text-slate-600">
+                <span className="border-none focus-visible:ring-0 text-card-foreground">
                   {user?.name}
                 </span>
               </div>
 
               {/* Input Email */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-slate-500">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <Mail size={16} />
-                  <Label className="font-bold text-slate-700">Email</Label>
+                  <Label className="font-bold text-card-foreground">
+                    Email
+                  </Label>
                 </div>
-                <span
-                  className="bg-slate-50 border-none focus-visible:ring-0
-                text-slate-600"
-                >
+                <span className="border-none focus-visible:ring-0 text-card-foreground">
                   {user?.email}
                 </span>
               </div>
 
               {/* Input Teléfono */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-slate-500">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <Phone size={16} />
-                  <Label className="font-bold text-slate-700">Teléfono</Label>
+                  <Label className="font-bold text-card-foreground">
+                    Teléfono
+                  </Label>
                 </div>
-                <span className="bg-slate-50 border-none focus-visible:ring-0 text-slate-600">
+                <span className="border-none focus-visible:ring-0 text-card-foreground">
                   {!user?.phone ? "sin teléfono" : user?.phone}
                 </span>
               </div>
 
               {/* Input Rol */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-slate-500">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <Shield size={16} />
-                  <Label className="font-bold text-slate-700">
-                    Rol de acceso
+                  <Label className="font-bold text-card-foreground">
+                    Rol del usuario
                   </Label>
                 </div>
-                <div className="inline-block px-4 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wider">
+                <div className="inline-block px-4 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold font-body uppercase tracking-wider">
                   {user?.role}
                 </div>
               </div>

@@ -9,7 +9,12 @@ export const useStockBranch = () => {
     mutationFn: ({ dataStock, pId }: createProdBranchP) =>
       createProdBranch({ dataStock, pId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products", "branchesWP"] });
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["branchesWP"],
+      });
     },
     onError: (error: Error) => {
       throw new Error(error.message);

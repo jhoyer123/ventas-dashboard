@@ -29,8 +29,8 @@ export function ModalCancel({ funCancel, isOpen, closeModal }: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={funCancel}>Continue</AlertDialogAction>
+          <AlertDialogCancel className="cursor-pointer">Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={funCancel} className="cursor-pointer">Cancelar venta</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

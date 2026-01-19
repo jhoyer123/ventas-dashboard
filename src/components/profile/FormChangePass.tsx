@@ -39,10 +39,10 @@ export const FormChangePass = ({ funParent }: Props) => {
   };
 
   return (
-    <div className="w-full max-w-4xl bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 md:p-12 mt-2">
-      <div className="mb-8">
-        <h3 className="text-xl font-bold text-slate-800">Seguridad</h3>
-        <p className="text-slate-400 text-sm">
+    <div className="w-full max-w-4xl bg-card rounded-xl shadow-sm border border-border p-8 md:p-12 mt-2">
+      <div className="mb-8 space-y-2">
+        <h3 className="text-xl font-bold text-card-foreground">Seguridad</h3>
+        <p className="text-muted-foreground text-sm">
           Actualiza tu contraseña para mantener tu cuenta segura
         </p>
       </div>
@@ -53,22 +53,22 @@ export const FormChangePass = ({ funParent }: Props) => {
       >
         {/* Contraseña Actual - Ocupa ancho completo en el grid */}
         <div className="md:col-span-2 space-y-2">
-          <Label className="font-bold text-slate-700">Contraseña actual</Label>
+          <Label>Contraseña actual</Label>
           <div className="relative group">
             <Lock
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-400 transition-colors"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               size={18}
             />
             <Input
               type={show.current ? "text" : "password"}
-              className="pl-10 pr-12 py-6 bg-slate-50 border-none focus-visible:ring-2 focus-visible:ring-orange-200 text-slate-600 rounded-2xl"
+              className="pl-10 pr-12 py-6 text-card-foreground rounded-2xl"
               {...register("currentPassword")}
               placeholder="••••••••"
             />
             <button
               type="button"
               onClick={() => toggle("current")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             >
               {show.current ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -82,15 +82,15 @@ export const FormChangePass = ({ funParent }: Props) => {
 
         {/* Nueva Contraseña */}
         <div className="space-y-2">
-          <Label className="font-bold text-slate-700">Nueva contraseña</Label>
+          <Label>Nueva contraseña</Label>
           <div className="relative group">
             <Lock
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-400 transition-colors"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               size={18}
             />
             <Input
               type={show.next ? "text" : "password"}
-              className="pl-10 pr-12 py-6 bg-slate-50 border-none focus-visible:ring-2 focus-visible:ring-orange-200 text-slate-600 rounded-2xl"
+              className="pl-10 pr-12 py-6 rounded-2xl"
               {...register("newPassword")}
               placeholder="Nueva contraseña"
             />
@@ -98,7 +98,7 @@ export const FormChangePass = ({ funParent }: Props) => {
             <button
               type="button"
               onClick={() => toggle("next")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             >
               {show.next ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -112,24 +112,22 @@ export const FormChangePass = ({ funParent }: Props) => {
 
         {/* Confirmar Contraseña */}
         <div className="space-y-2">
-          <Label className="font-bold text-slate-700">
-            Confirmar contraseña
-          </Label>
+          <Label>Confirmar contraseña</Label>
           <div className="relative group">
             <Lock
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-400 transition-colors"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               size={18}
             />
             <Input
               type={show.confirm ? "text" : "password"}
-              className="pl-10 pr-12 py-6 bg-slate-50 border-none focus-visible:ring-2 focus-visible:ring-orange-200 text-slate-600 rounded-2xl"
+              className="pl-10 pr-12 py-6 rounded-2xl"
               {...register("confirmPassword")}
               placeholder="Repite la contraseña"
             />
             <button
               type="button"
               onClick={() => toggle("confirm")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             >
               {show.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -145,7 +143,7 @@ export const FormChangePass = ({ funParent }: Props) => {
         <div className="md:col-span-2 pt-4 flex justify-end">
           <Button
             type="submit"
-            className="cursor-pointer w-full md:w-auto px-10 py-6 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-full transition-all shadow-lg active:scale-95"
+            className="cursor-pointer w-full md:w-auto px-10 py-6 rounded-full shadow-lg "
           >
             Actualizar contraseña
           </Button>

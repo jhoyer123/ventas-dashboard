@@ -12,9 +12,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ============================================
-   2. TOKENS DE DISEÑO (Design Tokens)
-   ============================================ */
 :root {
   /* === TIPOGRAFÍA === */
   --font-title: "Poppins", sans-serif;
@@ -100,6 +97,8 @@
   /* Brand (Tu violeta corporativo) */
   --brand: oklch(0.623 0.214 263.99);
   --brand-foreground: oklch(1 0 0);
+  /* Brand Hover - Versión más oscura (si prefieres ese efecto) */
+  --brand-hover-dark: oklch(0.523 0.214 263.99); /* -0.1 en luminosidad */
 
   /* Card Highlight (Cards especiales/premium) */
   --card-highlight: oklch(0.97 0.01 265.75);
@@ -123,9 +122,6 @@
   --sidebar-ring: oklch(0.704 0.04 256.788);
 }
 
-/* ============================================
-   3. DARK MODE
-   ============================================ */
 .dark {
   /* === BACKGROUNDS === */
   --background: oklch(0.129 0.042 264.695); /* Azul muy oscuro */
@@ -219,9 +215,6 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
-/* ============================================
-   4. THEME CONFIGURATION (Tailwind v4)
-   ============================================ */
 @theme inline {
   /* === RADIOS === */
   --radius-sm: calc(var(--radius) - 4px);
@@ -309,19 +302,19 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* ============================================
-   5. BASE LAYER (Estilos globales)
-   ============================================ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
 
-  body {
+  /*  body {
     @apply bg-background-view text-foreground;
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  } */
+  body {
+    @apply text-foreground;
   }
 
   h1,
