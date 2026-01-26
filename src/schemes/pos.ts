@@ -3,7 +3,9 @@ import { z } from "zod";
 export const ventaSchema = z
   .object({
     totalReal: z.number({ message: "Campo requerido" }).min(0),
-    totalCobrado: z.number().min(0),
+    totalCobrado: z
+      .number({ message: "Campo requerido" })
+      .min(0, { message: "El total cobrado no puede ser menor a 0" }),
     hayDeuda: z.boolean(),
     montoRecibido: z.number().optional(),
   })
@@ -20,7 +22,7 @@ export const ventaSchema = z
     {
       message: "El monto recibido debe ser menor al total cobrado",
       path: ["montoRecibido"],
-    }
+    },
   );
 
 export type VentaForm = z.infer<typeof ventaSchema>;

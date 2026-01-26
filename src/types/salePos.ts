@@ -53,3 +53,5 @@ export interface Client {
   name: string;
   idNit?: string;
 }
+
+export type EditingQtyMap = Record<string, string>;

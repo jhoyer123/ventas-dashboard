@@ -18,9 +18,11 @@ export const ProductsPos = ({
   getAvailableStock,
 }: Props) => {
   return (
-    <div className="flex-1 max-h-full h-full w-full pt-3 px-2 mb-13
+    <div
+      className="flex-1 max-h-full h-full w-full pt-3 px-2 mb-13
     md:mb-3 overflow-y-auto
-    xl:px-10">
+    xl:px-10"
+    >
       {isPending && products.length === 0 ? (
         <div className="flex justify-center items-center h-64 text-muted-foreground">
           <Loader2 className="animate-spin mr-2" /> Cargando catálogo...
@@ -39,18 +41,13 @@ export const ProductsPos = ({
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     alt={prod.name_prod}
                   />
-                  {prod.is_offer_active && (
-                    <div className="absolute top-2 left-2 bg-chart-5 text-primary-foreground text-[10px] font-black px-2 py-1 rounded shadow-lg">
-                      OFERTA
-                    </div>
-                  )}
                   <div className="absolute bottom-2 right-2 bg-accent backdrop-blur px-2 py-1 rounded-md text-[10px] font-bold border border-border">
                     Stock: {getAvailableStock(prod.id)}
                   </div>
                   <div className="absolute top-0 w-full px-1 mt-1 flex items-center justify-between">
-                    <div>
+                    <div className="bg-black text-white rounded-md">
                       {prod.is_offer_active && (
-                        <p className="text-[10px] text-muted-foreground line-through">
+                        <p className="text-sm line-through">
                           ${prod.price}
                         </p>
                       )}

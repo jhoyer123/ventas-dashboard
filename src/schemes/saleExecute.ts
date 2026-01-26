@@ -15,9 +15,11 @@ export const saleFormSchema = z
     isGeneric: z.boolean(),
     //datos financieros
     totalReal: z.number({ message: "Campo requerido" }).min(0),
-    totalCobrado: z.number({ message: "Campo requerido" }).min(0),
+    totalCobrado: z
+      .number({ message: "Campo requerido" })
+      .min(1, { message: "El total cobrado debe ser mayor a 0" }),
     hayDeuda: z.boolean(),
-    montoRecibido: z.number({message: "Campo requerido"}).optional(),
+    montoRecibido: z.number({ message: "Campo requerido" }).optional(),
   })
   .refine(
     (data) => {
@@ -32,7 +34,17 @@ export const saleFormSchema = z
     {
       message: "El monto recibido debe ser menor al total cobrado",
       path: ["montoRecibido"],
-    }
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.totalCobrado > data.totalReal) return false;
+      return true;
+    },
+    {
+      message: "El total cobrado no puede ser mayor al total real",
+      path: ["totalCobrado"],
+    },
   )
   .superRefine((data) => {
     if (data.isGeneric) {

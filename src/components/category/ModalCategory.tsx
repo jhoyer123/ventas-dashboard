@@ -31,11 +31,11 @@ export function ModalCategory({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {mode === "create"
-              ? "Crear categoria"
-              : mode === "update"
+            {mode === "view"
+              ? "Detalles de la categoria"
+              : initialData
                 ? "Actualizar categoria"
-                : "Detalle de la categoria"}
+                : "Crear nueva categoria"}
           </DialogTitle>
           <DialogDescription>
             {mode === "view"

@@ -30,7 +30,7 @@ export const useProducts = ({
 
   const products: ProductPos[] = useMemo(() => data ?? [], [data]);
 
-  // 👉 para paginación
+  //para paginación
   const loadMore = () => {
     setPage((prev) => prev + 1);
   };

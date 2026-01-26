@@ -56,10 +56,9 @@ export const ModalManageOffer = ({
 
   const onSubmit = (data: OfferFormValues) => {
     onActiveOffer(data);
-    console.log("Oferta Enviada:", data);
     setIsOpen(false);
   };
-  console.log(product);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[450px]">

@@ -12,7 +12,7 @@ import styles from "./styles.module.css";
 
 interface Props {
   cart: CartItem[];
-  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+  clearCart: () => void;
   changeByDelta: (item: CartItem, delta: number) => void;
   removeFromCart: (productId: string) => void;
   editingQty: Record<string, string>;
@@ -37,7 +37,7 @@ interface Props {
 
 export const AsidePos = ({
   cart,
-  setCart,
+  clearCart,
   changeByDelta,
   removeFromCart,
   editingQty,
@@ -70,7 +70,7 @@ export const AsidePos = ({
           </h2>
           <button
             onClick={() => {
-              setCart([]);
+              clearCart();
               setManualAmount("");
               setIsDebt(false);
             }}
@@ -112,13 +112,17 @@ export const AsidePos = ({
                 </div>
 
                 <div className="flex justify-between w-full items-center pl-5 pr-2">
-                  <div className="flex gap-2 items-center bg-background border border-border rounded-lg py-1 px-2
-                  lg:gap-4">
+                  <div
+                    className="flex gap-2 items-center bg-background border border-border rounded-lg py-1 px-2
+                  lg:gap-4"
+                  >
                     <h5 className="text-sm text-card-foreground font-semibold font-body">
                       ${item.subtotal.toFixed(2)}
                     </h5>
-                    <div className="flex gap-1 items-center
-                    lg:gap-3">
+                    <div
+                      className="flex gap-1 items-center
+                    lg:gap-3"
+                    >
                       <button
                         onClick={() => changeByDelta(item, -1)}
                         className="p-1 bg-secondary text-secondary-foreground rounded-full cursor-pointer"
@@ -128,15 +132,49 @@ export const AsidePos = ({
                       <input
                         type="number"
                         value={editingQty[item.id] ?? item.quantity}
-                        onChange={(e) =>
+                        /* onChange={(e) =>
                           setEditingQty((prev: { [key: string]: string }) => ({
                             ...prev,
                             [item.id]: e.target.value,
                           }))
-                        }
-                        onBlur={() =>
-                          commitQuantity(item, Number(editingQty[item.id]))
-                        }
+                        } */
+                        onChange={(e) => {
+                          const raw = e.target.value;
+
+                          // permitir vacío mientras escribe
+                          if (raw === "") {
+                            setEditingQty((prev) => ({
+                              ...prev,
+                              [item.id]: "",
+                            }));
+                            return;
+                          }
+
+                          // solo dígitos
+                          if (!/^\d+$/.test(raw)) return;
+
+                          // bloquear ceros a la izquierda (excepto "0")
+                          if (raw.length > 1 && raw.startsWith("0")) return;
+
+                          setEditingQty((prev) => ({
+                            ...prev,
+                            [item.id]: raw,
+                          }));
+                        }}
+                        onBlur={() => {
+                          const raw = editingQty[item.id];
+
+                          if (!raw) {
+                            setEditingQty((prev) => {
+                              const copy = { ...prev };
+                              delete copy[item.id];
+                              return copy;
+                            });
+                            return;
+                          }
+
+                          commitQuantity(item, Number(raw));
+                        }}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();

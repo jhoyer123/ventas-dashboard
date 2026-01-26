@@ -10,7 +10,6 @@ import { HeaderPos } from "@/components/Pos/HeaderPos";
 import { ProductsPos } from "@/components/Pos/ProductsPos";
 import { CircleAlert } from "lucide-react";
 import { AsidePos } from "@/components/Pos/AsidePos";
-import { useCart } from "@/hooks/pos/hookslogic/useCart";
 import { useProducts } from "@/hooks/pos/hookslogic/useProducts";
 import { ModalPosE } from "@/components/Pos/ModalPosE";
 //types para el pos y la venta
@@ -19,6 +18,7 @@ import type { SaleFormValues } from "@/schemes/saleExecute";
 //hook para crrear la venta
 import { useCreateSale } from "@/hooks/pos/useCreateSale";
 import { toast } from "sonner";
+import { usePosCart } from "@/hooks/pos/hookslogic/usePosCart";
 
 export type EditingQtyMap = Record<string, string>;
 
@@ -33,17 +33,16 @@ const Pos = () => {
   const [category, setCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const LIMIT = 20;
-  //usamos el hook de traer los productos para el punto de venta
 
   //USAMOS EL HOOK USECART
-  const cartLogic = useCart();
+  const cartLogicPos = usePosCart();
   //USAMOS EL HOOK DEL PRODUCTOS
   const productsLogic = useProducts({
     currentBranch,
     category,
     search,
     LIMIT,
-    cart: cartLogic.cart,
+    cart: cartLogicPos.cart,
   });
 
   //estado del modal de finalizar venta
@@ -89,10 +88,9 @@ const Pos = () => {
       position: "top-right",
       duration: 4000,
     });
-    console.log("Ejecutando venta con los siguientes datos:", datosE);
-    cartLogic.setCart([]); // Limpiar el carrito después de la venta
-    cartLogic.setManualAmount("");
-    cartLogic.setIsDebt(false);
+    cartLogicPos.clearCart(); // Limpiar el carrito después de la venta
+    cartLogicPos.setManualAmount("");
+    cartLogicPos.setIsDebt(false);
   };
 
   if (!currentBranch) {
@@ -122,12 +120,12 @@ const Pos = () => {
         />
 
         {/* Grid de Productos */}
-        <ProductsPos addToCart={cartLogic.addToCart} {...productsLogic} />
+        <ProductsPos addToCart={cartLogicPos.addToCart} {...productsLogic} />
       </section>
 
       {/* PANEL DERECHO: CARRITO */}
       <AsidePos
-        {...cartLogic}
+        {...cartLogicPos}
         openModal={() => setIsModalOpen(true)}
         isOpenShopping={isOpenShopping}
         setIsOpenShopping={setIsOpenShopping}
@@ -137,8 +135,8 @@ const Pos = () => {
       <ModalPosE
         isOpen={isModalOpen}
         setIsOpen={setIsModalOpen}
-        carts={cartLogic.cart}
-        totals={cartLogic.totals}
+        carts={cartLogicPos.cart}
+        totals={cartLogicPos.totals}
         executeSale={executeSale}
       />
     </div>
