@@ -192,10 +192,7 @@ export const offerSchema = z
       // Solo validamos fechas si la oferta está activa
       if (!data.isOfferActive) return true;
 
-      // 2. La fecha de fin debe ser posterior a la de inicio
-      const start = new Date(data.startDate);
-      const end = new Date(data.endDate);
-      return start < end;
+      return data.startDate <= data.endDate;
     },
     {
       message: "La fecha de fin debe ser posterior a la de inicio",
@@ -207,14 +204,10 @@ export const offerSchema = z
       // Solo validamos si la oferta está activa
       if (!data.isOfferActive) return true;
 
-      // 3. Las fechas no pueden ser del pasado
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Resetear horas para comparar solo fecha
+      const todayStr = today.toLocaleDateString("sv-SE");
 
-      const start = new Date(data.startDate);
-      start.setHours(0, 0, 0, 0);
-
-      return start >= today;
+      return data.startDate >= todayStr;
     },
     {
       message: "La fecha de inicio no puede ser anterior a hoy",
@@ -226,14 +219,10 @@ export const offerSchema = z
       // Solo validamos si la oferta está activa
       if (!data.isOfferActive) return true;
 
-      // 4. La fecha de fin tampoco puede ser del pasado
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const todayStr = today.toLocaleDateString("sv-SE");
 
-      const end = new Date(data.endDate);
-      end.setHours(0, 0, 0, 0);
-
-      return end >= today;
+      return data.endDate >= todayStr;
     },
     {
       message: "La fecha de fin no puede ser anterior a hoy",

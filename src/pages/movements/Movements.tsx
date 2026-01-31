@@ -8,18 +8,23 @@ import { DebouncedInput } from "@/components/common/tabla/DebouncedInput";
 import { useState } from "react";
 import type { Movement } from "@/types/movement";
 import { ModalDetMovement } from "@/components/movement/ModalDetMovement";
+import { useBranch } from "@/context/BranchContext";
 
 const Movements = () => {
   //usamos el hook del a tabla
   const tableState = useServerTableState({});
+  const { currentBranch } = useBranch();
   //usamos el hook para obtener los movimientos
-  const { data, isLoading } = useGetMovements(tableState.apiParams);
+  const { data, isLoading } = useGetMovements(
+    tableState.apiParams,
+    currentBranch,
+  );
 
   //logica para mostrar los detalles en un modal
   //estado para el modal de detalles
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMovement, setSelectedMovement] = useState<Movement | null>(
-    null
+    null,
   );
   const openModal = (movement: Movement) => {
     setSelectedMovement(movement);

@@ -53,3 +53,22 @@ export const isValidManualAmount = (
 
   return { isValid: true };
 };
+
+/**
+ * Validar si una oferta está activa según las fechas
+ */
+export const validateOffer = (
+  startDate: string | null,
+  endDate: string | null,
+): boolean => {
+  const today = new Date().toISOString().split("T")[0];
+  if (!startDate || !endDate) {
+    return false;
+  }
+
+  if (today >= startDate && today <= endDate) {
+    return true;
+  }
+
+  return false;
+};

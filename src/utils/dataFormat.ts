@@ -5,7 +5,8 @@ export const formatCurrency = (amount: number) => {
     currency: "BOB",
   }).format(amount);
 };
-// Convierte una fecha en un formato legible con día, mes, año, hora y minutos de bolivia
+
+// Convierte una fecha en un formato legible con día, mes, año, hora y minutos de bolivia (UX/UI)
 export const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("es-BO", {
     year: "numeric",
@@ -14,4 +15,13 @@ export const formatDate = (date: Date) => {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(date));
+};
+
+// devuleve solo la fecha sin hora en formato YYYY-MM-DD
+export const justDate = (utc: string | null): string | null => {
+  if (utc === null) {
+    return null;
+  }
+
+  return utc.split("T")[0];
 };

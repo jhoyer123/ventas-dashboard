@@ -36,7 +36,7 @@ export function DebouncedInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="pl-8 pr-10 h-10 border-border bg-card text-card-foreground focus:ring-ring transition-all font-body text-sm"
+        className="pl-8 pr-10"
       />
 
       {/* Botón para limpiar (solo visible cuando hay texto) */}

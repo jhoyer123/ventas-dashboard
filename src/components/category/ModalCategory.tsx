@@ -53,11 +53,19 @@ export function ModalCategory({
         />
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancelar</Button>
+            <Button variant="outline" className="cursor-pointer">
+              Cancelar
+            </Button>
           </DialogClose>
-          <Button type="submit" form="form-category">
-            {initialData ? "Actualizar" : "Crear"}
-          </Button>
+          {mode !== "view" && (
+            <Button
+              type="submit"
+              form="form-category"
+              className="cursor-pointer"
+            >
+              {initialData ? "Actualizar" : "Crear"}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

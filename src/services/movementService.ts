@@ -3,8 +3,11 @@ import { supabase } from "@/api/supabaseClient";
 import type { queryParams } from "@/types/table";
 
 //service para traer todos los movimientos
-export const getMovements = async (params: queryParams) => {
-  const { page, limit, search, sortField, sortOrder, branchId } = params;
+export const getMovements = async (
+  params: queryParams,
+  branchId: string | null,
+) => {
+  const { page, limit, search, sortField, sortOrder } = params;
 
   const from = (page - 1) * limit;
   const to = from + limit - 1;
@@ -12,14 +15,18 @@ export const getMovements = async (params: queryParams) => {
   let query = supabase.from("movements_view").select("*", { count: "exact" });
 
   if (search) {
+    const orFilters: string[] = [];
+
     query = query.or(
-      `product_name.ilike.%${search}%,employee_name.ilike.%${search}%,movedQuantity.eq.${search},type.ilike.%${search}%,branch_from_name.ilike.%${search}%,branch_to_name.ilike.%${search}%`
+      `name_prod.ilike.%${search}%,employee_name.ilike.%${search}%,branch_from_name.ilike.%${search}%,branch_to_name.ilike.%${search}%`,
     );
+
+    orFilters.push(`movedQuantity.eq.${Number(search)}`);
   }
 
   if (branchId) {
     query = query.or(
-      `branch_from_id.eq.${branchId},branch_to_id.eq.${branchId}`
+      `branch_from_id.eq.${branchId},branch_to_id.eq.${branchId}`,
     );
   }
 
@@ -33,7 +40,10 @@ export const getMovements = async (params: queryParams) => {
 
   const { data, error, count } = await query;
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.log("Error fetching movements:", error);
+    throw new Error(error.message);
+  }
 
   return {
     data: data ?? [],

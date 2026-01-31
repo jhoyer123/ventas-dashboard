@@ -24,12 +24,20 @@ import { useState } from "react";
 import { toast } from "sonner";
 import type { ResetCredentialsForm } from "@/schemes/credecials";
 import { Plus } from "lucide-react";
+import { FilterEmployee } from "@/components/Eployee/FilterEmployee";
+import useFilterEmployee from "@/hooks/employee/useFilterEmployee";
 
 export default function Employee() {
   //logica de la tabla
   const tableState = useServerTableState({});
   const { currentBranch } = useBranch();
-  const { data, isLoading } = useGetEmployee(tableState, currentBranch || null);
+  //filtrado de empleados
+  const { typeEmployee, changeTypeEmployee } = useFilterEmployee();
+  const { data, isLoading } = useGetEmployee(
+    tableState,
+    currentBranch || null,
+    typeEmployee,
+  );
   //estado para contorlar el form de solo lectura
   const [disableMod, setDesableMod] = useState(false);
   //logica para crear y actualizar el empleado
@@ -37,7 +45,7 @@ export default function Employee() {
   const update = useUpdateEmployee();
   //logica para el empleado seleccionado
   const [empSelected, setEmpSelected] = useState<Employee | undefined>(
-    undefined
+    undefined,
   );
 
   //logica del modal
@@ -159,11 +167,17 @@ export default function Employee() {
             </Button>
           )}
         </div>
-        <DebouncedInput
-          valueDafault={tableState.globalFilter ?? ""}
-          onChange={tableState.onGlobalFilterChange}
-          placeholder="Buscar empleados..."
-        />
+        <div className="flex gap-4">
+          <DebouncedInput
+            valueDafault={tableState.globalFilter ?? ""}
+            onChange={tableState.onGlobalFilterChange}
+            placeholder="Buscar empleados..."
+          />
+          <FilterEmployee
+            setTypeEmployee={changeTypeEmployee}
+            typeEmployee={typeEmployee}
+          />
+        </div>
         {/* TABLA - Crece para ocupar espacio restante */}
         <div className="flex-1 min-h-0">
           <DataTable

@@ -49,7 +49,7 @@ export const HeaderPos = (props: Props) => {
           </button>
           {categories?.map((cat) => (
             <button
-              key={cat.id}
+              key={`section-category-filter-pos-${cat.id}`}
               onClick={() => setCategory(cat.id)}
               className={`px-3 py-1 rounded-full text-sm font-body whitespace-nowrap transition-all cursor-pointer ${
                 category === cat.id || (cat.nameCat === "Todos" && !category)

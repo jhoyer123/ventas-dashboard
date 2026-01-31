@@ -3,12 +3,19 @@ import {
   hasAvailableStock,
   isProductInCart,
   isQuantityAvailable,
+  validateOffer,
 } from "@/lib/pos/validators";
+import { justDate } from "@/utils/dataFormat";
 /**
  * Calcula el precio final de un producto (considerando ofertas)
  */
 export const calculateFinalPrice = (product: ProductPos): number => {
-  return product.is_offer_active && product.price_offer
+  return product.is_offer_active &&
+    product.price_offer &&
+    validateOffer(
+      justDate(product.start_date),
+      justDate(product.end_date),
+    )
     ? product.price_offer
     : product.price;
 };

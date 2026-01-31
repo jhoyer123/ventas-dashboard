@@ -20,6 +20,7 @@ export interface Product {
   main_image?: string;
   category_name?: string;
   total_stock?: number; //stock total en todas las sucursales
+  branchId?: string; //id de la sucursal si es que se obtiene por sucursal
 }
 
 export interface ProductImage {

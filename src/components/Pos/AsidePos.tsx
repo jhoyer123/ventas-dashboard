@@ -89,7 +89,7 @@ export const AsidePos = ({
           ) : (
             cart.map((item, i) => (
               <div
-                key={item.id}
+                key={`section-car-item-pos-${item.id}`}
                 className="flex flex-col items-center justify-center w-full gap-3 px-2 py-1.5 rounded-2xl border border-border group bg-ring/10"
               >
                 <div className="flex w-full gap-2 items-center">

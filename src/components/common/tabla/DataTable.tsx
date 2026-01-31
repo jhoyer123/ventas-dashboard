@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table";
 
 import { Pagination } from "./Paginacion";
-import { ArrowUp, ArrowDown, ChevronsUpDown } from "lucide-react";
+import { ArrowUp, ArrowDown, ChevronsUpDown, Search } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -20,6 +20,7 @@ interface DataTableProps<TData, TValue> {
   sorting: SortingState;
   setSorting: OnChangeFn<SortingState>;
   isLoading: boolean;
+  isError?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -31,6 +32,7 @@ export function DataTable<TData, TValue>({
   sorting,
   setSorting,
   isLoading,
+  isError,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -44,8 +46,13 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  // Determinar si mostrar estado vacío
+  const isEmpty = !isLoading && !isError && data.length === 0;
+  const hasError = !isLoading && isError;
+
   return (
     <div className="flex flex-col h-full min-h-[500px] w-full bg-card rounded-xl border border-border shadow-sm relative">
+      {/* Loading State */}
       {isLoading && (
         <div className="absolute inset-0 bg-card backdrop-blur-sm z-40 flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
@@ -55,7 +62,6 @@ export function DataTable<TData, TValue>({
               <div className="w-16 h-16 border-4 border-chart-3 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
             </div>
 
-            {/* Texto */}
             <div className="text-center">
               <p className="text-sm font-semibold text-card-foreground">
                 Cargando datos
@@ -67,13 +73,69 @@ export function DataTable<TData, TValue>({
           </div>
         </div>
       )}
+      {/* Error State */}
+      {hasError && (
+        <div className="absolute inset-0 bg-card z-40 flex items-center justify-center p-8">
+          <div className="flex flex-col items-center gap-4 max-w-md text-center">
+            <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center">
+              <svg
+                className="w-8 h-8 text-destructive"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-card-foreground mb-2">
+                Error al cargar datos
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Error al cargar los datos. Por favor, intenta nuevamente o
+                contacta al soporte.
+              </p>
+            </div>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Empty State */}
+      {isEmpty && (
+        <div className="absolute inset-0 bg-card z-40 flex items-center justify-center p-8">
+          <div className="flex flex-col items-center gap-4 max-w-md text-center">
+            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
+              <Search className="w-10 h-10 text-muted-foreground" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-card-foreground mb-2">
+                No se encontraron resultados
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                No hay datos disponibles para mostrar. Intenta ajustar los
+                filtros o criterios de búsqueda.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Contenedor de la tabla */}
-      <div className="flex-1 overflow-auto rounded-xl h-full relative isolate">
-        <table className="w-full text-left border-collapse rounded-xl">
+      <div className="flex-1 overflow-auto rounded-xl h-full relative isolate w-full">
+        <table className="w-full table-auto text-left border-collapse rounded-xl">
           <thead className="sticky top-0 z-30 bg-card">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
-                key={headerGroup.id}
+                key={`"${headerGroup.id}-data-table-tr"`}
                 className="bg-card border-b border-border"
               >
                 {headerGroup.headers.map((header) => {
@@ -81,7 +143,7 @@ export function DataTable<TData, TValue>({
 
                   return (
                     <th
-                      key={header.id}
+                      key={`"${header.id}-data-table-th"`}
                       className={`px-4 py-3.5 text-xs font-body bg-ring/10 uppercase transition-colors ${
                         isSorted ? "text-primary" : "text-muted-foreground"
                       }`}
@@ -97,7 +159,7 @@ export function DataTable<TData, TValue>({
                         >
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {header.column.getCanSort() && (
                             <>
@@ -122,16 +184,19 @@ export function DataTable<TData, TValue>({
           </thead>
           <tbody className="divide-y divide-ring/10">
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="hover:bg-gray-50 transition-colors">
+              <tr
+                key={`"${row.id}-data-table-tbody-tr"`}
+                className="hover:bg-gray-50 transition-colors"
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td
-                    key={cell.id}
+                    key={`"${cell.id}-data-table-tbody-td"`}
                     className="px-4 py-4 text-sm text-card-foreground align-top"
                   >
                     <div className="min-h-12 flex items-center">
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </div>
                   </td>
@@ -142,12 +207,11 @@ export function DataTable<TData, TValue>({
         </table>
       </div>
 
-      {/* FOOTER CON CONTROLES PROFESIONALES */}
+      {/* footer table */}
       <div
         className="px-1 py-2 bg-ring/10 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 rounded-b-xl
       md:px-3 md:justify-around"
       >
-        {/* IZQUIERDA: Selector de cantidad (Solo visible en Desktop/Tablet) */}
         <div className="hidden sm:flex sm:justify-center sm:items-center gap-2 ">
           <span className="font-body font-medium text-sm text-muted-foreground tracking-wider">
             Mostrar:
@@ -158,14 +222,13 @@ export function DataTable<TData, TValue>({
             className="bg-card border border-border text-card-foreground text-sm rounded-lg focus:border-ring block p-1.5 shadow-sm hover:border-border transition-all outline-none cursor-pointer"
           >
             {[10, 20, 30].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
+              <option key={`${pageSize}-table-option-data`} value={pageSize}>
                 {pageSize}
               </option>
             ))}
           </select>
         </div>
 
-        {/* CENTRO/DERECHA: Paginación */}
         <div
           className="flex items-center gap-4 w-full justify-center
         md:w-auto"
@@ -184,7 +247,6 @@ export function DataTable<TData, TValue>({
           />
         </div>
 
-        {/* DERECHA: Total de registros (Oculto en móvil para no saturar) */}
         <div className="hidden lg:block text-sm text-muted-foreground">
           Mostrando registros del{" "}
           <span>
@@ -197,7 +259,7 @@ export function DataTable<TData, TValue>({
             {Math.min(
               (table.getState().pagination.pageIndex + 1) *
                 table.getState().pagination.pageSize,
-              rowCount
+              rowCount,
             )}
           </span>{" "}
           de <span>{rowCount}</span>

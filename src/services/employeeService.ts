@@ -7,7 +7,8 @@ import { type FormEmployeeInput } from "@/types/employee";
 // Get employees desde supabase - OPTIMIZADO
 export const getEmployees = async (
   params: TableParams,
-  branchId: string | null
+  branchId: string | null,
+  typeEmployee: "todos" | "con_acceso" | "sin_acceso",
 ) => {
   // Calculamos la paginación
   const from = (params.pageIndex - 1) * params.pageSize;
@@ -20,15 +21,24 @@ export const getEmployees = async (
       `id,name,cedula,address,phone,birthDate,job,branchId,users(id,email,role)`,
       {
         count: "exact",
-      }
+      },
     );
 
   // Búsqueda global
   if (params.globalFilter) {
     const search = params.globalFilter;
     query = query.or(
-      `name.ilike.%${search}%,cedula.ilike.%${search}%,address.ilike.%${search}%,phone.ilike.%${search}%`
+      `name.ilike.%${search}%,cedula.ilike.%${search}%,address.ilike.%${search}%,phone.ilike.%${search}%`,
     );
+  }
+
+  // Filtro por acceso al sistema
+  if (typeEmployee === "con_acceso") {
+    // Solo trae empleados donde la relación 'users' NO sea nula
+    query = query.not("users", "is", null);
+  } else if (typeEmployee === "sin_acceso") {
+    // Solo trae empleados donde la relación 'users' SEA nula
+    query = query.is("users", null);
   }
 
   //ahora verificar si traer solo los empleados de una sucursal o de todas
@@ -112,7 +122,7 @@ export const createEmployee = async (payload: FormEmployeeInput) => {
           p_system_role: payload.systemRole,
           p_force_password_change: true,
         }),
-      }
+      },
     );
 
     const json = await res.json();
@@ -143,7 +153,7 @@ export const createEmployee = async (payload: FormEmployeeInput) => {
 // Actualizar un empleado
 export const updateEmployee = async (
   employeeId: string,
-  dataEmp: FormEmployeeInput
+  dataEmp: FormEmployeeInput,
 ) => {
   const { data, error } = await supabase.rpc("update_employee_and_user", {
     p_employee_id: employeeId,
@@ -168,7 +178,7 @@ export const updateEmployee = async (
 //eliminar un empleado
 export const deleteEmployee = async (
   idEmp: string,
-  hasSystemAccess: boolean
+  hasSystemAccess: boolean,
 ) => {
   if (!hasSystemAccess) {
     const { data, error } = await supabase.rpc("delete_employee_decision", {
@@ -189,7 +199,7 @@ export const deleteEmployee = async (
       body: {
         employee_id: idEmp,
       },
-    }
+    },
   );
 
   if (error) {

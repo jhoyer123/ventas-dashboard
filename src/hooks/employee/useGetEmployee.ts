@@ -4,7 +4,7 @@ import { getEmployees } from "@/services/employeeService";
 import { type Employee } from "@/types/employee";
 import type { PaginatedResponse } from "@/components/common/tabla/api";
 
-const useGetEmployee = (tableState: any, branchId: string | null) => {
+const useGetEmployee = (tableState: any, branchId: string | null, typeEmployee: "todos" | "con_acceso" | "sin_acceso") => {
   const paramsServer = {
     pageIndex: tableState.apiParams.page,
     pageSize: tableState.apiParams.limit,
@@ -27,9 +27,10 @@ const useGetEmployee = (tableState: any, branchId: string | null) => {
       tableState.apiParams.sortField,
       tableState.apiParams.sortOrder,
       branchId,
+      typeEmployee,
     ],
 
-    queryFn: () => getEmployees(paramsServer, branchId),
+    queryFn: () => getEmployees(paramsServer, branchId, typeEmployee),
 
     retry: false,
   });

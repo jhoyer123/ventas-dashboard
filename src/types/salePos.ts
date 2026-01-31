@@ -31,6 +31,8 @@ export interface ProductPos {
   sku: string | null;
   price: number;
   price_offer: number | null;
+  start_date: string;
+  end_date: string;
   is_offer_active: boolean;
   stock: number;
   main_image: string;

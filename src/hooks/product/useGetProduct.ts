@@ -3,17 +3,21 @@ import { getProducts } from "@/services/productService";
 //type employee
 import { type Product } from "@/types/product";
 import type { PaginatedResponse } from "@/components/common/tabla/api";
+import type { ServerTableParams } from "@/components/common/tabla/useServerTableState";
 
-const useGetEmployee = (tableState: any, branchId: string | null) => {
+const useGetEmployee = (
+  tableState: ServerTableParams,
+  branchId: string | null,
+) => {
   const paramsServer = {
-    pageIndex: tableState.apiParams.page,
-    pageSize: tableState.apiParams.limit,
-    globalFilter: tableState.apiParams.search,
-    sorting: tableState.apiParams.sortField
+    pageIndex: tableState.page,
+    pageSize: tableState.limit,
+    globalFilter: tableState.search,
+    sorting: tableState.sortField
       ? [
           {
-            id: tableState.apiParams.sortField,
-            desc: tableState.apiParams.sortOrder === "desc",
+            id: tableState.sortField,
+            desc: tableState.sortOrder === "desc",
           },
         ]
       : [],
@@ -21,11 +25,11 @@ const useGetEmployee = (tableState: any, branchId: string | null) => {
   return useQuery<PaginatedResponse<Product>, Error>({
     queryKey: [
       "products",
-      tableState.apiParams.page,
-      tableState.apiParams.limit,
-      tableState.apiParams.search,
-      tableState.apiParams.sortField,
-      tableState.apiParams.sortOrder,
+      tableState.page,
+      tableState.limit,
+      tableState.search,
+      tableState.sortField,
+      tableState.sortOrder,
       branchId,
     ],
 
