@@ -57,7 +57,7 @@ export default function Product() {
   const { user } = useAuth();
 
   //obtenemos los productos segun el estado de la tabla y la sucursal actual
-  const { data, isLoading } = useGetprodut(tableState.apiParams, currentBranch);
+  const { data, isLoading, isError } = useGetprodut(tableState.apiParams, currentBranch);
 
   //usamos el hook de modales y sus funciones para abrir y cerrar
   const { modal, openModal, closeModal } = useProductModals();
@@ -218,6 +218,7 @@ export default function Product() {
             sorting={tableState.sorting}
             setSorting={tableState.setSorting}
             isLoading={isLoading}
+            isError={isError}
           />
         </div>
 

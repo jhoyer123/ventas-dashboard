@@ -1,19 +1,19 @@
 import { supabase } from "@/api/supabaseClient";
 //parametors que enviaremos al backend
-import type { TableParams } from "@/components/common/tabla/api";
 //type del empleado
 import { type FormEmployeeInput } from "@/types/employee";
+import type { queryParams } from "@/types/table";
 
 // Get employees desde supabase - OPTIMIZADO
 export const getEmployees = async (
-  params: TableParams,
-  branchId: string | null,
+  params: queryParams,
+  //branchId: string | null,
   typeEmployee: "todos" | "con_acceso" | "sin_acceso",
 ) => {
+  const { page, limit, search, sortField, sortOrder, branchId } = params;
   // Calculamos la paginación
-  const from = (params.pageIndex - 1) * params.pageSize;
-  const to = from + params.pageSize - 1;
-
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
   // UNA SOLA QUERY con count incluido
   let query = supabase
     .from("employees")
@@ -25,8 +25,7 @@ export const getEmployees = async (
     );
 
   // Búsqueda global
-  if (params.globalFilter) {
-    const search = params.globalFilter;
+  if (search) {
     query = query.or(
       `name.ilike.%${search}%,cedula.ilike.%${search}%,address.ilike.%${search}%,phone.ilike.%${search}%`,
     );
@@ -47,9 +46,9 @@ export const getEmployees = async (
   }
 
   // Aplicamos ordenamiento
-  if (params.sorting.length > 0) {
-    params.sorting.forEach((sort) => {
-      query = query.order(sort.id, { ascending: !sort.desc });
+  if (sortField) {
+    query = query.order(sortField, {
+      ascending: sortOrder === "asc",
     });
   }
 
@@ -60,7 +59,7 @@ export const getEmployees = async (
   const { data, error, count } = await query;
 
   if (error) {
-    throw error;
+    throw new Error("Error al obtener empleados");
   }
   //refinar datos
   const dataReifined = data.map((emp: any) => ({
@@ -82,9 +81,9 @@ export const getEmployees = async (
     data: dataReifined || [],
     meta: {
       total: count || 0,
-      page: params.pageIndex,
-      limit: params.pageSize,
-      totalPages: Math.ceil((count || 0) / params.pageSize),
+      page,
+      limit,
+      totalPages: Math.ceil((count || 0) / limit),
     },
   };
 };

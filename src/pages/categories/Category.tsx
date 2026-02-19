@@ -81,7 +81,7 @@ const Category = () => {
 
   //hook que trae los datos
   const tableState = useServerTableState({});
-  const { data, isLoading } = useGetCategoryT(tableState, null);
+  const { data, isLoading, isError } = useGetCategoryT(tableState, null);
 
   //modo vista o update
   const [mode, setMode] = useState<"view" | "update" | "create">("create");
@@ -129,6 +129,7 @@ const Category = () => {
             sorting={tableState.sorting}
             setSorting={tableState.setSorting}
             isLoading={isLoading}
+            isError={isError}
           />
         </div>
 

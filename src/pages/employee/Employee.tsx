@@ -20,7 +20,7 @@ import { ModalCredencials } from "@/components/Eployee/ModalCredencials";
 import { type Employee, type FormEmployeeInput } from "@/types/employee";
 //context del user
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { ResetCredentialsForm } from "@/schemes/credecials";
 import { Plus } from "lucide-react";
@@ -30,14 +30,23 @@ import useFilterEmployee from "@/hooks/employee/useFilterEmployee";
 export default function Employee() {
   //logica de la tabla
   const tableState = useServerTableState({});
+
+  //usamos el contexto de sucursal
   const { currentBranch } = useBranch();
+  useEffect(() => {
+    tableState.setPagination({
+      pageIndex: 0,
+      pageSize: tableState.pagination.pageSize,
+    });
+  }, [currentBranch]);
+
   //filtrado de empleados
   const { typeEmployee, changeTypeEmployee } = useFilterEmployee();
-  const { data, isLoading } = useGetEmployee(
-    tableState,
-    currentBranch || null,
+  const { data, isLoading, isError } = useGetEmployee(
+    { ...tableState.apiParams, branchId: currentBranch || null },
     typeEmployee,
   );
+
   //estado para contorlar el form de solo lectura
   const [disableMod, setDesableMod] = useState(false);
   //logica para crear y actualizar el empleado
@@ -194,6 +203,7 @@ export default function Employee() {
             sorting={tableState.sorting}
             setSorting={tableState.setSorting}
             isLoading={isLoading}
+            isError={isError}
           />
         </div>
 

@@ -101,9 +101,9 @@ export const getProducts = async (
   const { data, error, count } = await query;
 
   if (error) {
-    console.error("Error fetching products:", error);
     throw new Error(error.message);
   }
+
   //Retorno de datos
   return {
     data: data || [],
@@ -118,7 +118,6 @@ export const getProducts = async (
 
 //get product by id
 export const getProductById = async (id: string) => {
-  console.log("Fetching product with ID:", id);
   const { data, error } = await supabase
     .from("products")
     .select(`*,product_images (*)`)
@@ -126,7 +125,6 @@ export const getProductById = async (id: string) => {
     .single();
 
   if (error) {
-    console.error("Error fetching product by ID:", error);
     throw new Error(error.message);
   }
 

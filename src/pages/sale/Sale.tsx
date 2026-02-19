@@ -18,14 +18,23 @@ import { useCancelSale } from "@/hooks/sale/useCancelSale";
 import { useAuth } from "@/context/AuthContext";
 import type { DebtPaymentForm } from "@/schemes/debPay";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 const Sale = () => {
   //hook de la tabla
   const tableState = useServerTableState({});
-  //context de sucursal
+
+  //usamos el contexto de sucursal
   const { currentBranch } = useBranch();
+  useEffect(() => {
+    tableState.setPagination({
+      pageIndex: 0,
+      pageSize: tableState.pagination.pageSize,
+    });
+  }, [currentBranch]);
+
   //hook que trae las ventas realizadas
-  const { data, isLoading } = useGetSalesH({
+  const { data, isLoading, isError } = useGetSalesH({
     ...tableState.apiParams,
     branchId: currentBranch || null,
   });
@@ -96,6 +105,7 @@ const Sale = () => {
           sorting={tableState.sorting}
           setSorting={tableState.setSorting}
           isLoading={isLoading}
+          isError={isError}
         />
 
         {/* Modales */}

@@ -20,7 +20,7 @@ export const useProducts = ({
 }: Props) => {
   const [page, setPage] = useState(0);
   //usamos el hook de traer los productos para el punto de venta
-  const { data, isPending } = useGetProdPos({
+  const { data, isPending, isError } = useGetProdPos({
     p_branch_id: currentBranch!,
     p_search_term: search,
     p_category_id: category === "Todos" ? null : category,
@@ -45,6 +45,7 @@ export const useProducts = ({
   return {
     products,
     isPending,
+    isError,
     loadMore,
     getAvailableStock,
   };

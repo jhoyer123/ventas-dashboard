@@ -14,7 +14,7 @@ export const getSalesH = async (params: queryParams) => {
 
   if (search) {
     query = query.or(
-      `clientName.ilike.%${search}%,employee_name.ilike.%${search}%`
+      `clientName.ilike.%${search}%,employee_name.ilike.%${search}%`,
     );
   }
 

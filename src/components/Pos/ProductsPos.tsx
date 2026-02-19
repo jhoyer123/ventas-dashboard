@@ -4,11 +4,13 @@ import { Loader2, Plus } from "lucide-react";
 import styles from "@/components/Pos/styles.module.css";
 import { validateOffer } from "@/lib/pos/validators";
 import { justDate } from "@/utils/dataFormat";
+import Error from "../common/Error";
 
 interface Props {
   addToCart: (product: ProductPos) => void;
   products: ProductPos[];
   isPending: boolean;
+  isError: boolean;
   loadMore: () => void;
   getAvailableStock: (productId: string) => number;
 }
@@ -17,6 +19,7 @@ export const ProductsPos = ({
   products,
   addToCart,
   isPending,
+  isError,
   getAvailableStock,
 }: Props) => {
   return (
@@ -95,6 +98,8 @@ export const ProductsPos = ({
           </div>
         </div>
       )}
+
+      {isError && <Error />}
     </div>
   );
 };

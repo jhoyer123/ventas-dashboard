@@ -1,8 +1,7 @@
-//lo validacion de campos del formulario
 import { z } from "zod";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB en bytes
-const MAX_FILES = 10;
+const MAX_FILES = 1;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",

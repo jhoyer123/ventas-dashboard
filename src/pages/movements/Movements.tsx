@@ -5,7 +5,7 @@ import { columnsMovement } from "./ColumnsMovement";
 //importamos el hook para obtener los movimientos
 import { useGetMovements } from "@/hooks/movement/useGetMovements";
 import { DebouncedInput } from "@/components/common/tabla/DebouncedInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Movement } from "@/types/movement";
 import { ModalDetMovement } from "@/components/movement/ModalDetMovement";
 import { useBranch } from "@/context/BranchContext";
@@ -13,9 +13,18 @@ import { useBranch } from "@/context/BranchContext";
 const Movements = () => {
   //usamos el hook del a tabla
   const tableState = useServerTableState({});
+
+  //usamos el contexto de sucursal
   const { currentBranch } = useBranch();
+  useEffect(() => {
+    tableState.setPagination({
+      pageIndex: 0,
+      pageSize: tableState.pagination.pageSize,
+    });
+  }, [currentBranch]);
+
   //usamos el hook para obtener los movimientos
-  const { data, isLoading } = useGetMovements(
+  const { data, isLoading, isError } = useGetMovements(
     tableState.apiParams,
     currentBranch,
   );
@@ -63,6 +72,7 @@ const Movements = () => {
             sorting={tableState.sorting}
             setSorting={tableState.setSorting}
             isLoading={isLoading}
+            isError={isError}
           />
         </div>
 

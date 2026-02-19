@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/services/productService";
 //type employee
@@ -22,6 +23,14 @@ const useGetEmployee = (
         ]
       : [],
   };
+
+  const prevBranch = useRef(branchId);
+  const isSwitching = prevBranch.current !== branchId;
+
+  useEffect(() => {
+    prevBranch.current = branchId;
+  }, [branchId]);
+
   return useQuery<PaginatedResponse<Product>, Error>({
     queryKey: [
       "products",
@@ -34,7 +43,7 @@ const useGetEmployee = (
     ],
 
     queryFn: () => getProducts(paramsServer, branchId),
-
+    enabled: !isSwitching,
     retry: false,
   });
 };

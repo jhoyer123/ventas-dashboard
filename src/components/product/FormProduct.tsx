@@ -232,8 +232,8 @@ const FormProduct = ({
               onChange={onChange}
               onBlur={onBlur}
               error={errors.images?.message}
-              maxFiles={5}
-              maxSizeMB={5}
+              maxFiles={1}
+              maxSizeMB={2}
               imgExisting={initialData?.imageExisting}
               setValue={setValue}
               disabled={mode === "view"}

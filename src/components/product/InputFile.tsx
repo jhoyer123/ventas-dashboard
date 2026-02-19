@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Upload, X, Plus } from "lucide-react";
+import { toast } from "sonner";
 //import { type UseFormSetValue } from "react-hook-form";
 //import type { ProductType } from "@/types/product";
 
@@ -15,21 +16,22 @@ interface Props {
   //setValue?: UseFormSetValue<ProductType>;
   setValue?: any;
 }
-
+//solo se permitira 1 imagen
+//cambiar maxFiles para permitir mas imagenes
 const InputFile = ({
   value,
   onChange,
   onBlur,
   error,
-  maxFiles = 5,
-  maxSizeMB = 5,
+  maxFiles = 1,
+  maxSizeMB = 2,
   disabled = false,
   imgExisting = [],
   setValue,
 }: Props) => {
   //** IMAGENES EXISTENTE state**//
   const [existingImages, setExistingImages] = useState<string[]>(
-    imgExisting || []
+    imgExisting || [],
   );
   //** IMAGENES A ELIMINAR state**//
   const [deletedUrls, setDeletedUrls] = useState<string[]>([]);
@@ -40,7 +42,7 @@ const InputFile = ({
 
   // Convertir FileList a Array de Files con previews
   const fileListToPreviewArray = (
-    fileList: FileList
+    fileList: FileList,
   ): { file: File; url: string }[] => {
     return Array.from(fileList).map((file) => ({
       file,
@@ -74,10 +76,10 @@ const InputFile = ({
       return `${file.name} no es una imagen válida`;
     }
 
-    // Validar tamaño
+    // Validar tamaño en MB ${file.name}
     const sizeMB = file.size / (1024 * 1024);
     if (sizeMB > maxSizeMB) {
-      return `${file.name} excede el tamaño máximo de ${maxSizeMB}MB`;
+      return `La imagen excede el tamaño máximo de ${maxSizeMB}MB`;
     }
 
     return null;
@@ -106,7 +108,12 @@ const InputFile = ({
 
     // Mostrar errores si hay
     if (errors.length > 0) {
-      alert(errors.join("\n"));
+      //alert(errors.join("\n"));
+      toast.info(errors.join("\n"), {
+        className: "bg-red-500 text-white",
+        duration: 5000,
+        position: "top-center",
+      });
     }
 
     // Combinar archivos actuales + nuevos válidos
@@ -114,7 +121,12 @@ const InputFile = ({
 
     // Validar límite de archivos
     if (combinedFiles.length + existingImages.length > maxFiles) {
-      alert(`Solo puedes subir un máximo de ${maxFiles} imágenes`);
+      //alert(`Solo puedes subir un máximo de ${maxFiles} imágenes`);
+      toast.info("Solo puedes subir un máximo de 1 imagen", {
+        className: "bg-red-500 text-white",
+        duration: 5000,
+        position: "top-center",
+      });
       return;
     }
 
@@ -274,17 +286,18 @@ const InputFile = ({
             ))}
 
             {/* Botón para añadir más */}
-            {previews.length < maxFiles && !disabled && (
-              <button
-                type="button"
-                onClick={handleOpenFileDialog}
-                disabled={disabled}
-                className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors flex flex-col items-center justify-center gap-2 text-gray-500 hover:text-blue-500"
-              >
-                <Plus className="w-8 h-8" />
-                <span className="text-xs font-medium">Añadir más</span>
-              </button>
-            )}
+            {previews.length + existingImages.length < maxFiles &&
+              !disabled && (
+                <button
+                  type="button"
+                  onClick={handleOpenFileDialog}
+                  disabled={disabled}
+                  className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors flex flex-col items-center justify-center gap-2 text-gray-500 hover:text-blue-500"
+                >
+                  <Plus className="w-8 h-8" />
+                  <span className="text-xs font-medium">Añadir más</span>
+                </button>
+              )}
           </div>
 
           {/* Controles */}

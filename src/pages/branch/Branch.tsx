@@ -15,12 +15,14 @@ import { AlertDelete } from "@/components/common/AlertDelet";
 //context de la surcursal
 import { useBranch } from "@/context/BranchContext";
 import { Branches } from "@/components/branch/Branches";
+import { SkeletonCard } from "@/components/common/SkeletonCard";
+import Error from "@/components/common/Error";
 
 const Branch = () => {
   //context sucursal
   const { setBranchId, currentBranch } = useBranch();
   //hook de obtención de sucursales
-  const { data: branches } = useGetBranches();
+  const { data: branches, isLoading, isError } = useGetBranches();
   //logica para delete y update
   const [branchS, setBranchS] = useState<BranchOutput | undefined>(undefined);
   // Lógica del modal
@@ -159,6 +161,10 @@ const Branch = () => {
         }}
         nameDelete={branchS?.branch_name}
       />
+
+      {isLoading && <SkeletonCard />}
+
+      {isError && <Error />}
     </div>
   );
 };

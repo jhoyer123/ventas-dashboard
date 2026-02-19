@@ -99,7 +99,9 @@ const CreateProduct = (mode: Props) => {
   if (isEditing && error) {
     return (
       <div className="max-w-7xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Error al cargar el producto</h1>
+        <h3 className="text-2xl font-bold mb-4 text-center">
+          Error al cargar el producto
+        </h3>
       </div>
     );
   }
@@ -143,6 +145,7 @@ const CreateProduct = (mode: Props) => {
                 asChild
                 className="cursor-pointer w-full md:flex-1 lg:w-auto"
                 variant="secondary"
+                disabled={create.isPending || update.isPending}
               >
                 <Link to="/dashboard/products">Cancelar y volver</Link>
               </Button>
@@ -153,6 +156,7 @@ const CreateProduct = (mode: Props) => {
                 className="cursor-pointer w-full md:flex-1 lg:w-auto"
                 form="product-form"
                 variant="default"
+                disabled={create.isPending || update.isPending}
               >
                 {id ? "Actualizar Producto" : "Crear Producto"}
               </Button>
@@ -167,6 +171,11 @@ const CreateProduct = (mode: Props) => {
         mode={mode?.mode === "view" ? "view" : isEditing ? "update" : "create"}
         initialData={id ? dataPrepared : undefined}
       />
+
+      {create.isPending ||
+        (update.isPending && (
+          <div className="absolute inset-0 z-10 bg-black/30"></div>
+        ))}
     </div>
   );
 };
