@@ -4,12 +4,14 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { LuEyeClosed, LuEye } from "react-icons/lu";
 //importamos de zod
 import { loginSchema, type loginCredentials } from "../../schemes/auth";
+import { Label } from "../ui/label";
 
 interface FormLoginProps {
   submitParent: (data: loginCredentials) => void;
+  isPending: boolean;
 }
 
-const FormLogin = ({ submitParent }: FormLoginProps) => {
+const FormLogin = ({ submitParent, isPending }: FormLoginProps) => {
   //Form hook
   const {
     register,
@@ -36,12 +38,12 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
         <div className="space-y-5">
           {/* Email */}
           <div className="space-y-2">
-            <label
+            <Label
               className="block text-sm font-body text-gray-300
             sm:text-base"
             >
               Correo electrónico
-            </label>
+            </Label>
             <div>
               <input
                 type="email"
@@ -59,12 +61,12 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
 
           {/* Password */}
           <div className="space-y-2">
-            <label
+            <Label
               className="block text-sm font-body text-gray-300
             sm:text-base"
             >
               Contraseña
-            </label>
+            </Label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -92,6 +94,7 @@ const FormLogin = ({ submitParent }: FormLoginProps) => {
             type="submit"
             className="w-full mt-5 py-3 text-base font-title font-medium text-black bg-white rounded-2xl hover:bg-gray-200 transition duration-200 shadow-lg 
             cursor-pointer"
+            disabled={isPending}
           >
             Iniciar Sesión
           </button>

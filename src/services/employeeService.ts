@@ -62,21 +62,27 @@ export const getEmployees = async (
     throw new Error("Error al obtener empleados");
   }
   //refinar datos
-  const dataReifined = data.map((emp: any) => ({
-    id: emp.id,
-    name: emp.name,
-    cedula: emp.cedula,
-    address: emp.address,
-    phone: emp.phone,
-    // Convertimos el string de la fecha a un objeto Date real
-    birthDate: emp.birthDate ? new Date(emp.birthDate) : undefined,
-    job: emp.job,
-    branchId: emp.branchId,
-    // Aplanamos los datos del usuario si existen
-    email: emp.users?.email || null,
-    systemRole: emp.users?.role || null,
-    idUser: emp.users?.id || null,
-  }));
+  const dataReifined = data.map(
+    (emp: any) => (
+      console.log("birthDate raw:", emp.birthDate, typeof emp.birthDate),
+      {
+        id: emp.id,
+        name: emp.name,
+        cedula: emp.cedula,
+        address: emp.address,
+        phone: emp.phone,
+        // Convertimos el string de la fecha a un objeto Date real
+        birthDate: emp.birthDate,
+        job: emp.job,
+        branchId: emp.branchId,
+        // Aplanamos los datos del usuario si existen
+        email: emp.users?.email || null,
+        systemRole: emp.users?.role || null,
+        idUser: emp.users?.id || null,
+      }
+    ),
+  );
+  console.log("Data refined:", dataReifined);
   return {
     data: dataReifined || [],
     meta: {

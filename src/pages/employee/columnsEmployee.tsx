@@ -75,17 +75,18 @@ export const columnsPersonal = ({
     header: "Edad",
     enableSorting: true,
     cell: ({ row }) => {
-      //calcular la edad a partir de la fecha de nacimiento
       const hoy = new Date();
-      const cumpleanos = row.original.birthDate ? row.original.birthDate : "";
-      if (!cumpleanos) return "N/A";
-      let edad = hoy.getFullYear() - cumpleanos.getFullYear();
-      const mes = hoy.getMonth() - cumpleanos.getMonth();
+      const nacimiento = new Date(row.original.birthDate + "T00:00:00");
 
-      // Si no ha llegado su mes, o es su mes pero no ha llegado el día, restamos 1
-      if (mes < 0 || (mes === 0 && hoy.getDate() < cumpleanos.getDate())) {
-        edad--;
-      }
+      let edad = hoy.getFullYear() - nacimiento.getFullYear();
+
+      // Ajustar si todavía no cumplió años este año
+      const cumplea = new Date(
+        hoy.getFullYear(),
+        nacimiento.getMonth(),
+        nacimiento.getDate(),
+      );
+      if (hoy < cumplea) edad--;
 
       return edad;
     },

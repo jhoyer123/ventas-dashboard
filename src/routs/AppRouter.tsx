@@ -20,12 +20,14 @@ import Sale from "@/pages/sale/Sale";
 import Movements from "@/pages/movements/Movements";
 import Profile from "@/pages/profile/Profile";
 import Pos from "@/pages/pos/Pos";
+import Register from "@/pages/auth/Register";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         {/* RUTAS DEL DASHBOARD */}
         <Route
           path="/dashboard"

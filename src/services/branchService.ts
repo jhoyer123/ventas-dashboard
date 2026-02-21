@@ -30,7 +30,7 @@ export const getBranchWP = async (productId: string) => {
   if (error) {
     console.error(
       "Error al obtener sucursales sin el producto:",
-      error.message
+      error.message,
     );
     throw new Error(error.message);
   }
@@ -54,7 +54,7 @@ export const getBranchesES = async () => {
   if (error) {
     console.error(
       "Error al obtener sucursales con estadísticas:",
-      error.message
+      error.message,
     );
     throw new Error(error.message);
   }
@@ -106,8 +106,8 @@ export const updateBranch = async ({ id, dataBranch }: updateType) => {
 
 //función para eliminar una sucursal
 export const deleteBranch = async (idBranch: string) => {
-  const { data, error } = await supabase.rpc("soft_delete_branch", {
-    p_branch_id: idBranch,
+  const { data, error } = await supabase.rpc("delete_branch_safely", {
+    branch_uuid: idBranch,
   });
 
   if (error) throw error;

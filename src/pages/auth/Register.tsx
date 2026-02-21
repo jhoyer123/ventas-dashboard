@@ -4,8 +4,9 @@ import { useLogin } from "../../hooks/auth/useLogin";
 import type { loginCredentials } from "@/schemes/auth";
 import { VerifyCredencials } from "../../components/loginComp/VerifyCredencials";
 import { Link } from "react-router-dom";
+import FormRegister from "@/components/loginComp/FormRegister";
 
-const LoginCard = () => {
+const Register = () => {
   const { mutate, isPending, isError } = useLogin();
 
   const handleSubmit = (data: loginCredentials) => {
@@ -33,34 +34,34 @@ const LoginCard = () => {
           sm:text-2xl
           lg:text-3xl"
           >
-            ¡Panel de Gestión POS!
+            Registrate
           </h1>
           <p
             className="text-sm font-body text-gray-300
           sm:text-base"
           >
-            Ingresa tus credenciales para gestionar tus ventas, inventarios y
-            reportes.
+            Ingresa los datos solicitados para crear tu cuenta.
           </p>
         </div>
 
         {/* Formulario */}
-        <FormLogin submitParent={handleSubmit} isPending={isPending} />
+        <FormRegister isPending={isPending} />
 
         <p className="text-center text-white text-sm">
-          ¿No tienes cuenta?{" "}
-          <Link to="/register" className="text-blue-400 hover:underline">
-            Regístrate aquí
+          ¿Ya tienes una cuenta?{" "}
+          <Link to="/" className="text-blue-400 hover:underline">
+            Inicia sesión aquí
           </Link>
         </p>
 
         {/* ESTADOS DE TANSTACK */}
-        {isPending && <VerifyCredencials message="Verificando credenciales" />}
+        {isPending && <VerifyCredencials message="Creando cuenta" />}
 
         {isError && (
           <div className="mt-4 bg-red-900/30 border border-red-500/50 rounded-lg p-3 backdrop-blur-sm">
             <p className="text-red-200 text-sm text-center font-medium">
-              Credenciales incorrectas. Por favor, inténtalo de nuevo.
+              Ocurrio un error al registrar tu cuenta. Por favor, intenta
+              nuevamente.
             </p>
           </div>
         )}
@@ -69,4 +70,4 @@ const LoginCard = () => {
   );
 };
 
-export default LoginCard;
+export default Register;

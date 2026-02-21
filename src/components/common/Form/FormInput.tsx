@@ -14,6 +14,8 @@ interface InputProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   errors?: FieldErrors<T>;
   inputProps?: ComponentProps<"input">;
+  className?: string;
+  labelClassName?: string;
 }
 
 export function FormInput<T extends FieldValues>({
@@ -22,10 +24,14 @@ export function FormInput<T extends FieldValues>({
   register,
   errors,
   inputProps,
+  className,
+  labelClassName,
 }: InputProps<T>) {
   return (
     <div className="grid gap-2 w-full">
-      <Label htmlFor={name}>{label}</Label>
+      <Label htmlFor={name} className={labelClassName}>
+        {label}
+      </Label>
 
       <ShadInput
         id={name}
@@ -33,7 +39,8 @@ export function FormInput<T extends FieldValues>({
           valueAsNumber: inputProps?.type === "number",
         })}
         {...inputProps}
-        className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        //className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className={`[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${className}`}
       />
 
       {errors?.[name] && (

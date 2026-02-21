@@ -1,5 +1,9 @@
 //component para mostrar el pending de la verificación de credenciales
-export const VerifyCredencials = () => {
+interface Props {
+  message: string;
+}
+
+export const VerifyCredencials = ({ message }: Props) => {
   return (
     <div
       role="status"
@@ -21,7 +25,7 @@ export const VerifyCredencials = () => {
           fill="gray"
         />
       </svg>
-      <span className="text-white">Verificando credenciales</span>
+      <span className="text-white">{message}</span>
     </div>
   );
 };

@@ -209,7 +209,7 @@ export const updateProduct = async (id: string, dataProducto: ProductSupT) => {
   return data;
 };
 
-// SOFT DELETE — desactivar producto mediante el campo deleted_at
+// SOFT DELETE — desactivar producto mediante el campo deleted_at o hard delete
 export const deleteProductG = async (id: string) => {
   const { data, error } = await supabase.rpc("delete_product_global", {
     p_id: id,
@@ -221,8 +221,21 @@ export const deleteProductG = async (id: string) => {
         "El producto no se puede eliminar porque tiene stock en una o más sucursales.",
       );
     }
-
     throw new Error("Error al eliminar el producto: " + error.message);
+  }
+
+  // Solo borrar imágenes si fue hard delete definitivo
+  if (data === "OK") {
+    const folderPath = `product-${id}`;
+
+    const { data: files } = await supabase.storage
+      .from("img-products")
+      .list(folderPath);
+
+    if (files && files.length > 0) {
+      const paths = files.map((f) => `${folderPath}/${f.name}`);
+      await supabase.storage.from("img-products").remove(paths);
+    }
   }
 
   return data;
